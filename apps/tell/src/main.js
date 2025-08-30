@@ -249,10 +249,27 @@ toggleCamBtn.addEventListener('click', () => {
   toggleCamBtn.textContent = enabled ? 'Camera On' : 'Camera Off';
 });
 
+function isExpired(url) {
+  const createdAt = Number(url.searchParams.get('createdAt') || '');
+  if (!createdAt) return false;
+  const ageMs = Date.now() - createdAt;
+  return ageMs > 24 * 60 * 60 * 1000;
+}
+
+function enforceExpiry() {
+  const url = new URL(window.location.href);
+  if (isExpired(url)) {
+    alert('This session link has expired. Please ask the adult to create a new link.');
+    // Disable join actions
+    joinRoomButton.disabled = true;
+  }
+}
+
 startRoomButton.addEventListener('click', async () => {
   const code = generateRoomCode();
   const url = new URL(window.location.href);
   url.searchParams.set('room', code);
+  url.searchParams.set('createdAt', String(Date.now()));
   await ensureMedia();
   connectSignal();
   navigator.clipboard?.writeText(url.toString());
@@ -264,9 +281,14 @@ joinRoomButton.addEventListener('click', async () => {
   if (!code) return alert('Enter a room code.');
   const url = new URL(window.location.href);
   url.searchParams.set('room', code.toUpperCase());
+  if (!url.searchParams.get('createdAt')) {
+    // No createdAt; set now but will only affect this user
+    url.searchParams.set('createdAt', String(Date.now()));
+  }
   await ensureMedia();
   connectSignal();
   window.history.replaceState({}, '', url.toString());
+  enforceExpiry();
 });
 
 // Auto-join if room param exists
@@ -274,5 +296,7 @@ if (new URLSearchParams(location.search).get('room')) {
   ensureMedia().then(connectSignal);
 }
 
+// On load
+enforceExpiry();
 // Init story
 loadDefaultStory(); 
