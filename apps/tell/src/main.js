@@ -148,6 +148,76 @@ function generateRoomCode() {
   return Math.random().toString(36).slice(2, 8).toUpperCase();
 }
 
+// Helper: resilient autoplay with fallback and tap-to-unmute
+async function tryPlay(videoEl, { wantsAudio } = { wantsAudio: true }) {
+  if (!videoEl) return;
+  try {
+    videoEl.playsInline = true;
+    if (!wantsAudio) videoEl.muted = true;
+    await videoEl.play();
+  } catch (err) {
+    // Autoplay blocked; try muted fallback
+    try {
+      videoEl.muted = true;
+      await videoEl.play();
+      // Provide a tap-to-unmute button if audio is desired
+      if (wantsAudio) {
+        injectUnmuteButton(videoEl);
+      }
+    } catch (_) {
+      // As a last resort, show a play overlay
+      injectPlayButton(videoEl, wantsAudio);
+    }
+  }
+}
+
+function injectUnmuteButton(videoEl) {
+  const parent = videoEl.parentElement || document.body;
+  if (parent.querySelector('.unmute-overlay')) return;
+  const btn = document.createElement('button');
+  btn.textContent = 'Enable audio';
+  btn.className = 'unmute-overlay';
+  Object.assign(btn.style, {
+    position: 'absolute', bottom: '12px', left: '12px', zIndex: 5,
+    padding: '8px 12px', borderRadius: '8px', border: '1px solid #2C3E7A',
+    background: '#FFFFFFAA', color: '#2C3E7A', fontWeight: '700', cursor: 'pointer'
+  });
+  parent.style.position = parent.style.position || 'relative';
+  parent.appendChild(btn);
+  btn.addEventListener('click', async () => {
+    try {
+      videoEl.muted = false;
+      await videoEl.play();
+      btn.remove();
+    } catch (_) {}
+  });
+}
+
+function injectPlayButton(videoEl, wantsAudio) {
+  const parent = videoEl.parentElement || document.body;
+  if (parent.querySelector('.play-overlay')) return;
+  const btn = document.createElement('button');
+  btn.textContent = 'Tap to play';
+  btn.className = 'play-overlay';
+  Object.assign(btn.style, {
+    position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+    zIndex: 5, padding: '10px 14px', borderRadius: '10px', border: '1px solid #2C3E7A',
+    background: '#FFFFFFCC', color: '#2C3E7A', fontWeight: '700', cursor: 'pointer'
+  });
+  parent.style.position = parent.style.position || 'relative';
+  parent.appendChild(btn);
+  btn.addEventListener('click', async () => {
+    try {
+      videoEl.playsInline = true;
+      if (!wantsAudio) videoEl.muted = true;
+      await videoEl.play();
+      btn.remove();
+      if (wantsAudio && videoEl.muted) injectUnmuteButton(videoEl);
+    } catch (_) {}
+  });
+}
+
+// Update local preview to use tryPlay
 async function ensureMedia() {
   if (localStream) return localStream;
   log('requesting user media');
@@ -158,8 +228,14 @@ async function ensureMedia() {
     throw e;
   }
   localVideo.srcObject = localStream;
-  localVideo.play?.().catch(() => {});
+  tryPlay(localVideo, { wantsAudio: false });
   return localStream;
+}
+
+// Ensure remote playback uses tryPlay as well
+function attachRemoteStream(stream) {
+  remoteVideo.srcObject = stream;
+  tryPlay(remoteVideo, { wantsAudio: true });
 }
 
 function connectSignal() {
@@ -246,8 +322,7 @@ async function ensurePeer() {
   };
   pc.ontrack = (e) => {
     log('ontrack received');
-    remoteVideo.srcObject = e.streams[0];
-    remoteVideo.play?.().catch(() => {});
+    attachRemoteStream(e.streams[0]);
   };
   pc.onconnectionstatechange = () => {
     log('connection state', pc.connectionState);
