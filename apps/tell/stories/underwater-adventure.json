@@ -1,0 +1,12 @@
+{
+  "id": "underwater-adventure",
+  "title": "Underwater Adventure",
+  "ageRange": [3, 8],
+  "themes": ["curiosity", "friendship"],
+  "scenes": [
+    { "id": "s1", "background": "meadow.svg", "text": "At the shore, {{childName}} spotted a friendly dolphin waving!", "choices": [ { "label": "Wave back", "nextSceneId": "s2" }, { "label": "Build a sandcastle", "nextSceneId": "s3" } ] },
+    { "id": "s2", "background": "forest.svg", "text": "Splash! The dolphin invited {{childName}} to explore the reef.", "choices": [ { "label": "Swim gently", "nextSceneId": "s4" } ] },
+    { "id": "s3", "background": "castle.svg", "text": "The sandcastle grew tall and sparkly with seashell windows.", "choices": [ { "label": "Show the dolphin", "nextSceneId": "s4" } ] },
+    { "id": "s4", "background": "sunset.svg", "text": "As the sun set, everyone cheered for a day well spent!", "choices": [] }
+  ]
+} 

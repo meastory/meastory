@@ -1,0 +1,12 @@
+{
+  "id": "space-journey",
+  "title": "Space Journey",
+  "ageRange": [3, 8],
+  "themes": ["wonder", "teamwork"],
+  "scenes": [
+    { "id": "s1", "background": "castle.svg", "text": "{{childName}} looked up to see a friendly rocket ready to go!", "choices": [ { "label": "Countdown", "nextSceneId": "s2" }, { "label": "Pack snacks", "nextSceneId": "s3" } ] },
+    { "id": "s2", "background": "meadow.svg", "text": "3...2...1... Lift off! Stars twinkled all around.", "choices": [ { "label": "Wave at the moon", "nextSceneId": "s4" } ] },
+    { "id": "s3", "background": "forest.svg", "text": "Fruit and cookies secured! Time to buckle up.", "choices": [ { "label": "Blast off!", "nextSceneId": "s2" } ] },
+    { "id": "s4", "background": "sunset.svg", "text": "A gentle landing and a sparkling sky goodnight.", "choices": [] }
+  ]
+} 
