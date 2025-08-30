@@ -24,6 +24,8 @@ let dataChannel;
 
 const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
+function log(...args) { try { console.log('[webrtc]', ...args); } catch (_) {} }
+
 async function loadDefaultStory() {
   const response = await fetch('./stories/dragon-adventure.json');
   if (!response.ok) {
@@ -71,8 +73,50 @@ function personalize(text) {
   return text.replaceAll('{{childName}}', childName);
 }
 
-nextButton.addEventListener('click', () => renderScene(currentSceneIndex + 1));
-prevButton.addEventListener('click', () => renderScene(currentSceneIndex - 1));
+function sendSync(message) {
+  try {
+    if (dataChannel && dataChannel.readyState === 'open') {
+      dataChannel.send(JSON.stringify(message));
+    }
+  } catch (_) {}
+}
+
+function handleSyncMessage(msg) {
+  if (msg.type === 'scene') {
+    renderScene(msg.index);
+  } else if (msg.type === 'choice') {
+    const nextIndex = story.scenes.findIndex(s => s.id === msg.nextSceneId);
+    if (nextIndex !== -1) renderScene(nextIndex);
+  }
+}
+
+// Hook into existing UI actions
+nextButton.addEventListener('click', () => {
+  const next = currentSceneIndex + 1;
+  renderScene(next);
+  sendSync({ type: 'scene', index: next });
+});
+prevButton.addEventListener('click', () => {
+  const prev = currentSceneIndex - 1;
+  renderScene(prev);
+  sendSync({ type: 'scene', index: prev });
+});
+
+// Patch choice buttons in renderScene to send sync
+const originalRenderScene = renderScene;
+renderScene = function(index) {
+  originalRenderScene(index);
+  const scene = story?.scenes?.[currentSceneIndex];
+  if (!scene) return;
+  // Rebind choices to also sync
+  choicesEl.querySelectorAll('button').forEach((btn, idx) => {
+    const choice = scene.choices?.[idx];
+    if (!choice) return;
+    btn.addEventListener('click', () => {
+      sendSync({ type: 'choice', nextSceneId: choice.nextSceneId || null });
+    }, { once: true });
+  });
+};
 
 // Session scaffolding (placeholder)
 function generateRoomCode() {
@@ -81,20 +125,25 @@ function generateRoomCode() {
 
 async function ensureMedia() {
   if (localStream) return localStream;
+  log('requesting user media');
   localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
   localVideo.srcObject = localStream;
+  localVideo.play?.().catch(() => {});
   return localStream;
 }
 
 function connectSignal() {
   if (ws && ws.readyState === WebSocket.OPEN) return;
+  const roomId = new URLSearchParams(location.search).get('room');
+  if (!roomId) return alert('No room code present.');
   ws = new WebSocket('ws://localhost:3001');
   ws.onopen = () => {
-    const roomId = new URLSearchParams(location.search).get('room');
+    log('ws open, joining room', roomId);
     ws.send(JSON.stringify({ type: 'join', roomId }));
   };
   ws.onmessage = async (event) => {
     const msg = JSON.parse(event.data);
+    log('ws message', msg.type);
     switch (msg.type) {
       case 'hello':
       case 'joined':
@@ -102,63 +151,87 @@ function connectSignal() {
         // no-op
         break;
       case 'start-call':
+        log('start-call', msg.role);
         await startPeer(msg.role);
         break;
       case 'offer':
+        log('received offer');
         await ensurePeer();
-        await pc.setRemoteDescription(new RTCSessionDescription(msg.payload));
+        await pc.setRemoteDescription(msg.payload);
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
         ws.send(JSON.stringify({ type: 'answer', payload: answer }));
         break;
       case 'answer':
-        await pc.setRemoteDescription(new RTCSessionDescription(msg.payload));
+        log('received answer');
+        await pc.setRemoteDescription(msg.payload);
         break;
       case 'candidate':
         try {
           await pc.addIceCandidate(msg.payload);
-        } catch (_) {}
+          log('added candidate');
+        } catch (e) {
+          log('candidate error', e);
+        }
         break;
       case 'peer-left':
-        // reset remote
+        log('peer-left');
         if (remoteVideo.srcObject) remoteVideo.srcObject = null;
+        break;
+      case 'room-full':
+        alert('Room is full.');
+        break;
+      case 'error':
+        log('signal error', msg.error);
         break;
       default:
         break;
     }
   };
   ws.onclose = () => {
+    log('ws closed, retrying soon');
     setTimeout(connectSignal, 1000);
   };
 }
 
 async function ensurePeer() {
   if (pc) return pc;
+  log('creating RTCPeerConnection');
   pc = new RTCPeerConnection(iceServers);
   pc.onicecandidate = (e) => {
     if (e.candidate) ws?.send(JSON.stringify({ type: 'candidate', payload: e.candidate }));
   };
   pc.ontrack = (e) => {
+    log('ontrack received');
     remoteVideo.srcObject = e.streams[0];
+    remoteVideo.play?.().catch(() => {});
+  };
+  pc.onconnectionstatechange = () => {
+    log('connection state', pc.connectionState);
   };
   const stream = await ensureMedia();
   for (const track of stream.getTracks()) {
     pc.addTrack(track, stream);
   }
-  dataChannel = pc.createDataChannel('story');
-  dataChannel.onopen = () => {};
-  dataChannel.onmessage = (e) => {
-    // placeholder for story sync
-  };
+  // Caller will create channel; callee receives it via ondatachannel
+  try {
+    attachDataChannel(pc.createDataChannel('story'));
+  } catch (_) {
+    // callee path will receive
+  }
+  pc.ondatachannel = (event) => attachDataChannel(event.channel);
   return pc;
 }
 
 async function startPeer(role) {
   await ensurePeer();
   if (role === 'caller') {
+    log('creating offer');
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
     ws.send(JSON.stringify({ type: 'offer', payload: offer }));
+  } else {
+    log('callee ready, waiting for offer');
   }
 }
 
