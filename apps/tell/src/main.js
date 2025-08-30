@@ -9,8 +9,20 @@ const startRoomButton = document.getElementById('startRoomButton');
 const joinRoomButton = document.getElementById('joinRoomButton');
 const roomCodeInput = document.getElementById('roomCodeInput');
 
+const localVideo = document.getElementById('localVideo');
+const remoteVideo = document.getElementById('remoteVideo');
+const toggleMicBtn = document.getElementById('toggleMic');
+const toggleCamBtn = document.getElementById('toggleCam');
+
 let story = null;
 let currentSceneIndex = 0;
+
+let ws;
+let pc;
+let localStream;
+let dataChannel;
+
+const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
 async function loadDefaultStory() {
   const response = await fetch('./stories/dragon-adventure.json');
@@ -67,21 +79,127 @@ function generateRoomCode() {
   return Math.random().toString(36).slice(2, 8).toUpperCase();
 }
 
-startRoomButton.addEventListener('click', () => {
+async function ensureMedia() {
+  if (localStream) return localStream;
+  localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+  localVideo.srcObject = localStream;
+  return localStream;
+}
+
+function connectSignal() {
+  if (ws && ws.readyState === WebSocket.OPEN) return;
+  ws = new WebSocket('ws://localhost:3001');
+  ws.onopen = () => {
+    const roomId = new URLSearchParams(location.search).get('room');
+    ws.send(JSON.stringify({ type: 'join', roomId }));
+  };
+  ws.onmessage = async (event) => {
+    const msg = JSON.parse(event.data);
+    switch (msg.type) {
+      case 'hello':
+      case 'joined':
+      case 'peer-waiting':
+        // no-op
+        break;
+      case 'start-call':
+        await startPeer(msg.role);
+        break;
+      case 'offer':
+        await ensurePeer();
+        await pc.setRemoteDescription(new RTCSessionDescription(msg.payload));
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+        ws.send(JSON.stringify({ type: 'answer', payload: answer }));
+        break;
+      case 'answer':
+        await pc.setRemoteDescription(new RTCSessionDescription(msg.payload));
+        break;
+      case 'candidate':
+        try {
+          await pc.addIceCandidate(msg.payload);
+        } catch (_) {}
+        break;
+      case 'peer-left':
+        // reset remote
+        if (remoteVideo.srcObject) remoteVideo.srcObject = null;
+        break;
+      default:
+        break;
+    }
+  };
+  ws.onclose = () => {
+    setTimeout(connectSignal, 1000);
+  };
+}
+
+async function ensurePeer() {
+  if (pc) return pc;
+  pc = new RTCPeerConnection(iceServers);
+  pc.onicecandidate = (e) => {
+    if (e.candidate) ws?.send(JSON.stringify({ type: 'candidate', payload: e.candidate }));
+  };
+  pc.ontrack = (e) => {
+    remoteVideo.srcObject = e.streams[0];
+  };
+  const stream = await ensureMedia();
+  for (const track of stream.getTracks()) {
+    pc.addTrack(track, stream);
+  }
+  dataChannel = pc.createDataChannel('story');
+  dataChannel.onopen = () => {};
+  dataChannel.onmessage = (e) => {
+    // placeholder for story sync
+  };
+  return pc;
+}
+
+async function startPeer(role) {
+  await ensurePeer();
+  if (role === 'caller') {
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    ws.send(JSON.stringify({ type: 'offer', payload: offer }));
+  }
+}
+
+toggleMicBtn.addEventListener('click', () => {
+  if (!localStream) return;
+  const enabled = localStream.getAudioTracks().every(t => t.enabled);
+  localStream.getAudioTracks().forEach(t => t.enabled = !enabled);
+  toggleMicBtn.textContent = enabled ? 'Unmute' : 'Mute';
+});
+
+toggleCamBtn.addEventListener('click', () => {
+  if (!localStream) return;
+  const enabled = localStream.getVideoTracks().every(t => t.enabled);
+  localStream.getVideoTracks().forEach(t => t.enabled = !enabled);
+  toggleCamBtn.textContent = enabled ? 'Camera On' : 'Camera Off';
+});
+
+startRoomButton.addEventListener('click', async () => {
   const code = generateRoomCode();
   const url = new URL(window.location.href);
   url.searchParams.set('room', code);
+  await ensureMedia();
+  connectSignal();
   navigator.clipboard?.writeText(url.toString());
   alert(`Room created. Link copied to clipboard:\n${url.toString()}`);
 });
 
-joinRoomButton.addEventListener('click', () => {
+joinRoomButton.addEventListener('click', async () => {
   const code = roomCodeInput.value.trim();
   if (!code) return alert('Enter a room code.');
   const url = new URL(window.location.href);
   url.searchParams.set('room', code.toUpperCase());
-  window.location.href = url.toString();
+  await ensureMedia();
+  connectSignal();
+  window.history.replaceState({}, '', url.toString());
 });
 
-// Init
+// Auto-join if room param exists
+if (new URLSearchParams(location.search).get('room')) {
+  ensureMedia().then(connectSignal);
+}
+
+// Init story
 loadDefaultStory(); 
