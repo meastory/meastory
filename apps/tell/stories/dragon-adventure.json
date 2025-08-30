@@ -1,0 +1,40 @@
+{
+  "id": "dragon-adventure",
+  "title": "The Friendly Dragon",
+  "ageRange": [3, 8],
+  "themes": ["kindness", "courage", "friendship"],
+  "scenes": [
+    {
+      "id": "scene-1",
+      "background": "castle.jpg",
+      "text": "Once upon a time, {{childName}} spotted a gentle dragon near a castle.",
+      "choices": [
+        { "label": "Wave hello", "nextSceneId": "scene-2" },
+        { "label": "Look around the moat", "nextSceneId": "scene-3" }
+      ]
+    },
+    {
+      "id": "scene-2",
+      "background": "meadow.jpg",
+      "text": "The dragon waved back and offered a ride over the meadow!",
+      "choices": [
+        { "label": "Ride the dragon", "nextSceneId": "scene-4" },
+        { "label": "Pick flowers", "nextSceneId": "scene-4" }
+      ]
+    },
+    {
+      "id": "scene-3",
+      "background": "forest.jpg",
+      "text": "By the moat, {{childName}} found shiny pebbles that sparkled like stars.",
+      "choices": [
+        { "label": "Collect pebbles", "nextSceneId": "scene-4" }
+      ]
+    },
+    {
+      "id": "scene-4",
+      "background": "sunset.jpg",
+      "text": "As the sun set, everyone cheered for a new friendship. The end.",
+      "choices": []
+    }
+  ]
+} 

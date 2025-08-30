@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# Node/JS
+node_modules/
+dist/
+build/
+coverage/
+.tmp/
+
+# Env
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Netlify
+.netlify/ 

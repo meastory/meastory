@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Me A Story — Tell</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <h1>Me A Story — Tell</h1>
+      <p class="tagline">Live video storytelling for families</p>
+    </header>
+
+    <main class="container">
+      <section class="session-card">
+        <h2>Start or Join a Story</h2>
+        <div class="form-row">
+          <button id="startRoomButton" class="btn primary">Start a room</button>
+          <input id="roomCodeInput" class="input" placeholder="Enter room code" />
+          <button id="joinRoomButton" class="btn">Join</button>
+        </div>
+        <p class="hint">Share the room link with your family. Children join via link — no account needed.</p>
+      </section>
+
+      <section class="story-card">
+        <div id="background" class="background"></div>
+        <div class="story-content">
+          <h3 id="storyTitle">Loading story…</h3>
+          <p id="sceneText"></p>
+          <div id="choices" class="choices"></div>
+          <div class="controls">
+            <button id="prevButton" class="btn" disabled>Previous</button>
+            <button id="nextButton" class="btn">Next</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="safety-note">
+        <p>Adults initiate sessions. No child data is collected. Report concerns via the site footer.</p>
+      </section>
+    </main>
+
+    <script src="./src/main.js" type="module"></script>
+  </body>
+</html> 
