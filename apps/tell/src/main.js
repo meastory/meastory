@@ -355,3 +355,10 @@ if (new URLSearchParams(location.search).get('room')) {
 enforceExpiry();
 // Init story
 loadDefaultStory(); 
+
+// Feature flag: storybook mode (planned incremental rollout)
+const isStorybook = (() => {
+  const p = new URLSearchParams(location.search);
+  return p.has('storybook') || p.get('sb') === '1';
+})();
+// Currently no-op; guarded code will mount storybook in future milestones 

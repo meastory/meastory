@@ -1,0 +1,52 @@
+<svg viewBox="0 0 150 40" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="parchmentGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F5F5DC;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#F0E68C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DDD8B8;stop-opacity:1" />
+    </linearGradient>
+    <filter id="scrollShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  
+  <!-- Main scroll body -->
+  <rect x="15" y="5" width="120" height="30" 
+        rx="15" ry="15"
+        fill="url(#parchmentGrad)" 
+        stroke="#D2B48C" 
+        stroke-width="1"
+        filter="url(#scrollShadow)"/>
+  
+  <!-- Left scroll end -->
+  <circle cx="15" cy="20" r="8" 
+          fill="#8B7355" 
+          stroke="#654321" 
+          stroke-width="1"/>
+  <circle cx="15" cy="20" r="6" 
+          fill="none" 
+          stroke="#A0522D" 
+          stroke-width="0.5"/>
+  
+  <!-- Right scroll end -->
+  <circle cx="135" cy="20" r="8" 
+          fill="#8B7355" 
+          stroke="#654321" 
+          stroke-width="1"/>
+  <circle cx="135" cy="20" r="6" 
+          fill="none" 
+          stroke="#A0522D" 
+          stroke-width="0.5"/>
+  
+  <!-- Subtle aging texture lines -->
+  <g stroke="#D2B48C" stroke-width="0.5" opacity="0.6">
+    <line x1="25" y1="12" x2="125" y2="12"/>
+    <line x1="25" y1="28" x2="125" y2="28"/>
+  </g>
+  
+  <!-- Center highlight for text -->
+  <rect x="30" y="10" width="90" height="20" 
+        rx="10" ry="10"
+        fill="rgba(255,255,255,0.2)" 
+        stroke="none"/>
+</svg>
