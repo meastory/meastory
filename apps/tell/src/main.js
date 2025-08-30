@@ -21,6 +21,8 @@ let ws;
 let pc;
 let localStream;
 let dataChannel;
+let currentRole = null; // 'caller' | 'callee'
+let wsRetryMs = 1000;
 
 const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
@@ -126,7 +128,12 @@ function generateRoomCode() {
 async function ensureMedia() {
   if (localStream) return localStream;
   log('requesting user media');
-  localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+  } catch (e) {
+    alert('Unable to access camera/microphone. Please allow permissions and try again.');
+    throw e;
+  }
   localVideo.srcObject = localStream;
   localVideo.play?.().catch(() => {});
   return localStream;
@@ -139,6 +146,7 @@ function connectSignal() {
   ws = new WebSocket('ws://localhost:3001');
   ws.onopen = () => {
     log('ws open, joining room', roomId);
+    wsRetryMs = 1000; // reset backoff on success
     ws.send(JSON.stringify({ type: 'join', roomId }));
   };
   ws.onmessage = async (event) => {
@@ -152,6 +160,7 @@ function connectSignal() {
         break;
       case 'start-call':
         log('start-call', msg.role);
+        currentRole = msg.role;
         await startPeer(msg.role);
         break;
       case 'offer':
@@ -188,9 +197,14 @@ function connectSignal() {
         break;
     }
   };
+  ws.onerror = () => {
+    log('ws error');
+  };
   ws.onclose = () => {
     log('ws closed, retrying soon');
-    setTimeout(connectSignal, 1000);
+    const jitter = Math.floor(Math.random() * 250);
+    setTimeout(connectSignal, wsRetryMs + jitter);
+    wsRetryMs = Math.min(wsRetryMs * 2, 10000);
   };
 }
 
@@ -200,6 +214,12 @@ async function ensurePeer() {
   pc = new RTCPeerConnection(iceServers);
   pc.onicecandidate = (e) => {
     if (e.candidate) ws?.send(JSON.stringify({ type: 'candidate', payload: e.candidate }));
+  };
+  pc.oniceconnectionstatechange = () => {
+    log('ice state', pc.iceConnectionState);
+    if (pc.iceConnectionState === 'failed' || pc.iceConnectionState === 'disconnected') {
+      tryIceRestart();
+    }
   };
   pc.ontrack = (e) => {
     log('ontrack received');
@@ -221,6 +241,18 @@ async function ensurePeer() {
   }
   pc.ondatachannel = (event) => attachDataChannel(event.channel);
   return pc;
+}
+
+async function tryIceRestart() {
+  if (!pc) return;
+  if (currentRole === 'caller') {
+    log('attempting ICE restart (caller)');
+    const offer = await pc.createOffer({ iceRestart: true });
+    await pc.setLocalDescription(offer);
+    ws?.send(JSON.stringify({ type: 'offer', payload: offer }));
+  } else {
+    log('waiting for caller ICE restart');
+  }
 }
 
 async function startPeer(role) {
