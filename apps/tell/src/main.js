@@ -14,6 +14,9 @@ const remoteVideo = document.getElementById('remoteVideo');
 const toggleMicBtn = document.getElementById('toggleMic');
 const toggleCamBtn = document.getElementById('toggleCam');
 
+const storySelect = document.getElementById('storySelect');
+const loadStoryButton = document.getElementById('loadStoryButton');
+
 let story = null;
 let currentSceneIndex = 0;
 
@@ -28,8 +31,8 @@ const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
 function log(...args) { try { console.log('[webrtc]', ...args); } catch (_) {} }
 
-async function loadDefaultStory() {
-  const response = await fetch('./stories/dragon-adventure.json');
+async function loadStoryById(storyId) {
+  const response = await fetch(`./stories/${storyId}.json`);
   if (!response.ok) {
     storyTitleEl.textContent = 'Failed to load story';
     return;
@@ -37,6 +40,20 @@ async function loadDefaultStory() {
   story = await response.json();
   storyTitleEl.textContent = story.title;
   renderScene(0);
+}
+
+// Replace default loader to use selected value
+async function loadDefaultStory() {
+  const initial = storySelect?.value || 'dragon-adventure';
+  await loadStoryById(initial);
+}
+
+if (loadStoryButton) {
+  loadStoryButton.addEventListener('click', async () => {
+    const id = storySelect.value;
+    await loadStoryById(id);
+    sendSync({ type: 'story', id });
+  });
 }
 
 function renderScene(index) {
@@ -84,6 +101,12 @@ function sendSync(message) {
 }
 
 function handleSyncMessage(msg) {
+  if (msg.type === 'story') {
+    if (!story || story.id !== msg.id) {
+      loadStoryById(msg.id);
+    }
+    return;
+  }
   if (msg.type === 'scene') {
     renderScene(msg.index);
   } else if (msg.type === 'choice') {
