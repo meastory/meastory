@@ -77,4 +77,57 @@ body {
 .video-card { background: var(--color-white); border: 1px solid var(--color-mist); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
 .video-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .video-box { position: relative; background: #000; border-radius: 8px; overflow: hidden; min-height: 160px; }
-.video-box video { width: 100%; height: 100%; object-fit: cover; } 
+.video-box video { width: 100%; height: 100%; object-fit: cover; }
+
+/* Storybook mode (behind ?storybook=1) */
+.storybook-mode body {
+  background: #f6f3ea;
+}
+.storybook-mode .site-header {
+  background: transparent;
+  color: var(--color-ink);
+}
+.storybook-mode .story-card {
+  background: #fff;
+  border: 0;
+  box-shadow: none;
+}
+.storybook-mode .story-content {
+  max-width: 48ch;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: 'Nunito', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+  font-size: 18px;
+  line-height: 1.7;
+}
+@media (min-width: 768px) {
+  .storybook-mode .story-content { font-size: 20px; }
+}
+.storybook-mode #storyTitle {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 28px;
+  margin: 8px 0 12px;
+}
+@media (min-width: 768px) {
+  .storybook-mode #storyTitle { font-size: 34px; }
+}
+.storybook-mode #sceneText { margin-bottom: 12px; }
+.storybook-mode .choices {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+@media (min-width: 520px) {
+  .storybook-mode .choices { grid-template-columns: 1fr 1fr; }
+}
+.storybook-mode .choices .btn {
+  background: #f3e8c8;
+  border: 1px solid #decfa3;
+  color: #5b4636;
+  font-weight: 700;
+}
+.storybook-mode .controls .btn {
+  background: var(--color-primary);
+  color: #fff;
+} 
