@@ -410,6 +410,9 @@ startRoomButton.addEventListener('click', async () => {
   const url = new URL(window.location.href);
   url.searchParams.set('room', code);
   url.searchParams.set('createdAt', String(Date.now()));
+  // Preserve existing signal override if present
+  const signalOverride = new URLSearchParams(window.location.search).get('signal');
+  if (signalOverride) url.searchParams.set('signal', signalOverride);
   await ensureMedia();
   connectSignal();
   navigator.clipboard?.writeText(url.toString());
@@ -425,6 +428,9 @@ joinRoomButton.addEventListener('click', async () => {
     // No createdAt; set now but will only affect this user
     url.searchParams.set('createdAt', String(Date.now()));
   }
+  // Preserve existing signal override if present
+  const signalOverride = new URLSearchParams(window.location.search).get('signal');
+  if (signalOverride) url.searchParams.set('signal', signalOverride);
   await ensureMedia();
   connectSignal();
   window.history.replaceState({}, '', url.toString());
