@@ -570,6 +570,17 @@ loadDefaultStory();
 // Feature flag: storybook mode (planned incremental rollout)
 const isStorybook = IS_STORYBOOK;
 const isVideoFirst = (() => { try { return (new URLSearchParams(location.search).get('mode') || '').toLowerCase() === 'video-first'; } catch (_) { return false; } })();
+let storyTextScale = (() => { try { return Math.max(0.75, Math.min(1.75, Number(localStorage.getItem('storyTextScale') || '1'))); } catch (_) { return 1; } })();
+function applyStoryTextScale() {
+  try { document.documentElement.style.setProperty('--story-text-scale', String(storyTextScale)); } catch (_) {}
+}
+applyStoryTextScale();
+
+function changeStoryTextScale(delta) {
+  storyTextScale = Math.max(0.75, Math.min(1.75, Math.round((storyTextScale + delta) * 100) / 100));
+  try { localStorage.setItem('storyTextScale', String(storyTextScale)); } catch (_) {}
+  applyStoryTextScale();
+}
 // Currently no-op; guarded code will mount storybook/video-first in milestones
 
 if (isStorybook || isVideoFirst) {
@@ -648,6 +659,21 @@ if (isStorybook || isVideoFirst) {
         window.addEventListener('keydown', (e) => { if (open && e.key === 'Escape') setOpen(false); });
       }
 
+      // Storybook: add zoom controls near story content
+      if (isStorybook) {
+        const sc = document.querySelector('.story-card .story-content');
+        if (sc && !document.querySelector('.zoom-controls')) {
+          const z = document.createElement('div');
+          z.className = 'zoom-controls';
+          z.innerHTML = '<button class="btn" aria-label="Decrease text size" title="Decrease text size">−</button><button class="btn" aria-label="Increase text size" title="Increase text size">+</button>';
+          sc.parentElement?.appendChild(z);
+          const minus = z.children[0];
+          const plus = z.children[1];
+          minus.addEventListener('click', () => changeStoryTextScale(-0.1));
+          plus.addEventListener('click', () => changeStoryTextScale(+0.1));
+        }
+      }
+
       // Video-first: mount bottom overlay that mirrors story text and choices
       if (isVideoFirst) {
         const vf = document.createElement('div');
@@ -672,6 +698,17 @@ if (isStorybook || isVideoFirst) {
         camBtn.addEventListener('click', () => { toggleCamBtn.click(); refreshIcons(); });
         setTimeout(refreshIcons, 0);
 
+        // Zoom controls for video-first overlay
+        const zoom = document.createElement('div');
+        zoom.className = 'vf-zoom';
+        zoom.innerHTML = '<button class="icon-btn" aria-label="Decrease text size" title="Decrease text size">−</button><button class="icon-btn" aria-label="Increase text size" title="Increase text size">+</button>';
+        vf.querySelector('.scrim')?.appendChild(zoom);
+        const zMinus = zoom.children[0];
+        const zPlus = zoom.children[1];
+        zMinus.addEventListener('click', () => changeStoryTextScale(-0.1));
+        zPlus.addEventListener('click', () => changeStoryTextScale(+0.1));
+
+        // Mirror current story content whenever we render
         const applyMirror = () => {
           const t = document.getElementById('storyTitle')?.textContent || '';
           const p = document.getElementById('sceneText')?.textContent || '';
