@@ -638,6 +638,18 @@ if (isStorybook || isVideoFirst) {
       vf.className = 'vf-overlay';
       vf.innerHTML = '<div class="scrim"><h3 id="vfTitle"></h3><p id="vfScene"></p><div id="vfChoices" class="choices"></div></div>';
       document.body.appendChild(vf);
+      // Local controls overlay (icon-only)
+      const ctrl = document.createElement('div');
+      ctrl.className = 'vf-controls';
+      ctrl.innerHTML = '<button class="icon-btn" aria-label="Toggle mic">🎤</button><button class="icon-btn" aria-label="Toggle camera">🎥</button>';
+      // Attach to the local video box
+      const localBox = localVideo?.closest('.video-box');
+      if (localBox) localBox.appendChild(ctrl);
+      const micBtn = ctrl.children[0];
+      const camBtn = ctrl.children[1];
+      micBtn.addEventListener('click', () => toggleMicBtn.click());
+      camBtn.addEventListener('click', () => toggleCamBtn.click());
+
       // Mirror current story content whenever we render
       const applyMirror = () => {
         const t = document.getElementById('storyTitle')?.textContent || '';

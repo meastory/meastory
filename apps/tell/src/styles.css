@@ -229,7 +229,11 @@ body {
 }
 .storybook-mode .story-content { position: relative; z-index: 1; } 
 
+/* Ensure start overlay text is visible on white panel */
+.storybook-start-overlay .panel { color: var(--color-ink); }
+
 /* Video-first mode */
+.video-first { height: 100%; overflow: hidden; }
 .video-first body { background: #000; color: #fff; }
 .video-first .container { max-width: none; margin: 0; padding: 0; }
 .video-first .site-header { display: none; }
@@ -239,7 +243,7 @@ body {
 @supports not (height: 100dvh) {
   .video-first .video-row { min-height: calc(100vh - env(safe-area-inset-bottom)); }
 }
-.video-first .video-box { border-radius: 0; background: #000; min-height: auto; }
+.video-first .video-box { border-radius: 0; background: #000; min-height: auto; position: relative; }
 .video-first .video-box video { width: 100%; height: 100%; object-fit: cover; display: block; }
 @media (max-aspect-ratio: 3/4) {
   .video-first .video-row { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
@@ -260,4 +264,13 @@ body {
 .video-first .vf-overlay .choices .btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
 .video-first .vf-overlay .controls { display: none; }
 /* Show Menu button in video-first as well */
-.video-first .sb-menu-btn { position: fixed; top: 10px; right: 10px; z-index: 1001; } 
+.video-first .sb-menu-btn { position: fixed; top: 10px; right: 10px; z-index: 1001; }
+/* Local video overlay controls */
+.video-first .video-card .form-row { display: none; }
+.video-first .vf-controls { position: absolute; top: 10px; left: 10px; z-index: 1001; display: flex; gap: 8px; }
+.video-first .vf-controls .icon-btn {
+  width: 36px; height: 36px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(0,0,0,0.35); color: #fff; display: grid; place-items: center; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+.video-first .vf-controls .icon-btn:active { transform: scale(0.98); } 
