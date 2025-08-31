@@ -31,6 +31,7 @@ let makingOffer = false;
 
 // Storybook flags
 const IS_STORYBOOK = (() => { try { const p = new URLSearchParams(location.search); return p.has('storybook') || p.get('sb') === '1'; } catch (_) { return false; } })();
+const IS_VIDEO_FIRST = (() => { try { return (new URLSearchParams(location.search).get('mode') || '').toLowerCase() === 'video-first'; } catch (_) { return false; } })();
 let autoplayPrimed = false;
 
 const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
@@ -238,13 +239,15 @@ async function tryPlay(videoEl, { wantsAudio } = { wantsAudio: true }) {
     try {
       videoEl.muted = true;
       await videoEl.play();
-      // In storybook mode we use a single Start overlay; skip per-video overlays
-      if (wantsAudio && !IS_STORYBOOK) {
+      // In storybook or video-first we use a single Start overlay; skip per-video overlays
+      const suppress = IS_STORYBOOK || IS_VIDEO_FIRST || autoplayPrimed;
+      if (wantsAudio && !suppress) {
         injectUnmuteButton(videoEl);
       }
     } catch (_) {
-      // As a last resort, show a play overlay (suppressed in storybook)
-      if (!IS_STORYBOOK) injectPlayButton(videoEl, wantsAudio);
+      // As a last resort, show a play overlay (suppressed in storybook/video-first)
+      const suppress = IS_STORYBOOK || IS_VIDEO_FIRST || autoplayPrimed;
+      if (!suppress) injectPlayButton(videoEl, wantsAudio);
     }
   }
 }
