@@ -48,6 +48,17 @@ function attachDataChannel(channel) {
   };
 }
 
+function addMissingLocalTracks() {
+  if (!pc || !localStream) return;
+  const senders = pc.getSenders?.() || [];
+  for (const track of localStream.getTracks()) {
+    const alreadySending = senders.some(s => s.track && s.track.kind === track.kind);
+    if (!alreadySending) {
+      try { pc.addTrack(track, localStream); } catch (_) {}
+    }
+  }
+}
+
 // Allow overriding signaling URL via ?signal=... (e.g., wss://example.trycloudflare.com)
 function getSignalWebSocketUrl() {
   try {
@@ -397,13 +408,11 @@ async function tryIceRestart() {
 
 async function startPeer(role) {
   await ensurePeer();
-  // Attach local media now that role is known
+  // Ensure we have local media and (re)attach tracks to the new RTCPeerConnection
   if (!localStream) {
-    const stream = await ensureMedia();
-    for (const track of stream.getTracks()) {
-      pc.addTrack(track, stream);
-    }
+    localStream = await ensureMedia();
   }
+  addMissingLocalTracks();
   if (role === 'caller') {
     // Create data channel from caller side
     try { attachDataChannel(pc.createDataChannel('story')); } catch (_) {}
