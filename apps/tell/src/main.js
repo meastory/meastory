@@ -27,6 +27,7 @@ let dataChannel;
 let currentRole = null; // 'caller' | 'callee'
 let wsRetryMs = 1000;
 let pendingIceCandidates = [];
+let makingOffer = false;
 
 const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
@@ -68,6 +69,8 @@ function flushPendingIceCandidates() {
     try { pc.addIceCandidate(c); } catch (e) { log('flush candidate error', e); }
   }
 }
+
+function isPolitePeer() { return currentRole === 'callee'; }
 
 // Allow overriding signaling URL via ?signal=... (e.g., wss://example.trycloudflare.com)
 function getSignalWebSocketUrl() {
@@ -335,20 +338,43 @@ function connectSignal() {
         resetPeer({ keepLocalStream: true });
         await startPeer(msg.role);
         break;
-      case 'offer':
+      case 'offer': {
         log('received offer');
         await ensurePeer();
-        await pc.setRemoteDescription(msg.payload);
-        flushPendingIceCandidates();
-        const answer = await pc.createAnswer();
-        await pc.setLocalDescription(answer);
-        ws.send(JSON.stringify({ type: 'answer', payload: answer }));
+        const offer = msg.payload;
+        const offerCollision = makingOffer || pc.signalingState !== 'stable';
+        const polite = isPolitePeer();
+        try {
+          if (offerCollision) {
+            if (!polite) {
+              log('glare: ignoring offer');
+              return;
+            }
+            log('glare: rolling back');
+            await pc.setLocalDescription({ type: 'rollback' });
+          }
+          await pc.setRemoteDescription(offer);
+          flushPendingIceCandidates();
+          if (!localStream) localStream = await ensureMedia();
+          addMissingLocalTracks();
+          const answer = await pc.createAnswer();
+          await pc.setLocalDescription(answer);
+          ws.send(JSON.stringify({ type: 'answer', payload: answer }));
+        } catch (e) {
+          log('offer handling error', e);
+        }
         break;
-      case 'answer':
+      }
+      case 'answer': {
         log('received answer');
-        await pc.setRemoteDescription(msg.payload);
-        flushPendingIceCandidates();
+        try {
+          await pc.setRemoteDescription(msg.payload);
+          flushPendingIceCandidates();
+        } catch (e) {
+          log('answer handling error', e);
+        }
         break;
+      }
       case 'candidate':
         try {
           if (pc && pc.remoteDescription) {
@@ -406,6 +432,25 @@ async function ensurePeer() {
   };
   pc.onconnectionstatechange = () => {
     log('connection state', pc.connectionState);
+  };
+  pc.onsignalingstatechange = () => {
+    log('signaling state', pc.signalingState);
+  };
+  pc.onnegotiationneeded = async () => {
+    // Caller drives negotiation
+    if (currentRole !== 'caller') return;
+    if (!ws || ws.readyState !== WebSocket.OPEN) return;
+    try {
+      makingOffer = true;
+      log('negotiationneeded: creating offer');
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      ws.send(JSON.stringify({ type: 'offer', payload: offer }));
+    } catch (e) {
+      log('negotiationneeded error', e);
+    } finally {
+      makingOffer = false;
+    }
   };
   // Data channel will be created by caller in startPeer
   pc.ondatachannel = (event) => attachDataChannel(event.channel);
