@@ -280,10 +280,10 @@ html.video-first, html.video-first body { height: 100svh; overflow: hidden; }
 .video-first .vf-overlay .choices .btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); font-size: calc(1em * var(--story-text-scale)); }
 .video-first .vf-overlay .controls { display: none; }
 /* Show Menu button in video-first as well */
-.video-first .sb-menu-btn { position: fixed; top: 10px; right: 10px; z-index: 10002; background: rgba(0,0,0,0.55); color: #fff; border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 8px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+.video-first .sb-menu-btn { position: fixed; top: 10px; right: 10px; z-index: 10002; background: transparent; color: inherit; border: 0; border-radius: 0; padding: 0; box-shadow: none; }
 .video-first .sb-menu-btn:active { transform: scale(0.98); }
-.video-first .sb-menu-btn.open { background: rgba(0,0,0,0.7); }
-.video-first .sb-menu-btn img { width: 24px; height: 24px; display: block; }
+.video-first .sb-menu-btn.open { background: transparent; }
+.video-first .sb-menu-btn img { width: clamp(28px, 4vw, 56px); height: auto; display: block; }
 
 /* Backdrop for closing the panel on outside click */
 .video-first .sb-session-backdrop { position: fixed; inset: 0; z-index: 9997; display: none; background: transparent; }
@@ -321,9 +321,10 @@ html.video-first, html.video-first body { height: 100svh; overflow: hidden; }
 .storybook-mode .zoom-controls .btn { padding: 6px 10px; border-radius: 999px; font-weight: 800; }
 .video-first .vf-zoom { position: absolute; top: 10px; right: 14px; z-index: 1001; display: flex; gap: 8px; }
 .video-first .vf-zoom .icon-btn {
-  width: 36px; height: 36px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.35);
+  width: clamp(32px, 4.2vw, 56px); height: clamp(32px, 4.2vw, 56px); border-radius: 999px; border: 1px solid rgba(255,255,255,0.35);
   background: rgba(0,0,0,0.35); color: #fff; display: grid; place-items: center; cursor: pointer;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  font-size: clamp(18px, 2vw, 28px);
 }
 .video-first .vf-zoom .icon-btn:active { transform: scale(0.98); } 
 
@@ -331,8 +332,9 @@ html.video-first, html.video-first body { height: 100svh; overflow: hidden; }
 .video-first .video-card .form-row { display: none; }
 .video-first .vf-controls { position: absolute; top: 10px; left: 10px; z-index: 1001; display: flex; gap: 8px; }
 .video-first .vf-controls .icon-btn {
-  width: 36px; height: 36px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.35);
+  width: clamp(32px, 4.2vw, 56px); height: clamp(32px, 4.2vw, 56px); border-radius: 999px; border: 1px solid rgba(255,255,255,0.35);
   background: rgba(0,0,0,0.35); color: #fff; display: grid; place-items: center; cursor: pointer;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  font-size: clamp(18px, 2vw, 28px);
 }
 .video-first .vf-controls .icon-btn:active { transform: scale(0.98); } 

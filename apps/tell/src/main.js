@@ -684,7 +684,7 @@ if (isStorybook || isVideoFirst) {
       if (isVideoFirst) {
         const vf = document.createElement('div');
         vf.className = 'vf-overlay';
-        vf.innerHTML = '<div class="scrim"><h3 id="vfTitle" class="visually-hidden"></h3><p id="vfScene"></p><div id="vfChoices" class="choices"></div></div>';
+        vf.innerHTML = '<div class="scrim"><p id="vfScene"></p><div id="vfChoices" class="choices"></div></div>';
         document.body.appendChild(vf);
         // Visible centered titlebar
         const titlebar = document.createElement('div');
@@ -726,7 +726,6 @@ if (isStorybook || isVideoFirst) {
           const t = document.getElementById('storyTitle')?.textContent || '';
           const p = document.getElementById('sceneText')?.textContent || '';
           const srcChoices = document.getElementById('choices');
-          vf.querySelector('#vfTitle').textContent = t;
           titlebar.textContent = t;
           const dst = vf.querySelector('#vfScene');
           dst.textContent = p;
