@@ -599,38 +599,43 @@ if (isStorybook || isVideoFirst) {
     }, { once: true });
 
     // Inject simple menu toggle for both modes
-    const menuBtn = document.createElement('button');
-    menuBtn.className = 'sb-menu-btn';
-    menuBtn.textContent = 'Menu';
-    document.body.appendChild(menuBtn);
+    if (!document.querySelector('.sb-menu-btn')) {
+      const menuBtn = document.createElement('button');
+      menuBtn.className = 'sb-menu-btn';
+      menuBtn.textContent = 'Menu';
+      document.body.appendChild(menuBtn);
 
-    const panel = document.createElement('div');
-    panel.className = 'sb-session-overlay';
-    panel.innerHTML = '<div class="sb-session-content"></div>';
-    const content = panel.firstElementChild;
-    document.body.appendChild(panel);
+      const panel = document.createElement('div');
+      panel.className = 'sb-session-overlay';
+      panel.innerHTML = '<div class="sb-session-content"></div>';
+      const content = panel.firstElementChild;
+      document.body.appendChild(panel);
 
-    const sessionCards = document.querySelectorAll('.session-card');
-    if (sessionCards?.length && content) {
-      sessionCards.forEach((card) => {
-        const clone = card.cloneNode(true);
-        content.appendChild(clone);
-        const cStart = clone.querySelector('#startRoomButton');
-        const cJoin = clone.querySelector('#joinRoomButton');
-        const cRoom = clone.querySelector('#roomCodeInput');
-        const cLoad = clone.querySelector('#loadStoryButton');
-        const cSelect = clone.querySelector('#storySelect');
-        if (cStart) cStart.addEventListener('click', (e) => { e.preventDefault(); startRoomButton.click(); });
-        if (cJoin) cJoin.addEventListener('click', (e) => { e.preventDefault(); if (cRoom) roomCodeInput.value = cRoom.value; joinRoomButton.click(); });
-        if (cLoad) cLoad.addEventListener('click', (e) => { e.preventDefault(); if (cSelect) storySelect.value = cSelect.value; loadStoryButton.click(); });
-      });
+      const sessionCards = document.querySelectorAll('.session-card');
+      if (sessionCards?.length && content) {
+        sessionCards.forEach((card) => {
+          const clone = card.cloneNode(true);
+          content.appendChild(clone);
+          const cStart = clone.querySelector('#startRoomButton');
+          const cJoin = clone.querySelector('#joinRoomButton');
+          const cRoom = clone.querySelector('#roomCodeInput');
+          const cLoad = clone.querySelector('#loadStoryButton');
+          const cSelect = clone.querySelector('#storySelect');
+          if (cStart) cStart.addEventListener('click', (e) => { e.preventDefault(); startRoomButton.click(); });
+          if (cJoin) cJoin.addEventListener('click', (e) => { e.preventDefault(); if (cRoom) roomCodeInput.value = cRoom.value; joinRoomButton.click(); });
+          if (cLoad) cLoad.addEventListener('click', (e) => { e.preventDefault(); if (cSelect) storySelect.value = cSelect.value; loadStoryButton.click(); });
+        });
+      }
+
+      let open = false;
+      const setOpen = (val) => {
+        open = val;
+        panel.classList.toggle('open', open);
+      };
+      menuBtn.addEventListener('click', () => setOpen(!open));
+      panel.addEventListener('click', (e) => { if (e.target === panel) setOpen(false); });
+      window.addEventListener('keydown', (e) => { if (open && e.key === 'Escape') setOpen(false); });
     }
-
-    let open = false;
-    menuBtn.addEventListener('click', () => {
-      open = !open;
-      panel.classList.toggle('open', open);
-    });
 
     // Video-first: mount bottom overlay that mirrors story text and choices
     if (isVideoFirst) {
@@ -647,8 +652,16 @@ if (isStorybook || isVideoFirst) {
       if (localBox) localBox.appendChild(ctrl);
       const micBtn = ctrl.children[0];
       const camBtn = ctrl.children[1];
-      micBtn.addEventListener('click', () => toggleMicBtn.click());
-      camBtn.addEventListener('click', () => toggleCamBtn.click());
+      const refreshIcons = () => {
+        const micOn = !!localStream && localStream.getAudioTracks().every(t => t.enabled);
+        const camOn = !!localStream && localStream.getVideoTracks().every(t => t.enabled);
+        micBtn.textContent = micOn ? '🎤' : '🔇';
+        camBtn.textContent = camOn ? '🎥' : '📷';
+      };
+      micBtn.addEventListener('click', () => { toggleMicBtn.click(); refreshIcons(); });
+      camBtn.addEventListener('click', () => { toggleCamBtn.click(); refreshIcons(); });
+      // Initial state after local stream attaches
+      setTimeout(refreshIcons, 0);
 
       // Mirror current story content whenever we render
       const applyMirror = () => {
