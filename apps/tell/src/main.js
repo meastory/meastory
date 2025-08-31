@@ -574,116 +574,118 @@ const isVideoFirst = (() => { try { return (new URLSearchParams(location.search)
 
 if (isStorybook || isVideoFirst) {
   try {
-    // Create start overlay once per load
-    const overlay = document.createElement('div');
-    overlay.className = 'storybook-start-overlay';
-    overlay.innerHTML = '<div class="panel"><h2>Ready to Begin?</h2><p>Tap Start to enable audio and begin your story.</p><button class="start-btn">Start</button></div>';
-    document.body.appendChild(overlay);
-    const startBtn = overlay.querySelector('.start-btn');
-    startBtn?.addEventListener('click', async () => {
-      try {
-        autoplayPrimed = true;
-        if (remoteVideo) {
-          remoteVideo.playsInline = true;
-          remoteVideo.muted = false;
-          try { await remoteVideo.play(); } catch (_) {}
+    const onReady = () => {
+      // Create start overlay once per load
+      const overlay = document.createElement('div');
+      overlay.className = 'storybook-start-overlay';
+      overlay.innerHTML = '<div class="panel"><h2>Ready to Begin?</h2><p>Tap Start to enable audio and begin your story.</p><button class="start-btn">Start</button></div>';
+      document.body.appendChild(overlay);
+      const startBtn = overlay.querySelector('.start-btn');
+      startBtn?.addEventListener('click', async () => {
+        try {
+          autoplayPrimed = true;
+          if (remoteVideo) {
+            remoteVideo.playsInline = true;
+            remoteVideo.muted = false;
+            try { await remoteVideo.play(); } catch (_) {}
+          }
+          if (localVideo) {
+            localVideo.playsInline = true;
+            localVideo.muted = true;
+            try { await localVideo.play(); } catch (_) {}
+          }
+        } finally {
+          overlay.remove();
         }
-        if (localVideo) {
-          localVideo.playsInline = true;
-          localVideo.muted = true;
-          try { await localVideo.play(); } catch (_) {}
+      }, { once: true });
+
+      // Inject simple menu toggle for both modes
+      if (!document.querySelector('.sb-menu-btn')) {
+        const menuBtn = document.createElement('button');
+        menuBtn.className = 'sb-menu-btn';
+        menuBtn.textContent = 'Menu';
+        document.body.appendChild(menuBtn);
+
+        const panel = document.createElement('div');
+        panel.className = 'sb-session-overlay';
+        panel.innerHTML = '<div class="sb-session-content"></div>';
+        const content = panel.firstElementChild;
+        document.body.appendChild(panel);
+
+        const sessionCards = document.querySelectorAll('.session-card');
+        if (sessionCards?.length && content) {
+          sessionCards.forEach((card) => {
+            const clone = card.cloneNode(true);
+            content.appendChild(clone);
+            const cStart = clone.querySelector('#startRoomButton');
+            const cJoin = clone.querySelector('#joinRoomButton');
+            const cRoom = clone.querySelector('#roomCodeInput');
+            const cLoad = clone.querySelector('#loadStoryButton');
+            const cSelect = clone.querySelector('#storySelect');
+            if (cStart) cStart.addEventListener('click', (e) => { e.preventDefault(); startRoomButton.click(); });
+            if (cJoin) cJoin.addEventListener('click', (e) => { e.preventDefault(); if (cRoom) roomCodeInput.value = cRoom.value; joinRoomButton.click(); });
+            if (cLoad) cLoad.addEventListener('click', (e) => { e.preventDefault(); if (cSelect) storySelect.value = cSelect.value; loadStoryButton.click(); });
+          });
         }
-      } finally {
-        overlay.remove();
-      }
-    }, { once: true });
 
-    // Inject simple menu toggle for both modes
-    if (!document.querySelector('.sb-menu-btn')) {
-      const menuBtn = document.createElement('button');
-      menuBtn.className = 'sb-menu-btn';
-      menuBtn.textContent = 'Menu';
-      document.body.appendChild(menuBtn);
-
-      const panel = document.createElement('div');
-      panel.className = 'sb-session-overlay';
-      panel.innerHTML = '<div class="sb-session-content"></div>';
-      const content = panel.firstElementChild;
-      document.body.appendChild(panel);
-
-      const sessionCards = document.querySelectorAll('.session-card');
-      if (sessionCards?.length && content) {
-        sessionCards.forEach((card) => {
-          const clone = card.cloneNode(true);
-          content.appendChild(clone);
-          const cStart = clone.querySelector('#startRoomButton');
-          const cJoin = clone.querySelector('#joinRoomButton');
-          const cRoom = clone.querySelector('#roomCodeInput');
-          const cLoad = clone.querySelector('#loadStoryButton');
-          const cSelect = clone.querySelector('#storySelect');
-          if (cStart) cStart.addEventListener('click', (e) => { e.preventDefault(); startRoomButton.click(); });
-          if (cJoin) cJoin.addEventListener('click', (e) => { e.preventDefault(); if (cRoom) roomCodeInput.value = cRoom.value; joinRoomButton.click(); });
-          if (cLoad) cLoad.addEventListener('click', (e) => { e.preventDefault(); if (cSelect) storySelect.value = cSelect.value; loadStoryButton.click(); });
-        });
+        let open = false;
+        const setOpen = (val) => {
+          open = val;
+          panel.classList.toggle('open', open);
+        };
+        menuBtn.addEventListener('click', () => setOpen(!open));
+        panel.addEventListener('click', (e) => { if (e.target === panel) setOpen(false); });
+        window.addEventListener('keydown', (e) => { if (open && e.key === 'Escape') setOpen(false); });
       }
 
-      let open = false;
-      const setOpen = (val) => {
-        open = val;
-        panel.classList.toggle('open', open);
-      };
-      menuBtn.addEventListener('click', () => setOpen(!open));
-      panel.addEventListener('click', (e) => { if (e.target === panel) setOpen(false); });
-      window.addEventListener('keydown', (e) => { if (open && e.key === 'Escape') setOpen(false); });
-    }
+      // Video-first: mount bottom overlay that mirrors story text and choices
+      if (isVideoFirst) {
+        const vf = document.createElement('div');
+        vf.className = 'vf-overlay';
+        vf.innerHTML = '<div class="scrim"><h3 id="vfTitle"></h3><p id="vfScene"></p><div id="vfChoices" class="choices"></div></div>';
+        document.body.appendChild(vf);
+        // Local controls overlay (icon-only)
+        const ctrl = document.createElement('div');
+        ctrl.className = 'vf-controls';
+        ctrl.innerHTML = '<button class="icon-btn" aria-label="Toggle mic">🎤</button><button class="icon-btn" aria-label="Toggle camera">🎥</button>';
+        const localBox = localVideo?.closest('.video-box');
+        if (localBox) localBox.appendChild(ctrl);
+        const micBtn = ctrl.children[0];
+        const camBtn = ctrl.children[1];
+        const refreshIcons = () => {
+          const micOn = !!localStream && localStream.getAudioTracks().every(t => t.enabled);
+          const camOn = !!localStream && localStream.getVideoTracks().every(t => t.enabled);
+          micBtn.textContent = micOn ? '🎤' : '🔇';
+          camBtn.textContent = camOn ? '🎥' : '📷';
+        };
+        micBtn.addEventListener('click', () => { toggleMicBtn.click(); refreshIcons(); });
+        camBtn.addEventListener('click', () => { toggleCamBtn.click(); refreshIcons(); });
+        setTimeout(refreshIcons, 0);
 
-    // Video-first: mount bottom overlay that mirrors story text and choices
-    if (isVideoFirst) {
-      const vf = document.createElement('div');
-      vf.className = 'vf-overlay';
-      vf.innerHTML = '<div class="scrim"><h3 id="vfTitle"></h3><p id="vfScene"></p><div id="vfChoices" class="choices"></div></div>';
-      document.body.appendChild(vf);
-      // Local controls overlay (icon-only)
-      const ctrl = document.createElement('div');
-      ctrl.className = 'vf-controls';
-      ctrl.innerHTML = '<button class="icon-btn" aria-label="Toggle mic">🎤</button><button class="icon-btn" aria-label="Toggle camera">🎥</button>';
-      // Attach to the local video box
-      const localBox = localVideo?.closest('.video-box');
-      if (localBox) localBox.appendChild(ctrl);
-      const micBtn = ctrl.children[0];
-      const camBtn = ctrl.children[1];
-      const refreshIcons = () => {
-        const micOn = !!localStream && localStream.getAudioTracks().every(t => t.enabled);
-        const camOn = !!localStream && localStream.getVideoTracks().every(t => t.enabled);
-        micBtn.textContent = micOn ? '🎤' : '🔇';
-        camBtn.textContent = camOn ? '🎥' : '📷';
-      };
-      micBtn.addEventListener('click', () => { toggleMicBtn.click(); refreshIcons(); });
-      camBtn.addEventListener('click', () => { toggleCamBtn.click(); refreshIcons(); });
-      // Initial state after local stream attaches
-      setTimeout(refreshIcons, 0);
-
-      // Mirror current story content whenever we render
-      const applyMirror = () => {
-        const t = document.getElementById('storyTitle')?.textContent || '';
-        const p = document.getElementById('sceneText')?.textContent || '';
-        const srcChoices = document.getElementById('choices');
-        vf.querySelector('#vfTitle').textContent = t;
-        vf.querySelector('#vfScene').textContent = p;
-        const dstChoices = vf.querySelector('#vfChoices');
-        dstChoices.innerHTML = '';
-        srcChoices?.querySelectorAll('button')?.forEach((btn, idx) => {
-          const clone = btn.cloneNode(true);
-          // Relay click to original to keep sync logic central
-          clone.addEventListener('click', () => btn.click());
-          dstChoices.appendChild(clone);
-        });
-      };
-      // Initial mirror and observe changes
-      applyMirror();
-      const observer = new MutationObserver(applyMirror);
-      observer.observe(document.getElementById('sceneText'), { characterData: true, subtree: true, childList: true });
-      observer.observe(document.getElementById('choices'), { childList: true, subtree: true });
+        const applyMirror = () => {
+          const t = document.getElementById('storyTitle')?.textContent || '';
+          const p = document.getElementById('sceneText')?.textContent || '';
+          const srcChoices = document.getElementById('choices');
+          vf.querySelector('#vfTitle').textContent = t;
+          vf.querySelector('#vfScene').textContent = p;
+          const dstChoices = vf.querySelector('#vfChoices');
+          dstChoices.innerHTML = '';
+          srcChoices?.querySelectorAll('button')?.forEach((btn, idx) => {
+            const clone = btn.cloneNode(true);
+            clone.addEventListener('click', () => btn.click());
+            dstChoices.appendChild(clone);
+          });
+        };
+        applyMirror();
+        const observer = new MutationObserver(applyMirror);
+        observer.observe(document.getElementById('sceneText'), { characterData: true, subtree: true, childList: true });
+        observer.observe(document.getElementById('choices'), { childList: true, subtree: true });
+      }
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', onReady, { once: true });
+    } else {
+      onReady();
     }
   } catch (_) {}
 } 
