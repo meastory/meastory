@@ -593,5 +593,43 @@ if (isStorybook) {
         overlay.remove();
       }
     }, { once: true });
+
+    // Inject simple menu toggle that exposes session controls
+    const menuBtn = document.createElement('button');
+    menuBtn.className = 'sb-menu-btn';
+    menuBtn.textContent = 'Menu';
+    document.body.appendChild(menuBtn);
+
+    const panel = document.createElement('div');
+    panel.className = 'sb-session-overlay';
+    panel.innerHTML = '<div class="sb-session-content"></div>';
+    const content = panel.firstElementChild;
+    document.body.appendChild(panel);
+
+    // Mirror the existing session controls into the overlay
+    const sessionCard = document.querySelector('.session-card');
+    if (sessionCard && content) {
+      content.appendChild(sessionCard.cloneNode(true));
+      // Rebind start/join inputs/buttons inside the cloned content
+      const clonedStart = content.querySelector('#startRoomButton');
+      const clonedJoin = content.querySelector('#joinRoomButton');
+      const clonedRoomInput = content.querySelector('#roomCodeInput');
+      if (clonedStart) {
+        clonedStart.addEventListener('click', (e) => { e.preventDefault(); startRoomButton.click(); });
+      }
+      if (clonedJoin) {
+        clonedJoin.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (clonedRoomInput) roomCodeInput.value = clonedRoomInput.value;
+          joinRoomButton.click();
+        });
+      }
+    }
+
+    let open = false;
+    menuBtn.addEventListener('click', () => {
+      open = !open;
+      panel.classList.toggle('open', open);
+    });
   } catch (_) {}
 } 
