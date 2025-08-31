@@ -779,12 +779,16 @@ if (isStorybook || isVideoFirst) {
           dst.textContent = p;
           const dstChoices = vf.querySelector('#vfChoices');
           dstChoices.innerHTML = '';
+          // choices
           srcChoices?.querySelectorAll('button')?.forEach((btn) => {
             const clone = btn.cloneNode(true);
             clone.addEventListener('click', () => btn.click());
             dstChoices.appendChild(clone);
           });
-          // Append zoom inline at end, bottom-right
+          // spacer then zoom
+          const spacer = document.createElement('div');
+          spacer.className = 'spacer';
+          dstChoices.appendChild(spacer);
           dstChoices.appendChild(zoom);
         };
         applyMirror();
