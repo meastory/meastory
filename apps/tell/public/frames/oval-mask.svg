@@ -1,1 +1,20 @@
- 
+<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Oval mask for clipping video content -->
+    <mask id="ovalMask">
+      <!-- White area shows through, black area is hidden -->
+      <rect width="200" height="150" fill="black"/>
+      <ellipse cx="100" cy="75" rx="85" ry="65" fill="white"/>
+    </mask>
+  </defs>
+  
+  <!-- Background that will be masked -->
+  <rect width="200" height="150" fill="#000000" mask="url(#ovalMask)"/>
+  
+  <!-- Optional: visible frame border -->
+  <ellipse cx="100" cy="75" rx="85" ry="65" 
+           fill="none" 
+           stroke="#8B4513" 
+           stroke-width="3"
+           opacity="0.8"/>
+</svg>

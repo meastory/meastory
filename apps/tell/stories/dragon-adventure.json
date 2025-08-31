@@ -2,39 +2,100 @@
   "id": "dragon-adventure",
   "title": "The Friendly Dragon",
   "ageRange": [3, 8],
-  "themes": ["kindness", "courage", "friendship"],
+  "themes": ["kindness", "courage", "friendship", "understanding"],
   "scenes": [
     {
       "id": "scene-1",
       "background": "castle.svg",
-      "text": "Once upon a time, {{childName}} spotted a gentle dragon near a castle.",
+      "text": "One bright morning, {{childName}} was exploring the hills near an ancient castle when something extraordinary happened! Behind a tall tower, they spotted a magnificent dragon with shimmering emerald scales. But this dragon wasn't scary at all—it had kind, twinkling eyes and was sitting quietly, looking a bit lonely. The dragon noticed {{childName}} and tilted its head curiously.",
       "choices": [
-        { "label": "Wave hello", "nextSceneId": "scene-2" },
-        { "label": "Look around the moat", "nextSceneId": "scene-3" }
+        { "label": "Wave hello to the dragon", "nextSceneId": "scene-2" },
+        { "label": "Walk closer to the moat", "nextSceneId": "scene-3" }
       ]
     },
     {
-      "id": "scene-2",
+      "id": "scene-2", 
       "background": "meadow.svg",
-      "text": "The dragon waved back and offered a ride over the meadow!",
+      "text": "The dragon's face lit up with joy! It waved back with one giant wing and spoke in a gentle, rumbly voice: 'Hello there, {{childName}}! I'm Emerald. I've been waiting so long for a friend to visit me.' The dragon's eyes sparkled with happiness. 'Would you like to see my favorite meadow? I can show you where the most beautiful wildflowers grow, and we could fly there together—I promise to fly very gently!'",
       "choices": [
-        { "label": "Ride the dragon", "nextSceneId": "scene-4" },
-        { "label": "Pick flowers", "nextSceneId": "scene-4" }
+        { "label": "Accept the dragon ride", "nextSceneId": "scene-4" },
+        { "label": "Ask to walk to the meadow instead", "nextSceneId": "scene-5" }
       ]
     },
     {
       "id": "scene-3",
-      "background": "forest.svg",
-      "text": "By the moat, {{childName}} found shiny pebbles that sparkled like stars.",
+      "background": "forest.svg", 
+      "text": "As {{childName}} walked along the castle's moat, they discovered something magical! The water was crystal clear, and at the bottom were hundreds of smooth pebbles that glowed with an inner light—some blue like sapphires, others golden like sunshine. Just then, the dragon appeared beside the moat. 'Oh, you found my treasure pebbles!' Emerald said warmly. 'I've been collecting them for years. Each one holds a happy memory. Would you like to choose one to keep?'",
       "choices": [
-        { "label": "Collect pebbles", "nextSceneId": "scene-4" }
+        { "label": "Choose a blue glowing pebble", "nextSceneId": "scene-6" },
+        { "label": "Choose a golden pebble", "nextSceneId": "scene-7" }
       ]
     },
     {
       "id": "scene-4",
+      "background": "meadow.svg",
+      "text": "What a wonderful ride! Emerald flew so smoothly that it felt like floating on a gentle breeze. The meadow below was bursting with rainbow-colored flowers that danced in the wind. As they landed softly, Emerald showed {{childName}} how to make flower crowns, and they spent the afternoon picking daisies, roses, and lavender. 'You're the best friend I've ever had,' Emerald said, placing a flower crown on {{childName}}'s head.",
+      "choices": [
+        { "label": "Make a flower crown for Emerald too", "nextSceneId": "scene-8" },
+        { "label": "Ask Emerald to tell a story", "nextSceneId": "scene-9" }
+      ]
+    },
+    {
+      "id": "scene-5",
+      "background": "meadow.svg",
+      "text": "Together, {{childName}} and Emerald walked through the countryside, chatting like old friends. Emerald told wonderful stories about the clouds and pointed out hidden animal homes along the way. When they reached the meadow, Emerald used gentle puffs of warm (not hot!) dragon breath to help all the flowers bloom extra bright. 'Walking with a friend makes every journey special,' Emerald said with a happy sigh.",
+      "choices": [
+        { "label": "Pick flowers together", "nextSceneId": "scene-8" },
+        { "label": "Sit and watch the clouds", "nextSceneId": "scene-9" }
+      ]
+    },
+    {
+      "id": "scene-6",
       "background": "sunset.svg",
-      "text": "As the sun set, everyone cheered for a new friendship. The end.",
+      "text": "{{childName}} chose a beautiful blue pebble that felt warm and comforting in their hand. Emerald explained that this was a 'friendship pebble'—it would always remind them of their new dragon friend. As the sun began to set, painting the sky in magnificent purples and golds, Emerald and {{childName}} sat by the castle, sharing stories and laughing together. 'This has been the most wonderful day,' Emerald said. 'Promise you'll come visit again soon?'",
+      "choices": [
+        { "label": "Promise to visit every week", "nextSceneId": "scene-10" },
+        { "label": "Invite Emerald to visit your home too", "nextSceneId": "scene-11" }
+      ]
+    },
+    {
+      "id": "scene-7",
+      "background": "sunset.svg", 
+      "text": "The golden pebble {{childName}} chose began to glow even brighter in their palm! 'Ah,' said Emerald with delight, 'you've picked a courage pebble! This one will remind you that you're brave enough to make new friends and try new adventures.' As the golden sunset painted everything in warm light, they sat together sharing their favorite memories. 'You helped me remember that the best treasures aren't things—they're friendships,' Emerald said gratefully.",
+      "choices": [
+        { "label": "Give Emerald a thank-you hug", "nextSceneId": "scene-10" },
+        { "label": "Ask if you can be pen pals", "nextSceneId": "scene-11" }
+      ]
+    },
+    {
+      "id": "scene-8",
+      "background": "sunset.svg",
+      "text": "With gentle fingers, {{childName}} wove a magnificent flower crown fit for a dragon, with extra-long daisy chains that draped beautifully around Emerald's neck. 'I feel like the most elegant dragon in the whole world!' Emerald laughed, striking a royal pose that made {{childName}} giggle. As the sun set, they danced in the meadow, flower crowns sparkling in the golden light. It was the perfect end to a perfect day of friendship.",
+      "choices": [
+        { "label": "Plan another adventure for tomorrow", "nextSceneId": "scene-10" },
+        { "label": "Exchange friendship bracelets", "nextSceneId": "scene-11" }
+      ]
+    },
+    {
+      "id": "scene-9",
+      "background": "sunset.svg",
+      "text": "Lying on their backs in the soft grass, {{childName}} and Emerald watched the clouds drift by, taking turns pointing out shapes—a sailing ship, a giant ice cream cone, a family of rabbits! Emerald told wonderful tales about cloud dragons who painted rainbows across the sky. As the first stars began to twinkle, {{childName}} realized they had made not just a friend, but a friend who would fill their life with magic and wonder.",
+      "choices": [
+        { "label": "Make a wish on the first star together", "nextSceneId": "scene-10" },
+        { "label": "Promise to meet here every sunset", "nextSceneId": "scene-11" }
+      ]
+    },
+    {
+      "id": "scene-10",
+      "background": "sunset.svg",
+      "text": "As the stars twinkled overhead, {{childName}} and Emerald made a wonderful promise to meet every week for new adventures. 'We could explore the Whispering Woods, or visit the Crystal Caves, or maybe even meet my cousin dragon who lives by the sea!' Emerald said excitedly. {{childName}} hugged their new friend goodbye, knowing that this was just the beginning of many magical adventures. Sometimes the most wonderful friendships begin with a simple wave hello.",
+      "choices": []
+    },
+    {
+      "id": "scene-11",
+      "background": "sunset.svg",
+      "text": "What a brilliant idea! Emerald was thrilled to be invited to visit {{childName}}'s world too. 'I could help in your garden, and give the best piggyback rides, and maybe teach your family how to roast marshmallows with perfectly warm dragon breath!' they planned together. As they said goodbye with a gentle dragon hug, {{childName}} knew they had found a friend who would bring magic and joy wherever they went. True friendship makes the whole world brighter!",
       "choices": []
     }
   ]
-} 
+}

@@ -1,12 +1,110 @@
 {
   "id": "space-journey",
-  "title": "Space Journey",
+  "title": "The Magical Space Journey",
   "ageRange": [3, 8],
-  "themes": ["wonder", "teamwork"],
+  "themes": ["wonder", "teamwork", "exploration", "courage"],
   "scenes": [
-    { "id": "s1", "background": "castle.svg", "text": "{{childName}} looked up to see a friendly rocket ready to go!", "choices": [ { "label": "Countdown", "nextSceneId": "s2" }, { "label": "Pack snacks", "nextSceneId": "s3" } ] },
-    { "id": "s2", "background": "meadow.svg", "text": "3...2...1... Lift off! Stars twinkled all around.", "choices": [ { "label": "Wave at the moon", "nextSceneId": "s4" } ] },
-    { "id": "s3", "background": "forest.svg", "text": "Fruit and cookies secured! Time to buckle up.", "choices": [ { "label": "Blast off!", "nextSceneId": "s2" } ] },
-    { "id": "s4", "background": "sunset.svg", "text": "A gentle landing and a sparkling sky goodnight.", "choices": [] }
+    {
+      "id": "scene-1",
+      "background": "castle.svg",
+      "text": "{{childName}} was stargazing in their backyard when something extraordinary appeared! A shimmering, silver rocket ship landed softly in the garden, decorated with twinkling lights that looked like captured stars. Out popped a friendly alien named Cosmo, who had big, kind eyes and skin that sparkled like the night sky. 'Greetings, {{childName}}!' Cosmo said with excitement. 'I'm on a mission to visit all the most beautiful places in the galaxy. Would you like to be my co-pilot and see the wonders of space?'",
+      "choices": [
+        { "label": "Accept the space adventure", "nextSceneId": "scene-2" },
+        { "label": "Ask Cosmo about their home planet first", "nextSceneId": "scene-3" }
+      ]
+    },
+    {
+      "id": "scene-2",
+      "background": "meadow.svg",
+      "text": "'Wonderful!' exclaimed Cosmo. 'But first, every good space explorer needs supplies!' Together, they packed the most important things for a space journey—{{childName}}'s favorite snacks, a cozy blanket for stargazing, and a special notebook to draw all the amazing things they would see. Cosmo showed {{childName}} the rocket's control panel, with buttons that glowed different colors. 'The blue button starts the gentle engines, the green button plays space music, and the gold button... well, that one's a surprise!' Cosmo winked.",
+      "choices": [
+        { "label": "Press the blue button to blast off", "nextSceneId": "scene-4" },
+        { "label": "Press the green button for space music first", "nextSceneId": "scene-5" }
+      ]
+    },
+    {
+      "id": "scene-3",
+      "background": "forest.svg",
+      "text": "Cosmo's eyes twinkled as they described their wonderful home planet. 'It's called Stellaria, and it's covered in crystal forests that sing when the wind blows through them! We have rivers made of liquid starlight, and flowers that bloom only under the light of three purple moons. But the best part is that everyone there believes in friendship and helping others—that's why I travel the galaxy, making friends like you!' {{childName}} thought Stellaria sounded like the most magical place imaginable.",
+      "choices": [
+        { "label": "Ask to visit Stellaria", "nextSceneId": "scene-6" },
+        { "label": "Suggest exploring other planets first", "nextSceneId": "scene-2" }
+      ]
+    },
+    {
+      "id": "scene-4",
+      "background": "sunset.svg",
+      "text": "3... 2... 1... WHOOSH! The rocket lifted off so gently it felt like floating on a cloud. Through the clear dome window, {{childName}} watched Earth get smaller and smaller until it looked like a beautiful blue marble decorated with swirling white clouds. 'There's your home!' Cosmo pointed. 'Isn't it magnificent?' All around them, stars twinkled like friendly diamonds, and in the distance, they could see the moon waving hello with its gentle, silvery light.",
+      "choices": [
+        { "label": "Wave back at the moon", "nextSceneId": "scene-7" },
+        { "label": "Ask to visit the colorful planet ahead", "nextSceneId": "scene-8" }
+      ]
+    },
+    {
+      "id": "scene-5",
+      "background": "meadow.svg",
+      "text": "The most wonderful music filled the rocket ship—it sounded like wind chimes mixed with gentle ocean waves and the sweetest bird songs! 'This is the music of the cosmos,' Cosmo explained. 'Every planet, every star, every comet has its own special song. When you put them all together, you get the symphony of space!' {{childName}} discovered they could conduct the music by moving their hands, making the melodies dance and swirl around the rocket ship.",
+      "choices": [
+        { "label": "Compose your own space song", "nextSceneId": "scene-7" },
+        { "label": "Ask to hear Earth's song", "nextSceneId": "scene-4" }
+      ]
+    },
+    {
+      "id": "scene-6",
+      "background": "forest.svg",
+      "text": "Stellaria was even more beautiful than Cosmo had described! The crystal trees chimed like bells in harmonious melodies as {{childName}} and Cosmo walked through the singing forest. The liquid starlight rivers sparkled with every color imaginable, and friendly Stellarians—who looked like Cosmo but in different beautiful colors—came out to welcome their Earth visitor. They gifted {{childName}} a small crystal that would always play the music of Stellaria, no matter how far from home they traveled.",
+      "choices": [
+        { "label": "Thank the Stellarians and explore more planets", "nextSceneId": "scene-9" },
+        { "label": "Ask to learn a Stellarian song", "nextSceneId": "scene-10" }
+      ]
+    },
+    {
+      "id": "scene-7",
+      "background": "sunset.svg",
+      "text": "The moon was delighted to have visitors! As they flew closer, {{childName}} could see that the moon's surface was covered in the most beautiful silver sand that sparkled like glitter. A friendly moon rabbit hopped out to greet them, offering moon cookies that tasted like vanilla and starlight. 'The Earth looks so peaceful from here,' the moon rabbit said. 'I love watching over all the children while they sleep, making sure their dreams are filled with wonder.' {{childName}} felt honored to meet such a caring guardian.",
+      "choices": [
+        { "label": "Promise to wave at the moon every night", "nextSceneId": "scene-9" },
+        { "label": "Ask the moon rabbit about space dreams", "nextSceneId": "scene-10" }
+      ]
+    },
+    {
+      "id": "scene-8",
+      "background": "meadow.svg",
+      "text": "The colorful planet was called Rainbow World, and it was incredible! Every part of the planet was a different color—purple mountains, orange rivers, green clouds, and yellow trees that grew rainbow fruit. The friendly Rainbow World inhabitants were living colors themselves, changing hues as their moods shifted. They taught {{childName}} and Cosmo how to paint with liquid rainbows, creating pictures that shimmered and moved like living art. 'Colors are the language of joy!' explained a cheerful inhabitant who was currently bright turquoise.",
+      "choices": [
+        { "label": "Create a rainbow painting of Earth", "nextSceneId": "scene-9" },
+        { "label": "Ask to take rainbow paint back to Earth", "nextSceneId": "scene-10" }
+      ]
+    },
+    {
+      "id": "scene-9",
+      "background": "sunset.svg",
+      "text": "As their amazing space journey came to an end, {{childName}} and Cosmo sat on the rocket's observation deck, watching the beautiful dance of stars and planets. 'Thank you for being the best co-pilot in the galaxy,' Cosmo said warmly. 'You've helped me discover that the most wonderful thing about space isn't the places you visit—it's the friends you make along the way.' As Earth came into view, {{childName}} felt grateful for the adventure and excited to share the magic of space with everyone back home.",
+      "choices": [
+        { "label": "Plan another space adventure for next week", "nextSceneId": "scene-11" },
+        { "label": "Ask Cosmo to meet your family", "nextSceneId": "scene-12" }
+      ]
+    },
+    {
+      "id": "scene-10",
+      "background": "sunset.svg",
+      "text": "What a perfect way to end their space adventure! {{childName}} learned that the secret to space travel isn't just about the amazing technology or the incredible sights—it's about approaching everything with wonder, kindness, and an open heart. As they landed gently back in the garden, Cosmo gave {{childName}} a special space explorer badge that glowed softly in the dark. 'This will remind you that adventure is always waiting, whether it's in the farthest reaches of space or right in your own backyard,' Cosmo said with a smile.",
+      "choices": [
+        { "label": "Promise to always look up at the stars and remember", "nextSceneId": "scene-11" },
+        { "label": "Invite Cosmo to stay and explore Earth", "nextSceneId": "scene-12" }
+      ]
+    },
+    {
+      "id": "scene-11",
+      "background": "sunset.svg",
+      "text": "Every night after their incredible adventure, {{childName}} would look up at the star-filled sky and wave at their friend Cosmo, who had promised to return soon for another magical journey. The crystal from Stellaria would play its gentle music, the moon rabbit would wink from their lunar home, and {{childName}} would fall asleep planning all the wonderful places they would explore next. Sometimes the greatest adventures begin when you're brave enough to say yes to the unknown.",
+      "choices": []
+    },
+    {
+      "id": "scene-12",
+      "background": "sunset.svg",
+      "text": "Cosmo was thrilled to stay and learn about Earth! Together, they explored {{childName}}'s garden, discovering that Earth had its own special magic—flowers that smelled like happiness, butterflies that painted the air with color as they flew, and the most beautiful sunrise that painted the sky in shades Cosmo had never seen on any other planet. 'Every world has its own special wonder,' Cosmo said as they watched the stars appear one by one. 'And the most wonderful thing of all is sharing these discoveries with a true friend.'",
+      "choices": []
+    }
   ]
-} 
+}

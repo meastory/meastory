@@ -1,12 +1,101 @@
 {
   "id": "underwater-adventure",
-  "title": "Underwater Adventure",
+  "title": "The Underwater Adventure", 
   "ageRange": [3, 8],
-  "themes": ["curiosity", "friendship"],
+  "themes": ["curiosity", "friendship", "exploration", "marine life"],
   "scenes": [
-    { "id": "s1", "background": "meadow.svg", "text": "At the shore, {{childName}} spotted a friendly dolphin waving!", "choices": [ { "label": "Wave back", "nextSceneId": "s2" }, { "label": "Build a sandcastle", "nextSceneId": "s3" } ] },
-    { "id": "s2", "background": "forest.svg", "text": "Splash! The dolphin invited {{childName}} to explore the reef.", "choices": [ { "label": "Swim gently", "nextSceneId": "s4" } ] },
-    { "id": "s3", "background": "castle.svg", "text": "The sandcastle grew tall and sparkly with seashell windows.", "choices": [ { "label": "Show the dolphin", "nextSceneId": "s4" } ] },
-    { "id": "s4", "background": "sunset.svg", "text": "As the sun set, everyone cheered for a day well spent!", "choices": [] }
+    {
+      "id": "scene-1",
+      "background": "sunset.svg",
+      "text": "{{childName}} was building sandcastles on a beautiful beach when something amazing happened! A shimmering dolphin poked its head above the waves and clicked a cheerful hello. The dolphin's name was Pearl, and she had the most intelligent, sparkling eyes. 'I've been watching you build that wonderful castle,' Pearl said in a voice like tinkling bells. 'Would you like to see the magical world beneath the waves? I know the most incredible places down there!'",
+      "choices": [
+        { "label": "Dive underwater with Pearl", "nextSceneId": "scene-2" },
+        { "label": "Show Pearl your sandcastle first", "nextSceneId": "scene-3" }
+      ]
+    },
+    {
+      "id": "scene-2",
+      "background": "meadow.svg",
+      "text": "Pearl touched {{childName}} with her fin, and suddenly they could breathe underwater like a fish! Down, down, down they swam, past schools of rainbow-colored fish and swaying seaweed forests. 'Look!' Pearl pointed with her fin. Ahead was the most beautiful coral reef {{childName}} had ever imagined—pink and purple corals shaped like flowers, with tiny fish darting in and out like living jewels. A wise old sea turtle named Shelly swam up to greet them. 'Welcome to our underwater garden!' Shelly said warmly.",
+      "choices": [
+        { "label": "Swim through the coral garden", "nextSceneId": "scene-4" },
+        { "label": "Ask Shelly about the sea creatures", "nextSceneId": "scene-5" }
+      ]
+    },
+    {
+      "id": "scene-3",
+      "background": "castle.svg",
+      "text": "{{childName}} proudly showed Pearl their magnificent sandcastle, complete with seashell windows and a moat filled with pretty pebbles. Pearl was delighted! 'This is wonderful!' she exclaimed. 'You know, we have something similar under the sea—would you like to see the coral castles where my fish friends live? They're made of living coral that grows in all the colors of the rainbow!' Pearl's excitement was contagious, and {{childName}} couldn't wait to explore.",
+      "choices": [
+        { "label": "Dive down to see the coral castles", "nextSceneId": "scene-2" },
+        { "label": "Ask Pearl to help improve your sandcastle first", "nextSceneId": "scene-6" }
+      ]
+    },
+    {
+      "id": "scene-4",
+      "background": "forest.svg",
+      "text": "Swimming through the coral garden was like floating through a fairy tale! Everywhere {{childName}} looked, there were new wonders—anemones that waved hello like underwater flowers, hermit crabs wearing shell hats, and seahorses that danced in pairs. A friendly octopus named Inky showed them how to play underwater tag, using all eight arms to be 'it' at once! 'The ocean is full of friends if you know how to look,' Pearl said as they played together in the dancing seaweed.",
+      "choices": [
+        { "label": "Play more games with the sea creatures", "nextSceneId": "scene-7" },
+        { "label": "Explore the deeper waters with Pearl", "nextSceneId": "scene-8" }
+      ]
+    },
+    {
+      "id": "scene-5",
+      "background": "forest.svg",
+      "text": "Shelly the sea turtle was full of wonderful stories! She told {{childName}} about the singing whales who lived in the deep waters, the dolphins who surfed on waves, and the tiny seahorses who held hands so they wouldn't get lost in the currents. 'Every creature in the ocean has a special job,' Shelly explained. 'The cleaner fish help keep everyone healthy, the coral provides homes for thousands of fish families, and we turtles help plant new seagrass meadows by carrying seeds on our shells!'",
+      "choices": [
+        { "label": "Ask to help plant seagrass", "nextSceneId": "scene-7" },
+        { "label": "Request to meet the singing whales", "nextSceneId": "scene-8" }
+      ]
+    },
+    {
+      "id": "scene-6",
+      "background": "castle.svg",
+      "text": "Pearl used her powerful tail to splash just the right amount of water to make {{childName}}'s sandcastle even more magnificent! Together they decorated it with the most beautiful shells, smooth sea glass, and pieces of coral that had washed up on the beach. Other sea creatures poked their heads above the waves to admire their work. 'This is the most beautiful sandcastle in the whole ocean!' declared a cheerful sea gull. {{childName}} felt so proud of their creation.",
+      "choices": [
+        { "label": "Dive underwater to see Pearl's home", "nextSceneId": "scene-2" },
+        { "label": "Invite all the sea creatures for a sandcastle party", "nextSceneId": "scene-9" }
+      ]
+    },
+    {
+      "id": "scene-7",
+      "background": "meadow.svg",
+      "text": "What a wonderful way to help the ocean! {{childName}} and Pearl worked together with Shelly to plant new seagrass seeds in a sunny underwater meadow. The baby fish came to watch, and even helped by creating tiny whirlpools with their fins to help the seeds settle into the sand. 'In a few months, this will be a beautiful underwater meadow where young fish can play and hide,' Shelly explained. {{childName}} felt happy knowing they had helped create a home for sea creatures.",
+      "choices": [
+        { "label": "Promise to come back and see how it grows", "nextSceneId": "scene-10" },
+        { "label": "Ask Pearl to show you her favorite hiding spot", "nextSceneId": "scene-11" }
+      ]
+    },
+    {
+      "id": "scene-8",
+      "background": "sunset.svg",
+      "text": "In the deeper, quieter waters, {{childName}} and Pearl encountered something truly magical—a family of whales swimming gracefully through the blue depths. The mother whale sang the most beautiful song, like a melody from a dream. 'She's singing about the wonders of the ocean and welcoming you to our underwater world,' Pearl translated. The baby whale came closer and gently touched {{childName}} with its fin, as if saying thank you for visiting their home.",
+      "choices": [
+        { "label": "Try to sing back to the whales", "nextSceneId": "scene-10" },
+        { "label": "Ask Pearl to teach you whale songs", "nextSceneId": "scene-11" }
+      ]
+    },
+    {
+      "id": "scene-9",
+      "background": "castle.svg",
+      "text": "What a delightful party! Sea creatures from all over came to admire the beautiful sandcastle. Pelicans brought seaweed streamers, crabs brought shiny shells for decorations, and Pearl organized underwater races around the castle moat. Even a majestic sea turtle brought a gift—a special piece of sea glass that glowed blue-green in the sunlight. 'This has been the best day ever!' laughed a little hermit crab as they all celebrated together.",
+      "choices": [
+        { "label": "Thank everyone and dive underwater for more adventures", "nextSceneId": "scene-10" },
+        { "label": "Ask if they can have parties like this every week", "nextSceneId": "scene-11" }
+      ]
+    },
+    {
+      "id": "scene-10",
+      "background": "sunset.svg",
+      "text": "As the sun began to set, painting the ocean in shades of gold and pink, {{childName}} and Pearl floated on the gentle waves, watching the first stars appear. 'Thank you for showing me the wonders of your underwater world,' {{childName}} said. Pearl smiled her dolphin smile. 'And thank you for reminding me how magical it is to see the ocean through new eyes. The sea is always here when you want to explore!' They promised to meet again soon for more underwater adventures.",
+      "choices": []
+    },
+    {
+      "id": "scene-11",
+      "background": "sunset.svg",
+      "text": "What a wonderful idea! Pearl taught {{childName}} a simple whale song—a gentle humming melody that meant 'hello, friend' in whale language. As they practiced together in the shallow waters, other dolphins came to join them, creating the most beautiful underwater choir. 'Now you can talk to any sea creature you meet,' Pearl said proudly. {{childName}} realized they had not just learned about the ocean, but had become part of its magical family. The sea would always welcome them home.",
+      "choices": []
+    }
   ]
-} 
+}

@@ -8,6 +8,10 @@ Live, interactive storytelling over video calls for families.
 ### Quick Links
 - PRD: `docs/PRD.md`
 - Architecture: `docs/ARCHITECTURE.md`
+- UI Design System: `docs/UI_DESIGN_SYSTEM.md`
+- WebRTC Signaling Architecture: `docs/WEBRTC_SIGNALING_ARCHITECTURE.md`
+- LLM Story Generation Engine: `docs/LLM_STORY_GENERATION_ENGINE.md`
+- UI Design Discovery Archive: `docs/UI_DESIGN_DISCOVERY_ARCHIVE.md`
 - Roadmap: `docs/ROADMAP.md`
 - Safety/Privacy/Compliance: `docs/SAFETY_PRIVACY_COMPLIANCE.md`
 - Brand Guide: `docs/BRAND_GUIDE.md`

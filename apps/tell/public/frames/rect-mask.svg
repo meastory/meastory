@@ -1,1 +1,23 @@
- 
+<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Rectangular mask with rounded corners for clipping video content -->
+    <mask id="rectMask">
+      <!-- White area shows through, black area is hidden -->
+      <rect width="200" height="150" fill="black"/>
+      <rect x="15" y="15" width="170" height="120" 
+            rx="8" ry="8" 
+            fill="white"/>
+    </mask>
+  </defs>
+  
+  <!-- Background that will be masked -->
+  <rect width="200" height="150" fill="#000000" mask="url(#rectMask)"/>
+  
+  <!-- Optional: visible frame border -->
+  <rect x="15" y="15" width="170" height="120" 
+        rx="8" ry="8"
+        fill="none" 
+        stroke="#8B4513" 
+        stroke-width="3"
+        opacity="0.8"/>
+</svg>
