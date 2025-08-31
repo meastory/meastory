@@ -435,6 +435,8 @@ startRoomButton.addEventListener('click', async () => {
   // Preserve existing signal override if present
   const signalOverride = new URLSearchParams(window.location.search).get('signal');
   if (signalOverride) url.searchParams.set('signal', signalOverride);
+  // Update current URL so connectSignal sees the room
+  window.history.replaceState({}, '', url.toString());
   connectSignal();
   navigator.clipboard?.writeText(url.toString());
   alert(`Room created. Link copied to clipboard:\n${url.toString()}`);
