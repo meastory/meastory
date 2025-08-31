@@ -566,9 +566,10 @@ loadDefaultStory();
 
 // Feature flag: storybook mode (planned incremental rollout)
 const isStorybook = IS_STORYBOOK;
-// Currently no-op; guarded code will mount storybook in future milestones
+const isVideoFirst = (() => { try { return (new URLSearchParams(location.search).get('mode') || '').toLowerCase() === 'video-first'; } catch (_) { return false; } })();
+// Currently no-op; guarded code will mount storybook/video-first in milestones
 
-if (isStorybook) {
+if (isStorybook || isVideoFirst) {
   try {
     // Create start overlay once per load
     const overlay = document.createElement('div');
@@ -594,7 +595,7 @@ if (isStorybook) {
       }
     }, { once: true });
 
-    // Inject simple menu toggle that exposes session controls
+    // Inject simple menu toggle for both modes
     const menuBtn = document.createElement('button');
     menuBtn.className = 'sb-menu-btn';
     menuBtn.textContent = 'Menu';
@@ -606,13 +607,11 @@ if (isStorybook) {
     const content = panel.firstElementChild;
     document.body.appendChild(panel);
 
-
     const sessionCards = document.querySelectorAll('.session-card');
     if (sessionCards?.length && content) {
       sessionCards.forEach((card) => {
         const clone = card.cloneNode(true);
         content.appendChild(clone);
-        // Rebind start/join and load story in the clone
         const cStart = clone.querySelector('#startRoomButton');
         const cJoin = clone.querySelector('#joinRoomButton');
         const cRoom = clone.querySelector('#roomCodeInput');
@@ -629,5 +628,34 @@ if (isStorybook) {
       open = !open;
       panel.classList.toggle('open', open);
     });
+
+    // Video-first: mount bottom overlay that mirrors story text and choices
+    if (isVideoFirst) {
+      const vf = document.createElement('div');
+      vf.className = 'vf-overlay';
+      vf.innerHTML = '<div class="scrim"><h3 id="vfTitle"></h3><p id="vfScene"></p><div id="vfChoices" class="choices"></div></div>';
+      document.body.appendChild(vf);
+      // Mirror current story content whenever we render
+      const applyMirror = () => {
+        const t = document.getElementById('storyTitle')?.textContent || '';
+        const p = document.getElementById('sceneText')?.textContent || '';
+        const srcChoices = document.getElementById('choices');
+        vf.querySelector('#vfTitle').textContent = t;
+        vf.querySelector('#vfScene').textContent = p;
+        const dstChoices = vf.querySelector('#vfChoices');
+        dstChoices.innerHTML = '';
+        srcChoices?.querySelectorAll('button')?.forEach((btn, idx) => {
+          const clone = btn.cloneNode(true);
+          // Relay click to original to keep sync logic central
+          clone.addEventListener('click', () => btn.click());
+          dstChoices.appendChild(clone);
+        });
+      };
+      // Initial mirror and observe changes
+      applyMirror();
+      const observer = new MutationObserver(applyMirror);
+      observer.observe(document.getElementById('sceneText'), { characterData: true, subtree: true, childList: true });
+      observer.observe(document.getElementById('choices'), { childList: true, subtree: true });
+    }
   } catch (_) {}
 } 

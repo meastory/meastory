@@ -228,3 +228,31 @@ body {
   z-index: 0;
 }
 .storybook-mode .story-content { position: relative; z-index: 1; } 
+
+/* Video-first mode */
+.video-first body { background: #000; color: #fff; }
+.video-first .container { max-width: none; margin: 0; padding: 0; }
+.video-first .site-header { display: none; }
+.video-first main.container { width: 100%; }
+.video-first .video-card { background: transparent; border: 0; border-radius: 0; padding: 0; margin: 0; }
+.video-first .video-row { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; gap: 0; min-height: calc(100vh - env(safe-area-inset-bottom)); }
+.video-first .video-box { border-radius: 0; background: #000; min-height: auto; }
+.video-first .video-box video { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-aspect-ratio: 3/4) {
+  .video-first .video-row { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+}
+/* Hide non-essential cards */
+.video-first .story-card, .video-first .session-card, .video-first .safety-note { display: none; }
+/* Story overlay zone (uses existing #sceneText/#choices content we’ll mirror) */
+.video-first .vf-overlay { position: fixed; left: 0; right: 0; bottom: 0; padding: 12px env(safe-area-inset-right) calc(12px + env(safe-area-inset-bottom)) env(safe-area-inset-left); z-index: 1000; }
+.video-first .vf-overlay .scrim { background: linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0)); border-radius: 12px; padding: 12px 14px; backdrop-filter: blur(6px); }
+@supports not ((backdrop-filter: blur(1px))) {
+  .video-first .vf-overlay .scrim { background: rgba(0,0,0,0.4); }
+}
+.video-first .vf-overlay #storyTitle { display: none; }
+.video-first .vf-overlay #sceneText { margin: 0 0 10px; font-size: clamp(16px, 2.4vw, 22px); line-height: 1.6; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
+.video-first .vf-overlay .choices { display: flex; gap: 8px; flex-wrap: wrap; }
+.video-first .vf-overlay .choices .btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+.video-first .vf-overlay .controls { display: none; }
+/* Show Menu button in video-first as well */
+.video-first .sb-menu-btn { position: fixed; top: 10px; right: 10px; z-index: 1001; } 

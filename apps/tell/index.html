@@ -17,6 +17,9 @@
           if (params.has('storybook') || params.get('sb') === '1') {
             document.documentElement.classList.add('storybook-mode');
           }
+          if ((params.get('mode') || '').toLowerCase() === 'video-first') {
+            document.documentElement.classList.add('video-first');
+          }
         } catch (e) {}
       })();
     </script>
