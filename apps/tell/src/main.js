@@ -26,6 +26,7 @@ let localStream;
 let dataChannel;
 let currentRole = null; // 'caller' | 'callee'
 let wsRetryMs = 1000;
+let pendingIceCandidates = [];
 
 const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
@@ -59,6 +60,15 @@ function addMissingLocalTracks() {
   }
 }
 
+function flushPendingIceCandidates() {
+  if (!pc || !pc.remoteDescription) return;
+  const queue = pendingIceCandidates;
+  pendingIceCandidates = [];
+  for (const c of queue) {
+    try { pc.addIceCandidate(c); } catch (e) { log('flush candidate error', e); }
+  }
+}
+
 // Allow overriding signaling URL via ?signal=... (e.g., wss://example.trycloudflare.com)
 function getSignalWebSocketUrl() {
   try {
@@ -81,6 +91,7 @@ function resetPeer({ keepLocalStream } = { keepLocalStream: true }) {
     }
   } catch (_) {}
   pc = null;
+  pendingIceCandidates = [];
   try { if (dataChannel) dataChannel.close?.(); } catch (_) {}
   dataChannel = null;
   if (remoteVideo && remoteVideo.srcObject) remoteVideo.srcObject = null;
@@ -328,6 +339,7 @@ function connectSignal() {
         log('received offer');
         await ensurePeer();
         await pc.setRemoteDescription(msg.payload);
+        flushPendingIceCandidates();
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
         ws.send(JSON.stringify({ type: 'answer', payload: answer }));
@@ -335,11 +347,17 @@ function connectSignal() {
       case 'answer':
         log('received answer');
         await pc.setRemoteDescription(msg.payload);
+        flushPendingIceCandidates();
         break;
       case 'candidate':
         try {
-          await pc.addIceCandidate(msg.payload);
-          log('added candidate');
+          if (pc && pc.remoteDescription) {
+            await pc.addIceCandidate(msg.payload);
+            log('added candidate');
+          } else {
+            pendingIceCandidates.push(msg.payload);
+            log('queued candidate');
+          }
         } catch (e) {
           log('candidate error', e);
         }
