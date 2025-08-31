@@ -276,7 +276,7 @@ html.video-first, html.video-first body { height: 100svh; overflow: hidden; }
 }
 .video-first .vf-overlay #storyTitle { display: none; }
 .video-first .vf-overlay #vfScene { margin: 0 0 10px; font-size: calc(clamp(16px, 2.4vw, 22px) * var(--story-text-scale)); line-height: 1.6; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
-.video-first .vf-overlay .choices { display: flex; gap: 8px; flex-wrap: wrap; }
+.video-first .vf-overlay .choices { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: flex-end; }
 .video-first .vf-overlay .choices .btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); font-size: calc(1em * var(--story-text-scale)); }
 .video-first .vf-overlay .controls { display: none; }
 /* Show Menu button in video-first as well */
@@ -319,7 +319,7 @@ html.video-first, html.video-first body { height: 100svh; overflow: hidden; }
 /* Zoom controls */
 .storybook-mode .zoom-controls { position: absolute; top: 8px; right: 8px; z-index: 5; display: flex; gap: 6px; }
 .storybook-mode .zoom-controls .btn { padding: 6px 10px; border-radius: 999px; font-weight: 800; }
-.video-first .vf-zoom { position: static; align-self: flex-end; z-index: 1001; display: flex; gap: 8px; margin-top: 6px; }
+.video-first .vf-zoom { position: static; align-self: auto; z-index: 1001; display: flex; gap: 8px; margin-top: 0; }
 .video-first .vf-zoom .icon-btn {
   width: clamp(36px, 5vw, 80px); height: clamp(36px, 5vw, 80px); border-radius: 999px; border: 1px solid rgba(255,255,255,0.35);
   background: rgba(0,0,0,0.35); color: #fff; display: grid; place-items: center; cursor: pointer;

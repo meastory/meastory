@@ -123,6 +123,9 @@ function resetPeer({ keepLocalStream } = { keepLocalStream: true }) {
   } catch (_) {}
   pc = null;
   pendingIceCandidates = [];
+  // Reset sender state so we reattach correctly on next call
+  audioSender = null;
+  videoSender = null;
   try { if (dataChannel) dataChannel.close?.(); } catch (_) {}
   dataChannel = null;
   if (remoteVideo && remoteVideo.srcObject) remoteVideo.srcObject = null;
@@ -639,6 +642,8 @@ if (isStorybook || isVideoFirst) {
       startBtn?.addEventListener('click', async () => {
         try {
           autoplayPrimed = true;
+          // Ensure media on user gesture for iOS and permissions
+          try { await ensureMedia(); } catch (_) {}
           if (remoteVideo) {
             remoteVideo.playsInline = true;
             remoteVideo.muted = false;
@@ -755,11 +760,10 @@ if (isStorybook || isVideoFirst) {
         camBtn.addEventListener('click', () => { toggleCamSend(); refreshIcons(); });
         setTimeout(refreshIcons, 0);
 
-        // Zoom controls for video-first overlay
+        // One shared zoom controls node, appended inline to choices
         const zoom = document.createElement('div');
         zoom.className = 'vf-zoom';
         zoom.innerHTML = '<button class="icon-btn" aria-label="Decrease text size" title="Decrease text size">−</button><button class="icon-btn" aria-label="Increase text size" title="Increase text size">+</button>';
-        vf.querySelector('.scrim')?.appendChild(zoom);
         const zMinus = zoom.children[0];
         const zPlus = zoom.children[1];
         zMinus.addEventListener('click', () => changeStoryTextScale(-0.1));
@@ -780,6 +784,8 @@ if (isStorybook || isVideoFirst) {
             clone.addEventListener('click', () => btn.click());
             dstChoices.appendChild(clone);
           });
+          // Append zoom inline at end, bottom-right
+          dstChoices.appendChild(zoom);
         };
         applyMirror();
         const observer = new MutationObserver(() => { applyMirror(); updateTitle(); });
