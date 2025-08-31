@@ -626,6 +626,23 @@ if (isStorybook) {
       }
     }
 
+    const sessionCards = document.querySelectorAll('.session-card');
+    if (sessionCards?.length && content) {
+      sessionCards.forEach((card) => {
+        const clone = card.cloneNode(true);
+        content.appendChild(clone);
+        // Rebind start/join and load story in the clone
+        const cStart = clone.querySelector('#startRoomButton');
+        const cJoin = clone.querySelector('#joinRoomButton');
+        const cRoom = clone.querySelector('#roomCodeInput');
+        const cLoad = clone.querySelector('#loadStoryButton');
+        const cSelect = clone.querySelector('#storySelect');
+        if (cStart) cStart.addEventListener('click', (e) => { e.preventDefault(); startRoomButton.click(); });
+        if (cJoin) cJoin.addEventListener('click', (e) => { e.preventDefault(); if (cRoom) roomCodeInput.value = cRoom.value; joinRoomButton.click(); });
+        if (cLoad) cLoad.addEventListener('click', (e) => { e.preventDefault(); if (cSelect) storySelect.value = cSelect.value; loadStoryButton.click(); });
+      });
+    }
+
     let open = false;
     menuBtn.addEventListener('click', () => {
       open = !open;
