@@ -151,14 +151,40 @@ body {
   .storybook-mode * { transition: none !important; animation: none !important; }
 } 
 
-/* Storybook video chrome: simple bounded masks */
+/* Storybook video chrome: SVG-bounded masks */
 .storybook-mode .video-card { background: transparent; border: 0; box-shadow: none; padding: 0; }
 .storybook-mode .video-row { gap: 12px; }
 .storybook-mode .video-box { position: relative; overflow: hidden; background: none; }
-.storybook-mode .video-box:nth-child(1) { aspect-ratio: 4 / 3; border-radius: 16px; }
-.storybook-mode .video-box:nth-child(2) { aspect-ratio: 1 / 1; border-radius: 50%; }
-.storybook-mode .video-box video { width: 100%; height: 100%; object-fit: cover; }
+/* Ensure consistent sizing */
+.storybook-mode .video-box:nth-child(1) { aspect-ratio: 4 / 3; }
+.storybook-mode .video-box:nth-child(2) { aspect-ratio: 1 / 1; }
+.storybook-mode .video-box video { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Apply SVG masks (WebKit + standard) */
+.storybook-mode .video-box:nth-child(1) video {
+  -webkit-mask-image: url('../public/frames/rect-mask.svg');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-image: url('../public/frames/rect-mask.svg');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+.storybook-mode .video-box:nth-child(2) video {
+  -webkit-mask-image: url('../public/frames/oval-mask.svg');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-image: url('../public/frames/oval-mask.svg');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
 @media (max-width: 640px) { .storybook-mode .video-row { grid-template-columns: 1fr; } }
+
+/* Hide any small per-video autoplay prompts in storybook mode */
+.storybook-mode .video-box .tap-to-play,
+.storybook-mode .video-box .enable-audio { display: none !important; }
 
 /* Storybook start overlay */
 .storybook-start-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.35); }
