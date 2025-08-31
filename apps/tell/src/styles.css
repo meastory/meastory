@@ -137,6 +137,7 @@ body {
   color: #5b4636;
   font-weight: 700;
   padding: 12px 14px;
+  font-size: calc(1em * var(--story-text-scale));
 }
 .storybook-mode .choices .btn:focus-visible {
   outline: 2px solid #8b6f4f;
@@ -276,7 +277,7 @@ html.video-first, html.video-first body { height: 100svh; overflow: hidden; }
 .video-first .vf-overlay #storyTitle { display: none; }
 .video-first .vf-overlay #vfScene { margin: 0 0 10px; font-size: calc(clamp(16px, 2.4vw, 22px) * var(--story-text-scale)); line-height: 1.6; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
 .video-first .vf-overlay .choices { display: flex; gap: 8px; flex-wrap: wrap; }
-.video-first .vf-overlay .choices .btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+.video-first .vf-overlay .choices .btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); font-size: calc(1em * var(--story-text-scale)); }
 .video-first .vf-overlay .controls { display: none; }
 /* Show Menu button in video-first as well */
 .video-first .sb-menu-btn { position: fixed; top: 10px; right: 10px; z-index: 10002; background: rgba(0,0,0,0.55); color: #fff; border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 8px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
@@ -312,3 +313,13 @@ html.video-first, html.video-first body { height: 100svh; overflow: hidden; }
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 .video-first .vf-zoom .icon-btn:active { transform: scale(0.98); } 
+
+/* Ensure mic/cam controls visible */
+.video-first .video-card .form-row { display: none; }
+.video-first .vf-controls { position: absolute; top: 10px; left: 10px; z-index: 1001; display: flex; gap: 8px; }
+.video-first .vf-controls .icon-btn {
+  width: 36px; height: 36px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(0,0,0,0.35); color: #fff; display: grid; place-items: center; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+.video-first .vf-controls .icon-btn:active { transform: scale(0.98); } 
