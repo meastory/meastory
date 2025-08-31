@@ -41,6 +41,26 @@ function getSignalWebSocketUrl() {
   return 'ws://localhost:3001';
 }
 
+function resetPeer({ keepLocalStream } = { keepLocalStream: true }) {
+  try {
+    if (pc) {
+      try { pc.ontrack = null; pc.ondatachannel = null; pc.onicecandidate = null; pc.oniceconnectionstatechange = null; pc.onconnectionstatechange = null; } catch (_) {}
+      try {
+        const senders = pc.getSenders?.() || [];
+        senders.forEach(s => { try { pc.removeTrack(s); } catch (_) {} });
+      } catch (_) {}
+      try { pc.close(); } catch (_) {}
+    }
+  } catch (_) {}
+  pc = null;
+  if (remoteVideo && remoteVideo.srcObject) remoteVideo.srcObject = null;
+  if (!keepLocalStream && localStream) {
+    try { localStream.getTracks().forEach(t => t.stop()); } catch (_) {}
+    localStream = null;
+    if (localVideo) localVideo.srcObject = null;
+  }
+}
+
 async function loadStoryById(storyId) {
   const response = await fetch(`./stories/${storyId}.json`);
   if (!response.ok) {
@@ -270,6 +290,8 @@ function connectSignal() {
       case 'start-call':
         log('start-call', msg.role);
         currentRole = msg.role;
+        // Fresh RTCPeerConnection for each call
+        resetPeer({ keepLocalStream: true });
         await startPeer(msg.role);
         break;
       case 'offer':
@@ -294,7 +316,7 @@ function connectSignal() {
         break;
       case 'peer-left':
         log('peer-left');
-        if (remoteVideo.srcObject) remoteVideo.srcObject = null;
+        resetPeer({ keepLocalStream: true });
         break;
       case 'room-full':
         alert('Room is full.');
@@ -337,12 +359,7 @@ async function ensurePeer() {
   pc.onconnectionstatechange = () => {
     log('connection state', pc.connectionState);
   };
-  // Media will be attached when startPeer runs after role assignment
-  try {
-    attachDataChannel(pc.createDataChannel('story'));
-  } catch (_) {
-    // callee path will receive
-  }
+  // Data channel will be created by caller in startPeer
   pc.ondatachannel = (event) => attachDataChannel(event.channel);
   return pc;
 }
@@ -369,6 +386,8 @@ async function startPeer(role) {
     }
   }
   if (role === 'caller') {
+    // Create data channel from caller side
+    try { attachDataChannel(pc.createDataChannel('story')); } catch (_) {}
     log('creating offer');
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
