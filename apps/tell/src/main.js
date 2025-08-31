@@ -31,6 +31,16 @@ const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
 function log(...args) { try { console.log('[webrtc]', ...args); } catch (_) {} }
 
+// Allow overriding signaling URL via ?signal=... (e.g., wss://example.trycloudflare.com)
+function getSignalWebSocketUrl() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const override = params.get('signal');
+    if (override) return override;
+  } catch (_) {}
+  return 'ws://localhost:3001';
+}
+
 async function loadStoryById(storyId) {
   const response = await fetch(`./stories/${storyId}.json`);
   if (!response.ok) {
@@ -242,7 +252,7 @@ function connectSignal() {
   if (ws && ws.readyState === WebSocket.OPEN) return;
   const roomId = new URLSearchParams(location.search).get('room');
   if (!roomId) return alert('No room code present.');
-  ws = new WebSocket('ws://localhost:3001');
+  ws = new WebSocket(getSignalWebSocketUrl());
   ws.onopen = () => {
     log('ws open, joining room', roomId);
     wsRetryMs = 1000; // reset backoff on success
