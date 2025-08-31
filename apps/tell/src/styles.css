@@ -151,29 +151,13 @@ body {
   .storybook-mode * { transition: none !important; animation: none !important; }
 } 
 
-/* Storybook video chrome (reverted to masked video + overlay frames) */
+/* Storybook video chrome: simple bounded masks */
 .storybook-mode .video-card { background: transparent; border: 0; box-shadow: none; padding: 0; }
 .storybook-mode .video-row { gap: 12px; }
-.storybook-mode .video-box { position: relative; overflow: visible; }
-.storybook-mode .video-box video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
-/* Local rectangular: subtle padding and rounded mask */
-.storybook-mode .video-box:nth-child(1) { aspect-ratio: 4 / 3; }
-.storybook-mode .video-box:nth-child(1) video { inset: 5%; border-radius: 14px; }
-.storybook-mode .video-box:nth-child(1)::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: url('../public/frames/wooden-rectangle.svg') center/contain no-repeat;
-  z-index: 2; pointer-events: none;
-}
-/* Remote oval: circular mask with more padding */
-.storybook-mode .video-box:nth-child(2) { aspect-ratio: 1 / 1; }
-.storybook-mode .video-box:nth-child(2) video { inset: 8%; border-radius: 50%; }
-.storybook-mode .video-box:nth-child(2)::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: url('../public/frames/oval-portrait.svg') center/contain no-repeat;
-  z-index: 2; pointer-events: none;
-}
+.storybook-mode .video-box { position: relative; overflow: hidden; background: none; }
+.storybook-mode .video-box:nth-child(1) { aspect-ratio: 4 / 3; border-radius: 16px; }
+.storybook-mode .video-box:nth-child(2) { aspect-ratio: 1 / 1; border-radius: 50%; }
+.storybook-mode .video-box video { width: 100%; height: 100%; object-fit: cover; }
 @media (max-width: 640px) { .storybook-mode .video-row { grid-template-columns: 1fr; } }
 
 /* Storybook start overlay */

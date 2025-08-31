@@ -29,6 +29,10 @@ let wsRetryMs = 1000;
 let pendingIceCandidates = [];
 let makingOffer = false;
 
+// Storybook flags
+const IS_STORYBOOK = (() => { try { const p = new URLSearchParams(location.search); return p.has('storybook') || p.get('sb') === '1'; } catch (_) { return false; } })();
+let autoplayPrimed = false;
+
 const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
 function log(...args) { try { console.log('[webrtc]', ...args); } catch (_) {} }
@@ -234,13 +238,13 @@ async function tryPlay(videoEl, { wantsAudio } = { wantsAudio: true }) {
     try {
       videoEl.muted = true;
       await videoEl.play();
-      // Provide a tap-to-unmute button if audio is desired
-      if (wantsAudio) {
+      // In storybook mode we use a single Start overlay; skip per-video overlays
+      if (wantsAudio && !IS_STORYBOOK) {
         injectUnmuteButton(videoEl);
       }
     } catch (_) {
-      // As a last resort, show a play overlay
-      injectPlayButton(videoEl, wantsAudio);
+      // As a last resort, show a play overlay (suppressed in storybook)
+      if (!IS_STORYBOOK) injectPlayButton(videoEl, wantsAudio);
     }
   }
 }
@@ -561,10 +565,7 @@ enforceExpiry();
 loadDefaultStory();
 
 // Feature flag: storybook mode (planned incremental rollout)
-const isStorybook = (() => {
-  const p = new URLSearchParams(location.search);
-  return p.has('storybook') || p.get('sb') === '1';
-})();
+const isStorybook = IS_STORYBOOK;
 // Currently no-op; guarded code will mount storybook in future milestones
 
 if (isStorybook) {
@@ -577,7 +578,7 @@ if (isStorybook) {
     const startBtn = overlay.querySelector('.start-btn');
     startBtn?.addEventListener('click', async () => {
       try {
-        // User gesture: try to play and unmute remote; ensure local preview plays
+        autoplayPrimed = true;
         if (remoteVideo) {
           remoteVideo.playsInline = true;
           remoteVideo.muted = false;
@@ -585,7 +586,6 @@ if (isStorybook) {
         }
         if (localVideo) {
           localVideo.playsInline = true;
-          // Keep local muted to avoid echo
           localVideo.muted = true;
           try { await localVideo.play(); } catch (_) {}
         }
