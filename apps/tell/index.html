@@ -14,10 +14,11 @@
       (function(){
         try {
           const params = new URLSearchParams(window.location.search);
-          if (params.has('storybook') || params.get('sb') === '1') {
+          const mode = (params.get('mode') || '').toLowerCase();
+          const wantsStorybook = params.has('storybook') || params.get('sb') === '1' || mode === 'storybook';
+          if (wantsStorybook) {
             document.documentElement.classList.add('storybook-mode');
-          }
-          if ((params.get('mode') || '').toLowerCase() === 'video-first') {
+          } else {
             document.documentElement.classList.add('video-first');
           }
         } catch (e) {}

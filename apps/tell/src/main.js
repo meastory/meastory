@@ -36,8 +36,8 @@ let videoTrackOriginal = null;
 let isVideoSending = true;
 
 // Storybook flags
-const IS_STORYBOOK = (() => { try { const p = new URLSearchParams(location.search); return p.has('storybook') || p.get('sb') === '1'; } catch (_) { return false; } })();
-const IS_VIDEO_FIRST = (() => { try { return (new URLSearchParams(location.search).get('mode') || '').toLowerCase() === 'video-first'; } catch (_) { return false; } })();
+const IS_STORYBOOK = (() => { try { const p = new URLSearchParams(location.search); return p.has('storybook') || p.get('sb') === '1' || (p.get('mode') || '').toLowerCase() === 'storybook'; } catch (_) { return false; } })();
+const IS_VIDEO_FIRST = (() => { try { if (IS_STORYBOOK) return false; const m = (new URLSearchParams(location.search).get('mode') || '').toLowerCase(); return m ? m === 'video-first' : true; } catch (_) { return true; } })();
 let autoplayPrimed = false;
 
 const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
@@ -616,7 +616,7 @@ loadDefaultStory();
 
 // Feature flag: storybook mode (planned incremental rollout)
 const isStorybook = IS_STORYBOOK;
-const isVideoFirst = (() => { try { return (new URLSearchParams(location.search).get('mode') || '').toLowerCase() === 'video-first'; } catch (_) { return false; } })();
+const isVideoFirst = IS_VIDEO_FIRST;
 let storyTextScale = (() => { try { return Math.max(0.75, Math.min(1.75, Number(localStorage.getItem('storyTextScale') || '1'))); } catch (_) { return 1; } })();
 function applyStoryTextScale() {
   try { document.documentElement.style.setProperty('--story-text-scale', String(storyTextScale)); } catch (_) {}
