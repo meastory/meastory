@@ -612,6 +612,11 @@ if (isStorybook || isVideoFirst) {
         const content = panel.firstElementChild;
         document.body.appendChild(panel);
 
+        // Backdrop for outside click close
+        const backdrop = document.createElement('div');
+        backdrop.className = 'sb-session-backdrop';
+        document.body.appendChild(backdrop);
+
         const sessionCards = document.querySelectorAll('.session-card');
         if (sessionCards?.length && content) {
           sessionCards.forEach((card) => {
@@ -634,8 +639,11 @@ if (isStorybook || isVideoFirst) {
         const setOpen = (val) => {
           open = val;
           panel.classList.toggle('open', open);
+          backdrop.classList.toggle('open', open);
+          menuBtn.classList.toggle('open', open);
         };
         menuBtn.addEventListener('click', () => setOpen(!open));
+        backdrop.addEventListener('click', () => setOpen(false));
         panel.addEventListener('click', (e) => { if (e.target === panel) setOpen(false); });
         window.addEventListener('keydown', (e) => { if (open && e.key === 'Escape') setOpen(false); });
       }
