@@ -161,31 +161,13 @@ body {
   overflow: visible;
   position: relative;
 }
-.storybook-mode #localVideo {
-  border-radius: 16px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
-}
-.storybook-mode #remoteVideo {
-  border-radius: 50%;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
-}
-/* Frame overlays */
-.storybook-mode #localVideo::after,
-.storybook-mode #remoteVideo::after { content: '' }
-.storybook-mode #localVideo {
-  -webkit-mask-image: radial-gradient(circle at center, black 99%, transparent 100%);
-  mask-image: none;
-}
-.storybook-mode #remoteVideo {
-  -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 71%);
-  mask-image: radial-gradient(circle at center, black 70%, transparent 71%);
-}
-.storybook-mode .video-box:nth-child(1) {
-  background: url('../public/frames/wooden-rectangle.svg') center/contain no-repeat;
-}
-.storybook-mode .video-box:nth-child(2) {
-  background: url('../public/frames/oval-portrait.svg') center/contain no-repeat;
-}
+.storybook-mode .video-box video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* Local (rectangular) frame */
+.storybook-mode .video-box:nth-child(1) { background: url('../public/frames/wooden-rectangle.svg') center/contain no-repeat; }
+.storybook-mode .video-box:nth-child(1) video { inset: 5%; border-radius: 12px; }
+/* Remote (oval) frame */
+.storybook-mode .video-box:nth-child(2) { background: url('../public/frames/oval-portrait.svg') center/contain no-repeat; aspect-ratio: 1 / 1; }
+.storybook-mode .video-box:nth-child(2) video { inset: 8%; border-radius: 50%; }
 @media (max-width: 640px) {
   .storybook-mode .video-row { grid-template-columns: 1fr; }
 } 
