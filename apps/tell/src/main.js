@@ -614,7 +614,13 @@ if (isStorybook || isVideoFirst) {
       if (!document.querySelector('.sb-menu-btn')) {
         const menuBtn = document.createElement('button');
         menuBtn.className = 'sb-menu-btn';
-        menuBtn.textContent = 'Menu';
+        if (isVideoFirst) {
+          menuBtn.innerHTML = '<img src="./public/brand/icons/tell-logo.svg" alt="Menu" aria-hidden="true" />';
+          menuBtn.setAttribute('aria-label', 'Menu');
+          menuBtn.title = 'Menu';
+        } else {
+          menuBtn.textContent = 'Menu';
+        }
         document.body.appendChild(menuBtn);
 
         const panel = document.createElement('div');
@@ -678,8 +684,15 @@ if (isStorybook || isVideoFirst) {
       if (isVideoFirst) {
         const vf = document.createElement('div');
         vf.className = 'vf-overlay';
-        vf.innerHTML = '<div class="scrim"><h3 id="vfTitle"></h3><p id="vfScene"></p><div id="vfChoices" class="choices"></div></div>';
+        vf.innerHTML = '<div class="scrim"><h3 id="vfTitle" class="visually-hidden"></h3><p id="vfScene"></p><div id="vfChoices" class="choices"></div></div>';
         document.body.appendChild(vf);
+        // Visible centered titlebar
+        const titlebar = document.createElement('div');
+        titlebar.className = 'vf-titlebar';
+        titlebar.textContent = document.getElementById('storyTitle')?.textContent || '';
+        document.body.appendChild(titlebar);
+        const updateTitle = () => { titlebar.textContent = document.getElementById('storyTitle')?.textContent || ''; };
+
         // Local controls overlay (icon-only)
         const ctrl = document.createElement('div');
         ctrl.className = 'vf-controls';
@@ -714,19 +727,22 @@ if (isStorybook || isVideoFirst) {
           const p = document.getElementById('sceneText')?.textContent || '';
           const srcChoices = document.getElementById('choices');
           vf.querySelector('#vfTitle').textContent = t;
-          vf.querySelector('#vfScene').textContent = p;
+          titlebar.textContent = t;
+          const dst = vf.querySelector('#vfScene');
+          dst.textContent = p;
           const dstChoices = vf.querySelector('#vfChoices');
           dstChoices.innerHTML = '';
-          srcChoices?.querySelectorAll('button')?.forEach((btn, idx) => {
+          srcChoices?.querySelectorAll('button')?.forEach((btn) => {
             const clone = btn.cloneNode(true);
             clone.addEventListener('click', () => btn.click());
             dstChoices.appendChild(clone);
           });
         };
         applyMirror();
-        const observer = new MutationObserver(applyMirror);
+        const observer = new MutationObserver(() => { applyMirror(); updateTitle(); });
         observer.observe(document.getElementById('sceneText'), { characterData: true, subtree: true, childList: true });
         observer.observe(document.getElementById('choices'), { childList: true, subtree: true });
+        observer.observe(document.getElementById('storyTitle'), { characterData: true, childList: true, subtree: true });
       }
     };
     if (document.readyState === 'loading') {
