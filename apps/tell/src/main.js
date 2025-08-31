@@ -615,7 +615,9 @@ if (isStorybook || isVideoFirst) {
         const sessionCards = document.querySelectorAll('.session-card');
         if (sessionCards?.length && content) {
           sessionCards.forEach((card) => {
-            const clone = card.cloneNode(true);
+            const clone = document.createElement('section');
+            clone.className = 'session-card';
+            clone.innerHTML = card.innerHTML;
             content.appendChild(clone);
             const cStart = clone.querySelector('#startRoomButton');
             const cJoin = clone.querySelector('#joinRoomButton');
