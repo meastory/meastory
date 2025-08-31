@@ -270,7 +270,7 @@ html.video-first, html.video-first body { height: 100svh; overflow: hidden; }
 .video-first .sb-session-overlay { display: block; }
 /* Story overlay zone (uses existing #sceneText/#choices content we’ll mirror) */
 .video-first .vf-overlay { position: fixed; left: 0; right: 0; bottom: 0; padding: 12px env(safe-area-inset-right) calc(12px + env(safe-area-inset-bottom)) env(safe-area-inset-left); z-index: 1000; }
-.video-first .vf-overlay .scrim { background: linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0)); border-radius: 12px; padding: 12px 14px; backdrop-filter: blur(6px); position: relative; }
+.video-first .vf-overlay .scrim { background: linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0)); border-radius: 12px; padding: 12px 14px; backdrop-filter: blur(6px); position: relative; display: flex; flex-direction: column; gap: 8px; }
 @supports not ((backdrop-filter: blur(1px))) {
   .video-first .vf-overlay .scrim { background: rgba(0,0,0,0.4); }
 }
@@ -283,7 +283,7 @@ html.video-first, html.video-first body { height: 100svh; overflow: hidden; }
 .video-first .sb-menu-btn { position: fixed; top: 10px; right: 10px; z-index: 10002; background: transparent; color: inherit; border: 0; border-radius: 0; padding: 0; box-shadow: none; }
 .video-first .sb-menu-btn:active { transform: scale(0.98); }
 .video-first .sb-menu-btn.open { background: transparent; }
-.video-first .sb-menu-btn img { width: clamp(28px, 4vw, 56px); height: auto; display: block; }
+.video-first .sb-menu-btn img { width: clamp(32px, 5vw, 80px); height: auto; display: block; }
 
 /* Backdrop for closing the panel on outside click */
 .video-first .sb-session-backdrop { position: fixed; inset: 0; z-index: 9997; display: none; background: transparent; }
@@ -319,12 +319,12 @@ html.video-first, html.video-first body { height: 100svh; overflow: hidden; }
 /* Zoom controls */
 .storybook-mode .zoom-controls { position: absolute; top: 8px; right: 8px; z-index: 5; display: flex; gap: 6px; }
 .storybook-mode .zoom-controls .btn { padding: 6px 10px; border-radius: 999px; font-weight: 800; }
-.video-first .vf-zoom { position: absolute; top: 10px; right: 14px; z-index: 1001; display: flex; gap: 8px; }
+.video-first .vf-zoom { position: static; align-self: flex-end; z-index: 1001; display: flex; gap: 8px; margin-top: 6px; }
 .video-first .vf-zoom .icon-btn {
-  width: clamp(32px, 4.2vw, 56px); height: clamp(32px, 4.2vw, 56px); border-radius: 999px; border: 1px solid rgba(255,255,255,0.35);
+  width: clamp(36px, 5vw, 80px); height: clamp(36px, 5vw, 80px); border-radius: 999px; border: 1px solid rgba(255,255,255,0.35);
   background: rgba(0,0,0,0.35); color: #fff; display: grid; place-items: center; cursor: pointer;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  font-size: clamp(18px, 2vw, 28px);
+  font-size: clamp(20px, 2.4vw, 36px);
 }
 .video-first .vf-zoom .icon-btn:active { transform: scale(0.98); } 
 
@@ -332,9 +332,9 @@ html.video-first, html.video-first body { height: 100svh; overflow: hidden; }
 .video-first .video-card .form-row { display: none; }
 .video-first .vf-controls { position: absolute; top: 10px; left: 10px; z-index: 1001; display: flex; gap: 8px; }
 .video-first .vf-controls .icon-btn {
-  width: clamp(32px, 4.2vw, 56px); height: clamp(32px, 4.2vw, 56px); border-radius: 999px; border: 1px solid rgba(255,255,255,0.35);
+  width: clamp(36px, 5vw, 80px); height: clamp(36px, 5vw, 80px); border-radius: 999px; border: 1px solid rgba(255,255,255,0.35);
   background: rgba(0,0,0,0.35); color: #fff; display: grid; place-items: center; cursor: pointer;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  font-size: clamp(18px, 2vw, 28px);
+  font-size: clamp(20px, 2.4vw, 36px);
 }
 .video-first .vf-controls .icon-btn:active { transform: scale(0.98); } 

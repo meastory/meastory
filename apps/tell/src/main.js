@@ -28,6 +28,12 @@ let currentRole = null; // 'caller' | 'callee'
 let wsRetryMs = 1000;
 let pendingIceCandidates = [];
 let makingOffer = false;
+// Track/sender state for reliable local/remote toggles
+let audioSender = null;
+let videoSender = null;
+let audioTrackOriginal = null;
+let videoTrackOriginal = null;
+let isVideoSending = true;
 
 // Storybook flags
 const IS_STORYBOOK = (() => { try { const p = new URLSearchParams(location.search); return p.has('storybook') || p.get('sb') === '1'; } catch (_) { return false; } })();
@@ -57,11 +63,28 @@ function attachDataChannel(channel) {
 
 function addMissingLocalTracks() {
   if (!pc || !localStream) return;
-  const senders = pc.getSenders?.() || [];
-  for (const track of localStream.getTracks()) {
-    const alreadySending = senders.some(s => s.track && s.track.kind === track.kind);
-    if (!alreadySending) {
-      try { pc.addTrack(track, localStream); } catch (_) {}
+  // Ensure we have up-to-date sender refs
+  try {
+    const senders = pc.getSenders?.() || [];
+    if (!audioSender) audioSender = senders.find(s => s.track && s.track.kind === 'audio') || audioSender;
+    if (!videoSender) videoSender = senders.find(s => s.track && s.track.kind === 'video') || videoSender;
+  } catch (_) {}
+  // Audio: always attach if missing
+  const audioTrack = audioTrackOriginal || localStream.getAudioTracks()[0];
+  if (audioTrack) {
+    if (audioSender && audioSender.track !== audioTrack) {
+      try { audioSender.replaceTrack(audioTrack); } catch (_) {}
+    } else if (!audioSender) {
+      try { audioSender = pc.addTrack(audioTrack, localStream); } catch (_) {}
+    }
+  }
+  // Video: attach only if we are sending video
+  const videoTrack = videoTrackOriginal || localStream.getVideoTracks()[0];
+  if (isVideoSending && videoTrack) {
+    if (videoSender && videoSender.track !== videoTrack) {
+      try { videoSender.replaceTrack(videoTrack); } catch (_) {}
+    } else if (!videoSender) {
+      try { videoSender = pc.addTrack(videoTrack, localStream); } catch (_) {}
     }
   }
 }
@@ -308,6 +331,8 @@ async function ensureMedia() {
     alert('Unable to access camera/microphone. Please allow permissions and try again.');
     throw e;
   }
+  audioTrackOriginal = localStream.getAudioTracks()[0] || audioTrackOriginal;
+  videoTrackOriginal = localStream.getVideoTracks()[0] || videoTrackOriginal;
   localVideo.srcObject = localStream;
   tryPlay(localVideo, { wantsAudio: false });
   return localStream;
@@ -495,19 +520,38 @@ async function startPeer(role) {
   }
 }
 
-toggleMicBtn.addEventListener('click', () => {
+// Mic/camera toggles unified
+function toggleMicSend() {
   if (!localStream) return;
-  const enabled = localStream.getAudioTracks().every(t => t.enabled);
-  localStream.getAudioTracks().forEach(t => t.enabled = !enabled);
-  toggleMicBtn.textContent = enabled ? 'Unmute' : 'Mute';
-});
-
-toggleCamBtn.addEventListener('click', () => {
+  const track = audioTrackOriginal || localStream.getAudioTracks()[0];
+  if (!track) return;
+  const next = !track.enabled;
+  try { track.enabled = next; } catch (_) {}
+  // Ensure sender points at the current track when enabling back
+  if (audioSender && audioSender.track !== track && next) {
+    try { audioSender.replaceTrack(track); } catch (_) {}
+  }
+  // Update legacy button label if present
+  if (toggleMicBtn) toggleMicBtn.textContent = next ? 'Mute' : 'Unmute';
+}
+function toggleCamSend() {
   if (!localStream) return;
-  const enabled = localStream.getVideoTracks().every(t => t.enabled);
-  localStream.getVideoTracks().forEach(t => t.enabled = !enabled);
-  toggleCamBtn.textContent = enabled ? 'Camera On' : 'Camera Off';
-});
+  const track = videoTrackOriginal || localStream.getVideoTracks()[0];
+  const currentlySending = !!isVideoSending;
+  const wantSend = !currentlySending;
+  isVideoSending = wantSend;
+  try {
+    // Local preview
+    if (track) track.enabled = wantSend;
+    // Remote sending via replaceTrack
+    if (videoSender) {
+      try { videoSender.replaceTrack(wantSend ? track : null); } catch (_) {}
+    } else if (wantSend && track && pc) {
+      try { videoSender = pc.addTrack(track, localStream); } catch (_) {}
+    }
+  } catch (_) {}
+  if (toggleCamBtn) toggleCamBtn.textContent = wantSend ? 'Camera Off' : 'Camera On';
+}
 
 function isExpired(url) {
   const createdAt = Number(url.searchParams.get('createdAt') || '');
@@ -702,13 +746,13 @@ if (isStorybook || isVideoFirst) {
         const micBtn = ctrl.children[0];
         const camBtn = ctrl.children[1];
         const refreshIcons = () => {
-          const micOn = !!localStream && localStream.getAudioTracks().every(t => t.enabled);
-          const camOn = !!localStream && localStream.getVideoTracks().every(t => t.enabled);
+          const micOn = !!(audioTrackOriginal || localStream?.getAudioTracks()[0]) && (audioTrackOriginal || localStream.getAudioTracks()[0]).enabled !== false;
+          const camOn = !!isVideoSending;
           micBtn.textContent = micOn ? '🎤' : '🔇';
           camBtn.textContent = camOn ? '🎥' : '📷';
         };
-        micBtn.addEventListener('click', () => { toggleMicBtn.click(); refreshIcons(); });
-        camBtn.addEventListener('click', () => { toggleCamBtn.click(); refreshIcons(); });
+        micBtn.addEventListener('click', () => { toggleMicSend(); refreshIcons(); });
+        camBtn.addEventListener('click', () => { toggleCamSend(); refreshIcons(); });
         setTimeout(refreshIcons, 0);
 
         // Zoom controls for video-first overlay
