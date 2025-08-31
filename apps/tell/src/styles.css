@@ -245,9 +245,9 @@ html.video-first, html.video-first body { height: 100svh; overflow: hidden; }
 .video-first .site-header { display: none; }
 .video-first main.container { width: 100%; }
 .video-first .video-card { background: transparent; border: 0; border-radius: 0; padding: 0; margin: 0; }
-.video-first .video-row { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; gap: 0; height: 100%; }
+.video-first .video-row { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; gap: 0; height: 100svh; }
 @supports not (height: 100svh) {
-  .video-first .video-row { height: 100%; }
+  .video-first .video-row { height: 100vh; }
 }
 .video-first .video-box { border-radius: 0; background: #000; min-height: auto; position: relative; }
 .video-first .video-box video { width: 100%; height: 100%; object-fit: cover !important; object-position: center center; display: block; }
