@@ -1,4 +1,4 @@
-# Product Requirements Document (PRD) — Phase 1 MVP: tell.meastory.com
+# Product Requirements Document (PRD) — Phase 1 MVP: read.meastory.com
 
 ### Overview
 - **Product**: Me A Story — Live video storytelling for families
@@ -39,7 +39,7 @@
 
 ### User Flows
 1) Start Session (Adult)
-- Open tell.meastory.com → click “Start a Story” → app creates room → display/share code and link → adult joins
+- Open read.meastory.com → click “Start a Story” → app creates room → display/share code and link → adult joins
 2) Join Session (Child/Guest)
 - Open shared link or enter code → join call → see synchronized story view
 3) Story Playback
@@ -93,7 +93,7 @@
 - Story quality: Human content review before publish
 
 ### Deliverables
-- Static website at tell.meastory.com
+- Static website at read.meastory.com
 - Working peer-to-peer video call
 - Story engine with 3–5 stories and static backgrounds
 - Room code generation/joining

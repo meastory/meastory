@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-We conducted comprehensive design discovery work exploring two different UI approaches for the Tell platform. After analysis, we determined that **infrastructure-first development** is the correct path, with design enhancements to follow once we have a globally accessible product with real user feedback.
+We conducted comprehensive design discovery work exploring two different UI approaches for the Read platform. After analysis, we determined that **infrastructure-first development** is the correct path, with design enhancements to follow once we have a globally accessible product with real user feedback.
 
 ## Design Approaches Explored
 

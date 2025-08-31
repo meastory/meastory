@@ -226,7 +226,7 @@ const generatePersonalizedStory = async (childProfile) => {
 
 **Integration with Main App:**
 ```javascript
-// apps/tell/src/storyLoader.js
+// apps/read/src/storyLoader.js
 const loadStoryById = async (storyId) => {
   // Try local stories first
   let story = await loadLocalStory(storyId);

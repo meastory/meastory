@@ -3,7 +3,7 @@
 Live, interactive storytelling over video calls for families.
 
 ### Status
-- Phase 1 (MVP) planning complete. Building `tell.meastory.com` as a static site on Netlify with vanilla HTML/CSS/JS and WebRTC.
+- Phase 1 (MVP) planning complete. Building `read.meastory.com` as a static site on Netlify with vanilla HTML/CSS/JS and WebRTC.
 
 ### Quick Links
 - PRD: `docs/PRD.md`
@@ -24,7 +24,7 @@ Live, interactive storytelling over video calls for families.
 meastory/
   docs/
   apps/
-    tell/
+    read/
       public/
       src/
       stories/
@@ -32,10 +32,10 @@ meastory/
 ```
 
 ### Getting Started (Phase 1)
-- Host on Netlify pointing to `apps/tell`
-- No build step required initially; open `apps/tell/index.html` to develop locally
-- Stories live under `apps/tell/stories/*.json`
-- Background images under `apps/tell/public/backgrounds/*`
+- Host on Netlify pointing to `apps/read`
+- No build step required initially; open `apps/read/index.html` to develop locally
+- Stories live under `apps/read/stories/*.json`
+- Background images under `apps/read/public/backgrounds/*`
 
 ### Contributing
 - Feature branches with clear, small PRs

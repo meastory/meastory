@@ -120,7 +120,7 @@ await supabase.from('story_sessions').insert({
 
 #### New Environment Configuration
 ```javascript
-// apps/tell/src/config.js (new file)
+// apps/read/src/config.js (new file)
 const SUPABASE_CONFIG = {
   url: process.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co',
   anonKey: process.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key'
@@ -131,7 +131,7 @@ export default SUPABASE_CONFIG;
 
 #### Updated Main Application Logic
 ```javascript
-// apps/tell/src/signaling.js (new file)
+// apps/read/src/signaling.js (new file)
 import { createClient } from '@supabase/supabase-js';
 import SUPABASE_CONFIG from './config.js';
 
@@ -180,7 +180,7 @@ class SupabaseSignaling {
 
 #### Modified Main Application
 ```javascript
-// apps/tell/src/main.js (modifications)
+// apps/read/src/main.js (modifications)
 import SupabaseSignaling from './signaling.js';
 
 // Replace WebSocket signaling with Supabase

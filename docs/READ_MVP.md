@@ -1,4 +1,4 @@
-# Tell MVP Overview
+# Read MVP Overview
 
 Goals
 
@@ -16,19 +16,19 @@ Modes
 
 Architecture (MVP)
 
-- Frontend: vanilla HTML/CSS/JS in `apps/tell`
+- Frontend: vanilla HTML/CSS/JS in `apps/read`
   - WebRTC: `RTCPeerConnection`, robust autoplay handling, single Start overlay
   - Perfect negotiation pattern, candidate queuing, ICE restart handling
   - DataChannel for story state sync (story selection, scene changes, choices)
 - Signaling: Node `ws` server in `apps/signal` (local ws:// by default)
   - Quick Cloudflare Tunnel recommended for iOS camera/mic permissions (HTTPS)
-- Stories: JSON content in `apps/tell/stories` with `background` hinting
+- Stories: JSON content in `apps/read/stories` with `background` hinting
 
 Key Files
 
-- `apps/tell/index.html` — App shell; now defaults to video-first mode
-- `apps/tell/src/main.js` — WebRTC, story sync, Start overlay, menu, VF controls
-- `apps/tell/src/styles.css` — Namespaced styles for video-first and storybook
+- `apps/read/index.html` — App shell; now defaults to video-first mode
+- `apps/read/src/main.js` — WebRTC, story sync, Start overlay, menu, VF controls
+- `apps/read/src/styles.css` — Namespaced styles for video-first and storybook
 - `apps/signal/server.js` — WebSocket signaling
 
 Setup
@@ -36,7 +36,7 @@ Setup
 1) App
 
 ```sh
-python3 -m http.server 5173 --directory apps/tell
+python3 -m http.server 5173 --directory apps/read
 ```
 
 2) Signal

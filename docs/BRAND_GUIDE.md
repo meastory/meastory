@@ -21,8 +21,8 @@
 
 ### Subdomain Accent System
 - One accent per page; use sparingly (10–20%)
-- tell: Warm Coral #FF6B6B (energy)
-- read: Sky Blue #60A5FA (calm)
+- read: Warm Coral #FF6B6B (energy)
+- tell: Sky Blue #60A5FA (calm)
 - write: Violet #8B5CF6 (creativity)
 - draw: Mint #34D399 (playful)
 - send: Rose #FB7185 (celebratory)
@@ -44,5 +44,5 @@
 - Emphasize safety and togetherness; celebrate imagination
 
 ### Assets & Usage
-- Store shared assets in `apps/tell/public/brand` initially
+- Store shared assets in `apps/read/public/brand` initially
 - Provide favicon, logos (SVG/PNG), and color tokens 

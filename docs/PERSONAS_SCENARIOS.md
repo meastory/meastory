@@ -17,7 +17,7 @@
   - Values: friendly characters; choices shaping the narrative
 
 ### Typical Scenario
-Gloria starts a session on `tell.meastory.com`, shares the link. Paul opens it on a tablet with Charlie. They enjoy a 10-minute interactive adventure. Scenes change with choices, and the UI stays simple and reassuring. Charlie finishes delighted and asks for another story.
+Gloria starts a session on `read.meastory.com`, shares the link. Paul opens it on a tablet with Charlie. They enjoy a 10-minute interactive adventure. Scenes change with choices, and the UI stays simple and reassuring. Charlie finishes delighted and asks for another story.
 
 ### Goals by Persona
 - Gloria: easy start/join, minimal tech friction

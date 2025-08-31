@@ -5,7 +5,7 @@
 - Collect the minimum data necessary; no child personal data
 - Build transparency and consent into flows; publish clear policies
 
-### Phase 1 (MVP) — Tell
+### Phase 1 (MVP) — Read
 - No authentication or accounts
 - Adults generate session links; children join as guests
 - Session links are short-lived (target 24 hours); client-side expiry if no backend

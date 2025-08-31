@@ -25,7 +25,7 @@ Stories are defined as JSON files that the client loads at runtime. Phase 1 uses
 ```
 
 Notes
-- `background` points to a static asset in `apps/tell/public/backgrounds`
+- `background` points to a static asset in `apps/read/public/backgrounds`
 - `choices` are optional for linear scenes; omit or use empty array
 - Personalization (Phase 2): the client substitutes tokens like `{{childName}}`
 
@@ -88,8 +88,8 @@ Notes
 - Human review before publish
 
 ### File Locations
-- Stories: `apps/tell/stories/*.json`
-- Backgrounds: `apps/tell/public/backgrounds/*`
+- Stories: `apps/read/stories/*.json`
+- Backgrounds: `apps/read/public/backgrounds/*`
 
 ### Future Extensions
 - `audio`: per-scene narration assets

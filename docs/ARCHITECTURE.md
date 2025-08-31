@@ -15,7 +15,7 @@
 meastory/
   docs/                        # Product, architecture, policies, runbooks
   apps/
-    tell/                      # Phase 1 MVP static site (Netlify)
+    read/                      # Phase 1 MVP static site (Netlify)
       public/                  # Static assets (images, icons)
       src/                     # Vanilla JS/CSS/HTML
       stories/                 # JSON story definitions
@@ -40,10 +40,10 @@ meastory/
 
 ### Video Provider Plugin Architecture (forward-looking)
 - Keep an interface in `packages/video` (future) with adapters: `webrtc`, `zoom`, `daily`
-- Phase 1 implements only `webrtc` internals inside `apps/tell/src` with an interface boundary to allow later extraction
+- Phase 1 implements only `webrtc` internals inside `apps/read/src` with an interface boundary to allow later extraction
 
 ### Data & Story Schema
-- JSON-based story definitions stored in `apps/tell/stories`
+- JSON-based story definitions stored in `apps/read/stories`
 - Strict, documented schema with validation during build (JSON Schema in Phase 2)
 
 ### Security & Privacy
@@ -56,7 +56,7 @@ meastory/
 - Manual cross-browser smoke tests for Phase 1
 
 ### CI/CD
-- Netlify deploys from `apps/tell`
+- Netlify deploys from `apps/read`
 - Branch deploy previews for feature branches
 - Add GitHub Actions later for lint/typecheck/tests
 

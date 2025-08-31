@@ -5,7 +5,7 @@
 - 3–5 stories in JSON
 - Static backgrounds with transitions
 - Room code generation and joining
-- Netlify deployment at `tell.meastory.com`
+- Netlify deployment at `read.meastory.com`
 
 Milestones
 - M1: Video connection established between two browsers
