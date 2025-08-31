@@ -214,3 +214,17 @@ body {
 .storybook-mode .session-card { display: none; }
 /* But show session cards inside the overlay */
 .storybook-mode .sb-session-overlay .session-card { display: block; } 
+
+/* Storybook page surface */
+.storybook-mode .story-card {
+  position: relative;
+}
+.storybook-mode .story-card::before {
+  content: '';
+  position: absolute; inset: 10px 8px 12px;
+  background: #fbf7eb;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.10);
+  z-index: 0;
+}
+.storybook-mode .story-content { position: relative; z-index: 1; } 
