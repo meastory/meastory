@@ -337,11 +337,7 @@ async function ensurePeer() {
   pc.onconnectionstatechange = () => {
     log('connection state', pc.connectionState);
   };
-  const stream = await ensureMedia();
-  for (const track of stream.getTracks()) {
-    pc.addTrack(track, stream);
-  }
-  // Caller will create channel; callee receives it via ondatachannel
+  // Media will be attached when startPeer runs after role assignment
   try {
     attachDataChannel(pc.createDataChannel('story'));
   } catch (_) {
@@ -365,6 +361,13 @@ async function tryIceRestart() {
 
 async function startPeer(role) {
   await ensurePeer();
+  // Attach local media now that role is known
+  if (!localStream) {
+    const stream = await ensureMedia();
+    for (const track of stream.getTracks()) {
+      pc.addTrack(track, stream);
+    }
+  }
   if (role === 'caller') {
     log('creating offer');
     const offer = await pc.createOffer();
@@ -413,7 +416,6 @@ startRoomButton.addEventListener('click', async () => {
   // Preserve existing signal override if present
   const signalOverride = new URLSearchParams(window.location.search).get('signal');
   if (signalOverride) url.searchParams.set('signal', signalOverride);
-  await ensureMedia();
   connectSignal();
   navigator.clipboard?.writeText(url.toString());
   alert(`Room created. Link copied to clipboard:\n${url.toString()}`);
@@ -431,7 +433,6 @@ joinRoomButton.addEventListener('click', async () => {
   // Preserve existing signal override if present
   const signalOverride = new URLSearchParams(window.location.search).get('signal');
   if (signalOverride) url.searchParams.set('signal', signalOverride);
-  await ensureMedia();
   connectSignal();
   window.history.replaceState({}, '', url.toString());
   enforceExpiry();
@@ -439,7 +440,7 @@ joinRoomButton.addEventListener('click', async () => {
 
 // Auto-join if room param exists
 if (new URLSearchParams(location.search).get('room')) {
-  ensureMedia().then(connectSignal);
+  connectSignal();
 }
 
 // On load
