@@ -31,6 +31,23 @@ const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
 function log(...args) { try { console.log('[webrtc]', ...args); } catch (_) {} }
 
+function attachDataChannel(channel) {
+  try { if (dataChannel && dataChannel !== channel) dataChannel.close?.(); } catch (_) {}
+  dataChannel = channel;
+  try { dataChannel.binaryType = 'arraybuffer'; } catch (_) {}
+  dataChannel.onopen = () => log('datachannel open');
+  dataChannel.onclose = () => { log('datachannel close'); dataChannel = null; };
+  dataChannel.onerror = (e) => log('datachannel error', e?.message || e);
+  dataChannel.onmessage = (event) => {
+    try {
+      const msg = JSON.parse(event.data);
+      handleSyncMessage(msg);
+    } catch (e) {
+      log('datachannel parse error', e);
+    }
+  };
+}
+
 // Allow overriding signaling URL via ?signal=... (e.g., wss://example.trycloudflare.com)
 function getSignalWebSocketUrl() {
   try {
@@ -53,6 +70,8 @@ function resetPeer({ keepLocalStream } = { keepLocalStream: true }) {
     }
   } catch (_) {}
   pc = null;
+  try { if (dataChannel) dataChannel.close?.(); } catch (_) {}
+  dataChannel = null;
   if (remoteVideo && remoteVideo.srcObject) remoteVideo.srcObject = null;
   if (!keepLocalStream && localStream) {
     try { localStream.getTracks().forEach(t => t.stop()); } catch (_) {}
