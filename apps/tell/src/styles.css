@@ -239,18 +239,18 @@ body {
 .video-first .site-header { display: none; }
 .video-first main.container { width: 100%; }
 .video-first .video-card { background: transparent; border: 0; border-radius: 0; padding: 0; margin: 0; }
-.video-first .video-row { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; gap: 0; min-height: 100dvh; }
-@supports not (height: 100dvh) {
-  .video-first .video-row { min-height: calc(100vh - env(safe-area-inset-bottom)); }
+.video-first .video-row { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; gap: 0; min-height: 100svh; }
+@supports not (height: 100svh) {
+  .video-first .video-row { min-height: 100vh; }
 }
 .video-first .video-box { border-radius: 0; background: #000; min-height: auto; position: relative; }
 .video-first .video-box video { width: 100%; height: 100%; object-fit: cover; display: block; }
 @media (max-aspect-ratio: 3/4) {
   .video-first .video-row { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
   /* Bottom overlay sizing for portrait */
-  .video-first .vf-overlay { padding: 8px env(safe-area-inset-right) calc(8px + env(safe-area-inset-bottom)) env(safe-area-inset-left); height: 30dvh; }
-  @supports not (height: 30dvh) {
-    .video-first .vf-overlay { height: 30vh; }
+  .video-first .vf-overlay { padding: 8px env(safe-area-inset-right) calc(8px + env(safe-area-inset-bottom)) env(safe-area-inset-left); height: 28svh; }
+  @supports not (height: 28svh) {
+    .video-first .vf-overlay { height: 28vh; }
   }
   .video-first .vf-overlay .scrim { height: 100%; overflow: auto; -webkit-overflow-scrolling: touch; padding: 10px 12px; }
   .video-first .vf-overlay #sceneText { font-size: clamp(14px, 4vw, 18px); line-height: 1.5; }
