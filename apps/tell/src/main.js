@@ -558,11 +558,40 @@ if (new URLSearchParams(location.search).get('room')) {
 // On load
 enforceExpiry();
 // Init story
-loadDefaultStory(); 
+loadDefaultStory();
 
 // Feature flag: storybook mode (planned incremental rollout)
 const isStorybook = (() => {
   const p = new URLSearchParams(location.search);
   return p.has('storybook') || p.get('sb') === '1';
 })();
-// Currently no-op; guarded code will mount storybook in future milestones 
+// Currently no-op; guarded code will mount storybook in future milestones
+
+if (isStorybook) {
+  try {
+    // Create start overlay once per load
+    const overlay = document.createElement('div');
+    overlay.className = 'storybook-start-overlay';
+    overlay.innerHTML = '<div class="panel"><h2>Ready to Begin?</h2><p>Tap Start to enable audio and begin your story.</p><button class="start-btn">Start</button></div>';
+    document.body.appendChild(overlay);
+    const startBtn = overlay.querySelector('.start-btn');
+    startBtn?.addEventListener('click', async () => {
+      try {
+        // User gesture: try to play and unmute remote; ensure local preview plays
+        if (remoteVideo) {
+          remoteVideo.playsInline = true;
+          remoteVideo.muted = false;
+          try { await remoteVideo.play(); } catch (_) {}
+        }
+        if (localVideo) {
+          localVideo.playsInline = true;
+          // Keep local muted to avoid echo
+          localVideo.muted = true;
+          try { await localVideo.play(); } catch (_) {}
+        }
+      } finally {
+        overlay.remove();
+      }
+    }, { once: true });
+  } catch (_) {}
+} 
