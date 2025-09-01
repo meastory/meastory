@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuthStore } from '../stores/authStore'
+import { useRoomStore } from '../stores/roomStore'
 import RoomManager from './RoomManager'
 import StoryLibrary from './StoryLibrary'
 
@@ -8,11 +9,17 @@ export default function MenuPanel() {
   const [showRoomManager, setShowRoomManager] = useState(false)
   const [showStoryLibrary, setShowStoryLibrary] = useState(false)
   const { user, signOut } = useAuthStore()
+  const { currentRoom, leaveRoom } = useRoomStore()
 
   const toggleMenu = () => setIsOpen(!isOpen)
   
   const handleSignOut = async () => {
     await signOut()
+    setIsOpen(false)
+  }
+
+  const handleLeaveRoom = () => {
+    leaveRoom()
     setIsOpen(false)
   }
 
@@ -63,35 +70,79 @@ export default function MenuPanel() {
             <h2 className="text-2xl font-bold mb-4">Menu</h2>
             
             <div className="space-y-3">
-              <button
-                onClick={() => {
-                  setShowRoomManager(true)
-                  setIsOpen(false)
-                }}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
-              >
-                🎭 Manage Rooms
-              </button>
-              
-              <button
-                onClick={() => {
-                  setShowStoryLibrary(true)
-                  setIsOpen(false)
-                }}
-                className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
-              >
-                📚 Select Story
-              </button>
-              
-              <button
-                onClick={() => {
-                  // TODO: Implement settings
-                  setIsOpen(false)
-                }}
-                className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
-              >
-                ⚙️ Settings
-              </button>
+              {currentRoom ? (
+                // In-room menu options
+                <>
+                  <div className="border-b pb-3 mb-3">
+                    <p className="text-sm text-gray-600 mb-2">
+                      Current Room: <span className="font-semibold">{currentRoom.name}</span>
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Code: {currentRoom.code}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={handleLeaveRoom}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
+                  >
+                    🚪 Leave Room
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setShowStoryLibrary(true)
+                      setIsOpen(false)
+                    }}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
+                  >
+                    📚 Change Story
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      // TODO: Implement room settings
+                      setIsOpen(false)
+                    }}
+                    className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
+                  >
+                    ⚙️ Room Settings
+                  </button>
+                </>
+              ) : (
+                // Room manager menu options
+                <>
+                  <button
+                    onClick={() => {
+                      setShowRoomManager(true)
+                      setIsOpen(false)
+                    }}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
+                  >
+                    🎭 Manage Rooms
+                  </button>
+                  
+                  <button
+                    onClick={() => {
+                      setShowStoryLibrary(true)
+                      setIsOpen(false)
+                    }}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
+                  >
+                    📚 Browse Stories
+                  </button>
+                  
+                  <button
+                    onClick={() => {
+                      // TODO: Implement settings
+                      setIsOpen(false)
+                    }}
+                    className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
+                  >
+                    ⚙️ Settings
+                  </button>
+                </>
+              )}
               
               {user && (
                 <div className="border-t pt-3 mt-4">
