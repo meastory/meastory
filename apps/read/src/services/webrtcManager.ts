@@ -4,6 +4,8 @@ class WebRTCManager {
   private peerConnections: Map<string, RTCPeerConnection> = new Map()
   private dataChannels: Map<string, RTCDataChannel> = new Map()
   private iceCandidatesQueue: Map<string, RTCIceCandidateInit[]> = new Map()
+  private audioSender: RTCRtpSender | null = null
+  private videoSender: RTCRtpSender | null = null
   private iceServers: RTCConfiguration = {
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
@@ -31,6 +33,9 @@ class WebRTCManager {
     } else {
       console.warn('⚠️ No local stream available when creating peer connection')
     }
+    
+    // Update sender references
+    this.updateSenderReferences(peerConnection)
     
     // Handle remote stream
     peerConnection.ontrack = (event) => {
@@ -61,12 +66,14 @@ class WebRTCManager {
       
       if (state === 'connected') {
         console.log(`✅ Connected to ${peerId}`)
+        // Ensure all local tracks are properly attached
+        this.addMissingLocalTracks(peerId)
         // Data channel should be ready now
         console.log('📡 Data channels:', Array.from(this.dataChannels.keys()))
       } else if (state === 'connecting') {
         console.log(`🔄 Connecting to ${peerId}...`)
       } else if (state === 'disconnected') {
-        console.log(`�� Disconnected from ${peerId}`)
+        console.log(`🔌 Disconnected from ${peerId}`)
       } else if (state === 'failed') {
         console.error(`❌ Connection failed for ${peerId}`)
         this.handleConnectionFailure(peerId)
@@ -81,6 +88,51 @@ class WebRTCManager {
     
     this.peerConnections.set(peerId, peerConnection)
     return peerConnection
+  }
+
+  updateSenderReferences(peerConnection: RTCPeerConnection): void {
+    try {
+      const senders = peerConnection.getSenders?.() || []
+      if (!this.audioSender) {
+        this.audioSender = senders.find(s => s.track && s.track.kind === 'audio') || null
+      }
+      if (!this.videoSender) {
+        this.videoSender = senders.find(s => s.track && s.track.kind === 'video') || null
+      }
+    } catch (error) {
+      console.error('❌ Error updating sender references:', error)
+    }
+  }
+
+  addMissingLocalTracks(peerId: string): void {
+    const peerConnection = this.peerConnections.get(peerId)
+    if (!peerConnection) return
+    
+    const localStream = useWebRTCStore.getState().localStream
+    if (!localStream) return
+    
+    // Update sender references
+    this.updateSenderReferences(peerConnection)
+    
+    // Audio: always attach if missing
+    const audioTrack = localStream.getAudioTracks()[0]
+    if (audioTrack) {
+      if (this.audioSender && this.audioSender.track !== audioTrack) {
+        try { this.audioSender.replaceTrack(audioTrack) } catch (_) {}
+      } else if (!this.audioSender) {
+        try { this.audioSender = peerConnection.addTrack(audioTrack, localStream) } catch (_) {}
+      }
+    }
+    
+    // Video: attach if we have video enabled
+    const videoTrack = localStream.getVideoTracks()[0]
+    if (videoTrack) {
+      if (this.videoSender && this.videoSender.track !== videoTrack) {
+        try { this.videoSender.replaceTrack(videoTrack) } catch (_) {}
+      } else if (!this.videoSender) {
+        try { this.videoSender = peerConnection.addTrack(videoTrack, localStream) } catch (_) {}
+      }
+    }
   }
 
   async createOffer(peerId: string): Promise<void> {
@@ -152,6 +204,9 @@ class WebRTCManager {
     try {
       await peerConnection.setRemoteDescription(new RTCSessionDescription(answer))
       console.log('✅ Answer processed from:', from)
+      
+      // Ensure local tracks are properly attached
+      this.addMissingLocalTracks(from)
       
       // Process any queued ICE candidates now that remote description is set
       this.processQueuedIceCandidates(from)
@@ -228,9 +283,9 @@ class WebRTCManager {
         
         // Handle different message types
         switch (message.type) {
-          case 'story-choice':
+          case 'choice':
             // Handle story choice synchronization
-            this.handleStoryChoiceSync(message.choiceId)
+            this.handleStoryChoiceSync(message.nextSceneId)
             break
           case 'child-name-change':
             // Handle child name synchronization
@@ -258,7 +313,7 @@ class WebRTCManager {
     if (dataChannel && dataChannel.readyState === 'open') {
       dataChannel.send(JSON.stringify(message))
     } else {
-      console.warn('�� Data channel not ready for:', peerId)
+      console.warn('📡 Data channel not ready for:', peerId)
     }
   }
 
@@ -291,7 +346,7 @@ class WebRTCManager {
   }
 
   closeAllConnections(): void {
-    console.log('�� Closing all WebRTC connections')
+    console.log('🔌 Closing all WebRTC connections')
     
     // Close peer connections
     this.peerConnections.forEach((peerConnection, peerId) => {
@@ -312,11 +367,10 @@ class WebRTCManager {
   }
 
   // Story synchronization methods
-  syncStoryChoice(choiceId: number): void {
+  syncStoryChoice(sceneId: string): void {
     this.broadcastDataMessage({
-      type: 'story-choice',
-      choiceId,
-      timestamp: Date.now()
+      type: 'choice',
+      nextSceneId: sceneId
     })
   }
 
@@ -328,30 +382,38 @@ class WebRTCManager {
     })
   }
 
-  handleStoryChoiceSync(choiceId: number): void {
-    console.log('📖 Syncing story choice from remote participant:', choiceId)
-    // Import room store dynamically to avoid circular dependencies
-    import('../stores/roomStore').then(({ useRoomStore }) => {
-      const roomStore = useRoomStore.getState()
-      if (roomStore.currentStory) {
-        roomStore.loadScene(choiceId)
-      }
-    }).catch(error => {
+  handleStoryChoiceSync(nextSceneId: string): void {
+    console.log('📖 Syncing story choice to scene:', nextSceneId)
+    // Navigate to the scene by ID
+    try {
+      // Use a simple approach - update the room store directly
+      import('../stores/roomStore').then(({ useRoomStore }) => {
+        const roomStore = useRoomStore.getState()
+        if (roomStore.currentStory && nextSceneId) {
+          roomStore.loadScene(nextSceneId)
+        }
+      }).catch(error => {
+        console.error('❌ Error syncing story choice:', error)
+      })
+    } catch (error) {
       console.error('❌ Error syncing story choice:', error)
-    })
+    }
   }
 
   handleChildNameSync(name: string): void {
     console.log('👤 Syncing child name from remote participant:', name)
-    // Import room store dynamically to avoid circular dependencies
-    import('../stores/roomStore').then(({ useRoomStore }) => {
-      const roomStore = useRoomStore.getState()
-      // Update child name in local storage and state
+    // Update child name in local storage and state
+    try {
       localStorage.setItem('childName', name)
-      roomStore.setChildName(name)
-    }).catch(error => {
+      import('../stores/roomStore').then(({ useRoomStore }) => {
+        const roomStore = useRoomStore.getState()
+        roomStore.setChildName(name)
+      }).catch(error => {
+        console.error('❌ Error syncing child name:', error)
+      })
+    } catch (error) {
       console.error('❌ Error syncing child name:', error)
-    })
+    }
   }
 }
 

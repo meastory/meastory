@@ -60,11 +60,10 @@ export default function StoryPlayer() {
       // Sync choice with other participants via WebRTC data channels
       try {
         const { webrtcManager } = await import('../services/webrtcManager')
-        webrtcManager.syncStoryChoice(nextSceneOrder)
+        webrtcManager.syncStoryChoice(nextScene.id)
       } catch (webrtcError) {
         console.warn('WebRTC sync failed:', webrtcError)
-      }
-      
+      }      
     } catch (error) {
       console.error('❌ Error loading next scene:', error)
     } finally {
