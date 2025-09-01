@@ -33,12 +33,13 @@ export default function MenuPanel() {
 
   return (
     <>
-      <button onClick={toggleMenu} className="menu-button" aria-label="Open menu">
+      {/* Menu Button - positioned in top-right corner */}
+      <button onClick={toggleMenu} className="menu-btn" aria-label="Open menu">
         ☰
       </button>
 
       {isOpen && (
-        <div className="menu-panel">
+        <div className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full text-gray-900">
             <h2 className="text-2xl font-bold mb-4">Menu</h2>
             
