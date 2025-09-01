@@ -201,7 +201,11 @@ export default function RoomManager() {
   return (
     <div className="min-h-screen bg-black text-white p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-center">Room Manager</h1>
+        <h1 className="text-3xl font-bold mb-4 text-center">Room Manager</h1>
+        <p className="text-gray-400 text-center mb-8 max-w-2xl mx-auto">
+          Create or join rooms to read stories together. Once in a room, you can change stories 
+          anytime without leaving - perfect for multiple storytelling sessions!
+        </p>
         
         {/* Tabs - Fixed styling */}
         <div className="flex mb-6 border-b border-gray-700">
@@ -251,7 +255,7 @@ export default function RoomManager() {
                   onChange={(e) => setSelectedStoryId(e.target.value)}
                   className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
                 >
-                  <option value="">No story selected</option>
+                  <option value="">No story selected (you can change later)</option>
                   {stories.map((story) => (
                     <option key={story.id} value={story.id}>
                       {story.title}
@@ -259,7 +263,8 @@ export default function RoomManager() {
                   ))}
                 </select>
                 <p className="text-xs text-gray-400 mt-1">
-                  Choose a story to use in this room, or leave blank to select later
+                  Choose a story to start with, or leave blank and select one later. 
+                  You can change stories anytime without leaving the room!
                 </p>
               </div>
               

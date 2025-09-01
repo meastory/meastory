@@ -38,8 +38,10 @@ export default function StoryLibrary() {
 
   const handleStorySelect = async (story: Story) => {
     if (currentRoom) {
-      // We're in a room, update the room's story
+      // We're in a room, change the story for all participants
       console.log('🔄 Changing room story to:', story.title)
+      setMessage(`Changing story to: ${story.title}...`)
+
       try {
         const { error } = await supabase
           .from('rooms')
@@ -56,7 +58,7 @@ export default function StoryLibrary() {
         setMessage('Error changing story')
       }
     } else {
-      // Not in a room, show preview and option to create room
+      // Not in a room, just show preview
       setSelectedStory(story)
     }
   }
@@ -109,9 +111,27 @@ export default function StoryLibrary() {
     <div className="min-h-screen bg-black text-white p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 text-center">
-          {currentRoom ? 'Change Story' : 'Story Library'}
+          {currentRoom ? 'Choose a New Story' : 'Create Room with Story'}
         </h1>
         
+        {!currentRoom && (
+          <div className="mb-6 p-4 bg-blue-900/50 rounded-lg border border-blue-500/30">
+            <p className="text-blue-200 text-center text-sm">
+              Select a story below to create a new room. Once in a room, you can change stories 
+              anytime without creating new rooms - perfect for multiple storytelling sessions!
+            </p>
+          </div>
+        )}
+
+        {currentRoom && (
+          <div className="mb-6 p-4 bg-blue-900/50 rounded-lg border border-blue-500/30">
+            <p className="text-blue-200 text-center">
+              🎭 You're in room: <span className="font-semibold">{currentRoom.name}</span><br/>
+              <span className="text-sm">Changing the story will affect all participants in this room</span>
+            </p>
+          </div>
+        )}
+
         {message && (
           <div className="mb-8 p-4 bg-gray-800 rounded-lg text-center">
             <p className="text-sm">{message}</p>
@@ -122,7 +142,7 @@ export default function StoryLibrary() {
           {stories.map((story) => (
             <div 
               key={story.id}
-              className="bg-gray-900 rounded-lg p-6 hover:bg-gray-800 transition-colors cursor-pointer"
+              className="bg-gray-900 rounded-lg p-6 hover:bg-gray-800 transition-colors cursor-pointer border-2 border-transparent hover:border-blue-500/50"
               onClick={() => handleStorySelect(story)}
             >
               <h3 className="text-xl font-bold mb-2">{story.title}</h3>
@@ -130,7 +150,7 @@ export default function StoryLibrary() {
                 {story.description || 'No description available'}
               </p>
               <div className="text-xs text-gray-400">
-                {currentRoom ? 'Tap to select' : 'Tap to preview'}
+                {currentRoom ? 'Click to change story for everyone' : 'Click to create room with this story'}
               </div>
             </div>
           ))}
@@ -142,7 +162,7 @@ export default function StoryLibrary() {
           </div>
         )}
 
-        {/* Story Preview Modal */}
+        {/* Story Preview Modal - Only for out-of-room selection */}
         {selectedStory && !currentRoom && (
           <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
             <div className="bg-gray-900 rounded-lg p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto">

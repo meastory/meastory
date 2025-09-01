@@ -99,6 +99,10 @@ export default function MenuPanel() {
                     📚 Change Story
                   </button>
 
+                  <p className="text-xs text-gray-400 text-center mt-1">
+                    Change the story for everyone in this room
+                  </p>
+
                   <button
                     onClick={() => {
                       // TODO: Implement room settings
