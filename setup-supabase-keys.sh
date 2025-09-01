@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "🔑 Setting up Supabase API Keys"
+echo "================================"
+echo ""
+echo "Your Supabase project URL is already configured:"
+echo "VITE_SUPABASE_URL=https://dsckjfnvcqsriyalhgrz.supabase.co"
+echo ""
+echo "To get your ANON KEY:"
+echo "1. Go to: https://supabase.com/dashboard/project/dsckjfnvcqsriyalhgrz/settings/api"
+echo "2. Copy the 'anon public' key"
+echo "3. Replace 'your_supabase_anon_key_here' in apps/read/.env"
+echo ""
+echo "Or run this command to open the settings page:"
+echo "open https://supabase.com/dashboard/project/dsckjfnvcqsriyalhgrz/settings/api"
+echo ""
+echo "Once you've updated the .env file, your app will be ready to connect to Supabase!"
