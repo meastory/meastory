@@ -28,14 +28,49 @@ export default function RoomManager() {
 
   const loadUserRooms = async () => {
     try {
-      const { data, error } = await supabase
+      // Load rooms where user is host OR participant
+      const { data: hostedRooms, error: hostedError } = await supabase
         .from('rooms')
-        .select('*')
+        .select('id, name, code, story_id, host_id, status, created_at, updated_at, max_participants, settings, ended_at')
         .eq('host_id', user!.id)
-        .order('created_at', { ascending: false })
 
-      if (error) throw error
-      setRooms(data || [])
+      if (hostedError) throw hostedError
+
+      // Load rooms where user is a participant
+      const { data: participantRooms, error: participantError } = await supabase
+        .from('room_participants')
+        .select(`
+          room_id,
+          rooms (
+            id,
+            name,
+            code,
+            story_id,
+            host_id,
+            status,
+            created_at,
+            updated_at,
+            max_participants,
+            settings,
+            ended_at
+          )
+        `)
+        .eq('user_id', user!.id)
+
+      if (participantError) throw participantError
+
+      // Combine and deduplicate rooms
+      const allRooms = [
+        ...(hostedRooms || []),
+        ...(participantRooms?.map(p => p.rooms).filter(Boolean) || [])
+      ]
+
+      // Remove duplicates based on room ID
+      const uniqueRooms = allRooms.filter((room, index, self) => 
+        index === self.findIndex(r => r.id === room.id)
+      )
+
+      setRooms(uniqueRooms)
     } catch (error) {
       console.error('Error loading rooms:', error)
     }
@@ -99,24 +134,29 @@ export default function RoomManager() {
         }
       }
 
+      // Reset form
       setRoomName('')
       setSelectedStoryId('')
+
+      // Reload rooms to show the new room
       loadUserRooms()
     } catch (error: any) {
-      console.error('❌ Room creation error:', error)
+      console.error('❌ Error creating room:', error)
       setMessage(`Error creating room: ${error.message}`)
     } finally {
       setLoading(false)
     }
   }
 
-  const joinRoom = async () => {
+  const handleJoinRoom = async () => {
     if (!user || !roomCode.trim()) return
 
     setLoading(true)
     setMessage('')
 
     try {
+      console.log('🔗 Joining room with code:', roomCode.trim())
+
       // First, find the room
       const { data: room, error: roomError } = await supabase
         .from('rooms')
@@ -125,6 +165,8 @@ export default function RoomManager() {
         .single()
 
       if (roomError) throw roomError
+
+      console.log('📋 Found room:', room.name, 'ID:', room.id)
 
       // Check if user is already a participant
       const { data: existingParticipant } = await supabase
@@ -152,9 +194,11 @@ export default function RoomManager() {
 
       setMessage(`Successfully joined room: ${room.name}`)
       setRoomCode('')
+
+      // Reload rooms to show the joined room
       loadUserRooms()
     } catch (error: any) {
-      console.error('Room join error:', error)
+      console.error('❌ Room join error:', error)
       setMessage(`Error joining room: ${error.message}`)
     } finally {
       setLoading(false)
@@ -227,123 +271,114 @@ export default function RoomManager() {
           </button>
         </div>
 
-        {/* Create Room Tab */}
-        {activeTab === 'create' && (
-          <div className="bg-gray-900 rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-bold mb-4">Create New Room</h2>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Room Name</label>
-                <input
-                  type="text"
-                  value={roomName}
-                  onChange={(e) => setRoomName(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter room name"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-2">Select Story (Optional)</label>
-                <select
-                  value={selectedStoryId}
-                  onChange={(e) => setSelectedStoryId(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-                >
-                  <option value="">No story selected</option>
-                  {stories.map((story) => (
-                    <option key={story.id} value={story.id}>
-                      {story.title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              
-              <button
-                onClick={createRoom}
-                disabled={loading || !roomName.trim()}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 px-4 py-2 rounded-lg font-medium transition-colors"
-              >
-                {loading ? 'Creating...' : 'Create Room'}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Join Room Tab */}
-        {activeTab === 'join' && (
-          <div className="bg-gray-900 rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-bold mb-4">Join Existing Room</h2>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Room Code</label>
-                <input
-                  type="text"
-                  value={roomCode}
-                  onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter room code (e.g., ABC123)"
-                  maxLength={6}
-                />
-              </div>
-              
-              <button
-                onClick={joinRoom}
-                disabled={loading || !roomCode.trim()}
-                className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-600 px-4 py-2 rounded-lg font-medium transition-colors"
-              >
-                {loading ? 'Joining...' : 'Join Room'}
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* Status Message */}
         {message && (
-          <div className="mb-8 p-4 bg-gray-800 rounded-lg">
-            <p className="text-sm">{message}</p>
+          <div className="mb-6 p-4 bg-blue-900/50 border border-blue-500 rounded-lg text-center">
+            {message}
           </div>
         )}
 
-        {/* User's Rooms */}
-        <div className="bg-gray-900 rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4">Your Rooms</h2>
+        {/* Tab Content */}
+        {activeTab === 'create' && (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Room Name</label>
+              <input
+                type="text"
+                value={roomName}
+                onChange={(e) => setRoomName(e.target.value)}
+                placeholder="Enter room name"
+                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Select Story (Optional)</label>
+              <select
+                value={selectedStoryId}
+                onChange={(e) => setSelectedStoryId(e.target.value)}
+                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/50"
+              >
+                <option value="">No story selected</option>
+                {stories.map((story) => (
+                  <option key={story.id} value={story.id}>
+                    {story.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              onClick={createRoom}
+              disabled={loading || !roomName.trim()}
+              className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white rounded-lg font-medium transition-colors"
+            >
+              {loading ? 'Creating...' : 'Create Room'}
+            </button>
+          </div>
+        )}
+
+        {activeTab === 'join' && (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Room Code</label>
+              <input
+                type="text"
+                value={roomCode}
+                onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
+                placeholder="Enter 6-character room code"
+                maxLength={6}
+                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 text-center text-2xl font-mono tracking-wider"
+              />
+            </div>
+
+            <button
+              onClick={handleJoinRoom}
+              disabled={loading || roomCode.length !== 6}
+              className="w-full px-6 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white rounded-lg font-medium transition-colors"
+            >
+              {loading ? 'Joining...' : 'Join Room'}
+            </button>
+          </div>
+        )}
+
+        {/* Your Rooms */}
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Your Rooms</h2>
           
           {rooms.length === 0 ? (
-            <p className="text-gray-400">No rooms created yet</p>
+            <p className="text-gray-400 text-center py-8">
+              {activeTab === 'create' 
+                ? 'Create your first room to get started!' 
+                : 'No rooms available. Create a room or join one with a code.'}
+            </p>
           ) : (
-            <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
               {rooms.map((room) => (
-                <div key={room.id} className="bg-gray-800 rounded-lg p-4">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-medium">{room.name}</h3>
-                      <p className="text-sm text-gray-400">Code: {room.code || 'Generating...'}</p>
-                      {room.story_id && (
-                        <p className="text-sm text-green-400">
-                          Story: {stories.find(s => s.id === room.story_id)?.title || 'Loading...'}
-                        </p>
-                      )}
-                      <p className="text-sm text-gray-400">
-                        Status: {room.status} | Created: {new Date(room.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="text-right space-y-2">
-                      <button
-                        onClick={() => handleEnterRoom(room)}
-                        className="block w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm transition-colors"
-                      >
-                        Enter Room
-                      </button>
+                <div key={room.id} className="bg-white/10 border border-white/20 rounded-lg p-4">
+                  <h3 className="font-semibold text-lg mb-2">{room.name}</h3>
+                  <p className="text-sm text-gray-300 mb-2">
+                    Code: <span className="font-mono font-bold">{room.code}</span>
+                  </p>
+                  <p className="text-sm text-gray-400 mb-4">
+                    Status: {room.status || 'Active'}
+                  </p>
+                  
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEnterRoom(room)}
+                      className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                    >
+                      Enter Room
+                    </button>
+                    {room.host_id === user.id && (
                       <button
                         onClick={() => handleDeleteRoom(room.id, room.name)}
-                        className="block w-full bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm transition-colors"
+                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
                       >
-                        Delete Room
+                        Delete
                       </button>
-                    </div>
+                    )}
                   </div>
                 </div>
               ))}
