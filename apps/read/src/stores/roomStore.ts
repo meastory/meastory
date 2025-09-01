@@ -19,7 +19,7 @@ interface RoomState {
 interface RoomActions {
   enterRoom: (roomId: string) => Promise<void>
   loadStory: (storyId: string) => Promise<void>
-  loadScene: (sceneId: string) => Promise<void>
+  loadScene: (sceneId: string | number) => Promise<void>
   loadParticipants: (roomId: string) => Promise<void>
   leaveRoom: () => void
   setError: (error: string | null) => void
@@ -110,14 +110,30 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
     }
   },
 
-  loadScene: async (sceneId: string) => {
-    console.log('🎭 Loading scene:', sceneId)
+  loadScene: async (sceneIdentifier: string | number) => {
+    console.log('🎭 Loading scene:', sceneIdentifier)
+    const { currentStory } = get()
+    
+    if (!currentStory) {
+      console.error('❌ No current story to load scene from')
+      return
+    }
+
     try {
-      const { data: scene, error } = await supabase
+      let query = supabase
         .from('story_scenes')
         .select('*')
-        .eq('id', sceneId)
-        .single()
+        .eq('story_id', currentStory.id)
+
+      // If sceneIdentifier is a number, load by scene_order
+      if (typeof sceneIdentifier === 'number') {
+        query = query.eq('scene_order', sceneIdentifier)
+      } else {
+        // If it's a string, load by UUID
+        query = query.eq('id', sceneIdentifier)
+      }
+
+      const { data: scene, error } = await query.single()
 
       if (error) throw error
 
@@ -147,7 +163,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
   },
 
   leaveRoom: () => {
-    console.log('🚪 Leaving room')
+    console.log('�� Leaving room')
     set({
       currentRoom: null,
       currentStory: null,
