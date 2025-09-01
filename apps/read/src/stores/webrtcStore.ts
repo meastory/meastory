@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { supabase } from './authStore'
 
 interface Participant {
   id: string
@@ -24,7 +25,7 @@ interface WebRTCState {
   isConnecting: boolean
   
   // Signaling
-  signalingSocket: WebSocket | null
+  signalingSocket: any
 }
 
 interface WebRTCActions {
@@ -38,7 +39,7 @@ interface WebRTCActions {
   toggleVideo: () => void
   
   // Signaling
-  sendSignalingMessage: (type: string, payload?: any) => void
+  sendSignalingMessage: (type: string, payload?: any) => Promise<void>
   
   // Participant management
   addParticipant: (id: string, name?: string) => void
@@ -50,7 +51,6 @@ interface WebRTCActions {
   handleOffer: (from: string, offer: RTCSessionDescriptionInit) => Promise<void>
   handleAnswer: (from: string, answer: RTCSessionDescriptionInit) => Promise<void>
   handleCandidate: (from: string, candidate: RTCIceCandidateInit) => Promise<void>
-  handleSignalingMessage: (message: any) => void
   
   // Error handling
   setError: (error: string) => void
@@ -79,45 +79,63 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
       // Initialize local media stream first
       await get().initializeLocalStream()
 
-      // Connect to signaling server
-      const signalingUrl = process.env.NODE_ENV === 'production' 
-        ? 'wss://meastory-signal.herokuapp.com' // Update with your production URL
-        : 'ws://localhost:3001'
+      // Use Supabase Realtime for signaling instead of custom WebSocket
+      console.log('📡 Setting up Supabase Realtime signaling for room:', roomCode)
       
-      const socket = new WebSocket(signalingUrl)
+      // Subscribe to room-specific signaling channel
+      const channel = supabase.channel(`webrtc-${roomCode}`)
       
-      socket.onopen = () => {
-        console.log('📡 Signaling connection established')
-        set({ signalingSocket: socket, roomId, isConnected: true, isConnecting: false })
-        
-        // Join the room
-        socket.send(JSON.stringify({
-          type: 'join',
-          roomId: roomCode // Use the room code for signaling
-        }))
-      }
+      // Handle signaling messages
+      channel
+        .on('broadcast', { event: 'offer' }, ({ payload }: { payload: any }) => {
+          console.log('📨 Received offer via Supabase Realtime')
+          get().handleOffer(payload.from, payload.offer)
+        })
+        .on('broadcast', { event: 'answer' }, ({ payload }: { payload: any }) => {
+          console.log('📨 Received answer via Supabase Realtime')
+          get().handleAnswer(payload.from, payload.answer)
+        })
+        .on('broadcast', { event: 'candidate' }, ({ payload }: { payload: any }) => {
+          console.log('🧊 Received ICE candidate via Supabase Realtime')
+          get().handleCandidate(payload.from, payload.candidate)
+        })
+        .on('broadcast', { event: 'join' }, ({ payload }: { payload: any }) => {
+          console.log('👥 Participant joined via Supabase Realtime:', payload.clientId)
+          get().addParticipant(payload.clientId, payload.name)
+        })
+        .on('broadcast', { event: 'leave' }, ({ payload }: { payload: any }) => {
+          console.log('👋 Participant left via Supabase Realtime:', payload.clientId)
+          get().removeParticipant(payload.clientId)
+        })
 
-      socket.onmessage = (event) => {
-        try {
-          const message = JSON.parse(event.data)
-          get().handleSignalingMessage(message)
-        } catch (error) {
-          console.error('❌ Error parsing signaling message:', error)
+      // Subscribe to the channel
+      await channel.subscribe(async (status: string) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('📡 Supabase Realtime signaling connected')
+          set({ signalingSocket: channel, roomId, isConnected: true, isConnecting: false })
+          
+          // Announce our presence in the room
+          await channel.send({
+            type: 'broadcast',
+            event: 'join',
+            payload: { 
+              clientId: `user-${Date.now()}`,
+              name: 'Participant'
+            }
+          })
+          
+          console.log('✅ Successfully connected to WebRTC signaling')
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('❌ Supabase Realtime channel error')
+          set({ isConnecting: false })
+          get().setError('Failed to connect to signaling channel')
+        } else if (status === 'TIMED_OUT') {
+          console.error('❌ Supabase Realtime connection timed out')
+          set({ isConnecting: false })
+          get().setError('Signaling connection timed out')
         }
-      }
-
-      socket.onclose = () => {
-        console.log('📡 Signaling connection closed')
-        set({ signalingSocket: null, isConnected: false })
-        get().disconnect()
-      }
-
-      socket.onerror = (error) => {
-        console.error('❌ Signaling connection error:', error)
-        set({ isConnecting: false })
-        get().setError('Failed to connect to signaling server')
-      }
-
+      })
+      
     } catch (error: any) {
       console.error('❌ Connection error:', error)
       set({ isConnecting: false })
@@ -130,9 +148,9 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
     
     const { signalingSocket, localStream } = get()
     
-    // Close signaling connection
-    if (signalingSocket) {
-      signalingSocket.close()
+    // Close Supabase Realtime channel
+    if (signalingSocket && typeof signalingSocket.unsubscribe === 'function') {
+      signalingSocket.unsubscribe()
     }
     
     // Close WebRTC manager connections
@@ -207,15 +225,15 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
     }
   },
 
-  sendSignalingMessage: (type: string, payload?: any) => {
-    const { signalingSocket, clientId } = get()
+  sendSignalingMessage: async (type: string, payload?: any) => {
+    const { signalingSocket } = get()
     
-    if (signalingSocket && signalingSocket.readyState === WebSocket.OPEN) {
-      signalingSocket.send(JSON.stringify({
-        type,
-        payload,
-        clientId
-      }))
+    if (signalingSocket && typeof signalingSocket.send === 'function') {
+      await signalingSocket.send({
+        type: 'broadcast',
+        event: type,
+        payload
+      })
     }
   },
 
