@@ -5,6 +5,8 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  VITE_SUPABASE_URL = "https://dsckjfnvcqsriyalhgrz.supabase.co"
+  VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzY2tqZm52Y3Fz\ncml5YWxoZ3J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY3MzQ4MjAsImV4cCI6MjA3MjMxMDgyMH0.LVA0u8ymyn2Z0yOETNU5TkSRM8sm\n335wQHT9AyYW8Us"
 
 [[redirects]]
   from = "/*"
@@ -17,7 +19,7 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' https: wss:"
+    Content-Security-Policy = "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self' https: wss:;"
 
 [[headers]]
   for = "/index.html"
