@@ -51,9 +51,9 @@ print_status "Creating GitHub repository..."
 REPO_NAME="meastory"
 REPO_DESCRIPTION="Me A Story - Live video storytelling for families"
 
-# Check if repository already exists
-if gh repo view "create-meastory/$REPO_NAME" &> /dev/null; then
-    print_warning "Repository 'create-meastory/$REPO_NAME' already exists"
+# Check if repository already exists (try both usernames)
+if gh repo view "meastory/$REPO_NAME" &> /dev/null; then
+    print_warning "Repository 'meastory/$REPO_NAME' already exists"
     
     # Check if remote is already set
     if git remote get-url origin &> /dev/null; then
@@ -62,7 +62,7 @@ if gh repo view "create-meastory/$REPO_NAME" &> /dev/null; then
         exit 0
     else
         print_status "Setting up git remote for existing repository..."
-        git remote add origin "https://github.com/create-meastory/$REPO_NAME.git"
+        git remote add origin "https://github.com/meastory/$REPO_NAME.git"
     fi
 else
     print_status "Creating new repository: $REPO_NAME"
@@ -70,7 +70,7 @@ else
     
     if [ $? -eq 0 ]; then
         print_success "GitHub repository created successfully"
-        git remote add origin "https://github.com/create-meastory/$REPO_NAME.git"
+        git remote add origin "https://github.com/meastory/$REPO_NAME.git"
     else
         print_error "Failed to create GitHub repository"
         exit 1
@@ -84,9 +84,9 @@ git push -u origin main
 
 if [ $? -eq 0 ]; then
     print_success "Code pushed to GitHub successfully!"
-    print_status "Repository URL: https://github.com/create-meastory/$REPO_NAME"
+    print_status "Repository URL: https://github.com/meastory/$REPO_NAME"
     print_status "You can now:"
-    echo "  - View your code: https://github.com/create-meastory/$REPO_NAME"
+    echo "  - View your code: https://github.com/meastory/$REPO_NAME"
     echo "  - Set up GitHub Actions for CI/CD"
     echo "  - Enable branch protection rules"
     echo "  - Configure repository settings"
