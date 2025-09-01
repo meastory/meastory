@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Me A Story — Tell</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./src/styles.css" />
+    <link rel="icon" href="./public/brand/icons/tell-logo.svg" type="image/svg+xml">
+  </head>
+  <body>
+    <script>
+      (function(){
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const mode = (params.get('mode') || '').toLowerCase();
+          const wantsStorybook = params.has('storybook') || params.get('sb') === '1' || mode === 'storybook';
+          if (wantsStorybook) {
+            document.documentElement.classList.add('storybook-mode');
+          } else {
+            document.documentElement.classList.add('video-first');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <header class="site-header">
+      <h1>Me A Story — Tell</h1>
+      <p class="tagline">Live video storytelling for families</p>
+    </header>
+
+    <main class="container">
+      <section class="session-card">
+        <h2>Start or Join a Story</h2>
+        <div class="form-row">
+          <button id="startRoomButton" class="btn primary">Start a room</button>
+          <input id="roomCodeInput" class="input" placeholder="Enter room code" />
+          <button id="joinRoomButton" class="btn">Join</button>
+        </div>
+        <p class="hint">Share the room link with your family. Children join via link — no account needed.</p>
+      </section>
+
+      <section class="session-card">
+        <h2>Select a Story</h2>
+        <div class="form-row">
+          <select id="storySelect" class="input">
+            <option value="dragon-adventure">The Friendly Dragon</option>
+            <option value="underwater-adventure">Underwater Adventure</option>
+            <option value="space-journey">Space Journey</option>
+          </select>
+          <button id="loadStoryButton" class="btn">Load</button>
+        </div>
+      </section>
+
+      <section class="video-card">
+        <div class="video-row">
+          <div class="video-box"><video id="localVideo" autoplay playsinline muted></video></div>
+          <div class="video-box"><video id="remoteVideo" autoplay playsinline></video></div>
+        </div>
+        <div class="form-row">
+          <button id="toggleMic" class="btn">Mute</button>
+          <button id="toggleCam" class="btn">Camera Off</button>
+        </div>
+      </section>
+
+      <section class="story-card">
+        <div id="background" class="background"></div>
+        <div class="story-content">
+          <h3 id="storyTitle">Loading story…</h3>
+          <p id="sceneText"></p>
+          <div id="choices" class="choices"></div>
+          <div class="controls">
+            <button id="prevButton" class="btn" disabled>Previous</button>
+            <button id="nextButton" class="btn">Next</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="safety-note">
+        <p>Adults initiate sessions. No child data is collected. Report concerns via the site footer.</p>
+      </section>
+    </main>
+
+    <script src="./src/main.js" type="module"></script>
+  </body>
+</html> 
