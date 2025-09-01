@@ -23,11 +23,11 @@ interface RoomActions {
   loadScene: (sceneId: string | number) => Promise<void>
   loadParticipants: (roomId: string) => Promise<void>
   leaveRoom: () => void
+  changeStory: (storyId: string) => Promise<void>
   setError: (error: string | null) => void
   setLoading: (loading: boolean) => void
   setChildName: (name: string) => void
 }
-
 const initialState: RoomState = {
   currentRoom: null,
   currentStory: null,
@@ -182,14 +182,41 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
     }
   },
 
-  leaveRoom: () => {
+  changeStory: async (storyId: string) => {
+    console.log('🔄 Changing story in room to:', storyId)
+    
+    try {
+      // Update the room's story in database
+      const currentRoom = get().currentRoom
+      if (!currentRoom) {
+        throw new Error('No current room available')
+      }
+      
+      const { error } = await supabase
+        .from('rooms')
+        .update({ story_id: storyId })
+        .eq('id', currentRoom.id)
+      
+      if (error) throw error
+      
+      // Load the new story (this won't disconnect WebRTC)
+      await get().loadStory(storyId)
+      
+      console.log('✅ Story changed successfully without disconnecting WebRTC')
+    } catch (error: any) {
+      console.error('❌ Error changing story:', error)
+      set({ error: error.message })
+    }
+  },
+
+  leaveRoom: async () => {
     console.log('🚪 Leaving room')
     
     // Disconnect from WebRTC
     try {
-      const webrtcModule = require('./webrtcStore')
-      const webrtcStore = (webrtcModule as any).useWebRTCStore
-      webrtcStore.getState().disconnect()
+      const webrtcModule = await import('./webrtcStore')
+      const webrtcStore = webrtcModule.useWebRTCStore
+      await webrtcStore.getState().disconnect()
     } catch (error) {
       console.warn('WebRTC store not available for disconnect:', error)
     }
@@ -202,5 +229,4 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       participants: [],
       error: null,
     })
-  },
-}))
+  },}))

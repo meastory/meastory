@@ -11,7 +11,7 @@ interface StoryLibraryProps {
 }
 
 export default function StoryLibrary({ onClose }: StoryLibraryProps) {
-  const { currentRoom, enterRoom } = useRoomStore()
+  const { currentRoom, enterRoom, changeStory } = useRoomStore()
   const { user } = useAuthStore()
   const [stories, setStories] = useState<Story[]>([])
   const [loading, setLoading] = useState(true)
@@ -47,16 +47,11 @@ export default function StoryLibrary({ onClose }: StoryLibraryProps) {
       setMessage(`Loading ${story.title}...`)
 
       try {
-        const { error } = await supabase
-          .from('rooms')
-          .update({ story_id: story.id })
-          .eq('id', currentRoom.id)
-
-        if (error) throw error
-
-        // Reload the room with the new story
-        await enterRoom(currentRoom.id)
+        // Change story without disconnecting WebRTC
+        await changeStory(story.id)
         
+        // Auto-close the library
+        onClose?.()        
         // Auto-close the library
         onClose?.()
       } catch (error) {
