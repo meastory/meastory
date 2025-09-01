@@ -38,13 +38,13 @@ const initialState: AuthState = {
   initialized: false,
 }
 
-export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
+export const useAuthStore = create<AuthState & AuthActions>((set) => ({
   ...initialState,
 
   signIn: async (email: string, password: string) => {
     set({ loading: true })
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
@@ -61,7 +61,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
   signUp: async (email: string, password: string) => {
     set({ loading: true })
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
       })
@@ -139,7 +139,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
             .single()
 
           if (profileError && profileError.code === 'PGRST116') {
-            // Profile doesn't exist, it should be created by the trigger
+            // Profile not found, it should be created by the trigger
             console.log('Profile not found, waiting for trigger to create it')
           } else if (profileError) {
             console.error('Error fetching profile:', profileError)

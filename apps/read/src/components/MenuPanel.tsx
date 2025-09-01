@@ -76,7 +76,7 @@ export default function MenuPanel() {
               {user && (
                 <div className="border-t pt-3 mt-4">
                   <p className="text-sm text-gray-600 mb-2">
-                    Logged in as: {user.display_name || user.email}
+                    Logged in as: {user.display_name || 'User'}
                   </p>
                   <button
                     onClick={handleSignOut}

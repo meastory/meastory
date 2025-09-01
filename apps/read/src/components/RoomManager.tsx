@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useAuthStore, supabase } from '../stores/authStore'
-import type { Database } from '../types/supabase'
 import type { Tables } from '../types/supabase'
 
 type Room = Tables<'rooms'>
-type RoomParticipant = Tables<'room_participants'>
 
 export default function RoomManager() {
   const { user } = useAuthStore()
@@ -83,7 +81,7 @@ export default function RoomManager() {
       if (roomError) throw roomError
 
       // Check if user is already a participant
-      const { data: existingParticipant, error: participantError } = await supabase
+      const { data: existingParticipant } = await supabase
         .from('room_participants')
         .select('*')
         .eq('room_id', room.id)
@@ -101,7 +99,7 @@ export default function RoomManager() {
         .insert({
           room_id: room.id,
           user_id: user.id,
-          participant_name: user.display_name || user.email || 'Anonymous'
+          participant_name: user.display_name || 'Anonymous'
         })
 
       if (joinError) throw joinError
@@ -129,13 +127,13 @@ export default function RoomManager() {
         <div className="flex mb-6 border-b border-gray-700">
           <button
             onClick={() => setActiveTab('create')}
-            className={`px-4 py-2 ${activeTab === 'create' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-gray-400'}`}
+            className="px-4 py-2 border-b-2 border-blue-500 text-blue-400"
           >
             Create Room
           </button>
           <button
             onClick={() => setActiveTab('join')}
-            className={`px-4 py-2 ${activeTab === 'join' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-gray-400'}`}
+            className="px-4 py-2 text-gray-400"
           >
             Join Room
           </button>

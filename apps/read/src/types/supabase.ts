@@ -109,7 +109,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          code: string
+          code?: string
           created_at?: string
           ended_at?: string | null
           host_id: string
