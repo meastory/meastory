@@ -52,6 +52,9 @@ interface WebRTCActions {
   handleAnswer: (from: string, answer: RTCSessionDescriptionInit) => Promise<void>
   handleCandidate: (from: string, candidate: RTCIceCandidateInit) => Promise<void>
   
+  // Signaling message handling
+  handleSignalingMessage: (message: any) => void
+  
   // Error handling
   setError: (error: string) => void
 }
@@ -102,6 +105,11 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
         .on('broadcast', { event: 'join' }, ({ payload }: { payload: any }) => {
           console.log('👥 Participant joined via Supabase Realtime:', payload.clientId)
           get().addParticipant(payload.clientId, payload.name)
+          // Create offer for new participant
+          setTimeout(async () => {
+            const { webrtcManager } = await import('../services/webrtcManager')
+            webrtcManager.createOffer(payload.clientId)
+          }, 1000)
         })
         .on('broadcast', { event: 'leave' }, ({ payload }: { payload: any }) => {
           console.log('👋 Participant left via Supabase Realtime:', payload.clientId)
@@ -310,50 +318,91 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
   },
 
   handleSignalingMessage: (message: any) => {
-    const { type, clientId, roomId, peerCount } = message
+    console.log('📡 Signaling message:', message)
     
-    console.log('📡 Signaling message:', type, message)
-    
-    switch (type) {
-      case 'hello':
-        set({ clientId })
-        break
-        
-      case 'joined':
-        console.log(`✅ Joined room ${roomId} as ${clientId}. Peers: ${peerCount}`)
-        break
-        
-      case 'start-call':
-        get().startCall(message.role)
-        break
-        
-      case 'peer-joined':
-        get().addParticipant(message.clientId)
-        break
-        
-      case 'peer-left':
-        get().removeParticipant(message.clientId)
-        break
-        
-      case 'offer':
-        get().handleOffer(message.from, message.payload)
-        break
-        
-      case 'answer':
-        get().handleAnswer(message.from, message.payload)
-        break
-        
-      case 'candidate':
-        get().handleCandidate(message.from, message.payload)
-        break
-        
-      case 'error':
-        console.error('❌ Signaling error:', message.error)
-        get().setError(message.error)
-        break
-        
-      default:
-        console.log('📡 Unknown signaling message type:', type)
+    // Handle Supabase Realtime broadcast messages
+    if (message.type === 'broadcast') {
+      const { event, payload } = message
+      
+      switch (event) {
+        case 'offer':
+          console.log('📨 Processing offer from:', payload.from)
+          get().handleOffer(payload.from, payload.offer)
+          break
+          
+        case 'answer':
+          console.log('📨 Processing answer from:', payload.from)
+          get().handleAnswer(payload.from, payload.answer)
+          break
+          
+        case 'candidate':
+          console.log('🧊 Processing ICE candidate from:', payload.from)
+          get().handleCandidate(payload.from, payload.candidate)
+          break
+          
+        case 'join':
+          console.log('👥 Participant joined:', payload.clientId)
+          get().addParticipant(payload.clientId, payload.name)
+          // Create offer for new participant
+          setTimeout(async () => {
+            const { webrtcManager } = await import('../services/webrtcManager')
+            webrtcManager.createOffer(payload.clientId)
+          }, 1000)
+          break
+          
+        case 'leave':
+          console.log('👋 Participant left:', payload.clientId)
+          get().removeParticipant(payload.clientId)
+          break
+          
+        default:
+          console.log('📡 Unknown broadcast event:', event)
+      }
+    } else {
+      // Handle legacy WebSocket messages (fallback)
+      const { type, clientId, roomId, peerCount } = message
+      
+      switch (type) {
+        case 'hello':
+          set({ clientId })
+          break
+          
+        case 'joined':
+          console.log(`✅ Joined room ${roomId} as ${clientId}. Peers: ${peerCount}`)
+          break
+          
+        case 'start-call':
+          get().startCall(message.role)
+          break
+          
+        case 'peer-joined':
+          get().addParticipant(message.clientId)
+          break
+          
+        case 'peer-left':
+          get().removeParticipant(message.clientId)
+          break
+          
+        case 'offer':
+          get().handleOffer(message.from, message.payload)
+          break
+          
+        case 'answer':
+          get().handleAnswer(message.from, message.payload)
+          break
+          
+        case 'candidate':
+          get().handleCandidate(message.from, message.payload)
+          break
+          
+        case 'error':
+          console.error('❌ Signaling error:', message.error)
+          get().setError(message.error)
+          break
+          
+        default:
+          console.log('📡 Unknown signaling message type:', type)
+      }
     }
   },
 

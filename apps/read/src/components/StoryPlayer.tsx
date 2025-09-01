@@ -26,7 +26,7 @@ export default function StoryPlayer() {
       // Sync child name with other participants
       const syncChildName = async () => {
         try {
-          const { webrtcManager } = await import('../services/webrtcManager') as any
+          const { webrtcManager } = await import('../services/webrtcManager')
           webrtcManager.syncChildName(childName)
         } catch (webrtcError) {
           console.warn('WebRTC sync failed:', webrtcError)
@@ -59,7 +59,7 @@ export default function StoryPlayer() {
 
       // Sync choice with other participants via WebRTC data channels
       try {
-        const { webrtcManager } = await import('../services/webrtcManager') as any
+        const { webrtcManager } = await import('../services/webrtcManager')
         webrtcManager.syncStoryChoice(nextSceneOrder)
       } catch (webrtcError) {
         console.warn('WebRTC sync failed:', webrtcError)

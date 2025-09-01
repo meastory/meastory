@@ -26,8 +26,10 @@ class WebRTCManager {
     // Handle remote stream
     peerConnection.ontrack = (event) => {
       console.log('🎥 Received remote stream from:', peerId)
+      console.log('🎥 Stream tracks:', event.streams[0].getTracks().length)
       const [stream] = event.streams
       useWebRTCStore.getState().updateParticipantStream(peerId, stream)
+      console.log('✅ Remote stream added for:', peerId)
     }
     
     // Handle ICE candidates
@@ -43,13 +45,18 @@ class WebRTCManager {
     
     // Handle connection state changes
     peerConnection.onconnectionstatechange = () => {
-      console.log(`🔗 Connection state for ${peerId}:`, peerConnection.connectionState)
+      const state = peerConnection.connectionState
+      console.log(`🔗 Connection state for ${peerId}:`, state)
       
-      if (peerConnection.connectionState === 'connected') {
+      if (state === 'connected') {
         console.log(`✅ Connected to ${peerId}`)
-      } else if (peerConnection.connectionState === 'disconnected') {
+        // Data channel should be ready now
+        console.log('📡 Data channels:', Array.from(this.dataChannels.keys()))
+      } else if (state === 'connecting') {
+        console.log(`🔄 Connecting to ${peerId}...`)
+      } else if (state === 'disconnected') {
         console.log(`🔌 Disconnected from ${peerId}`)
-      } else if (peerConnection.connectionState === 'failed') {
+      } else if (state === 'failed') {
         console.error(`❌ Connection failed for ${peerId}`)
         this.handleConnectionFailure(peerId)
       }
@@ -106,6 +113,10 @@ class WebRTCManager {
         answer
       })
       
+      // Create data channel for the answering side
+      const dataChannel = peerConnection.createDataChannel('story-sync')
+      this.setupDataChannel(from, dataChannel)
+      
     } catch (error) {
       console.error('❌ Error handling offer:', error)
     }
@@ -149,7 +160,7 @@ class WebRTCManager {
     console.log('📡 Setting up data channel for:', peerId)
     
     dataChannel.onopen = () => {
-      console.log('📡 Data channel opened for:', peerId)
+      console.log('�� Data channel opened for:', peerId)
     }
     
     dataChannel.onmessage = (event) => {
@@ -161,9 +172,11 @@ class WebRTCManager {
         switch (message.type) {
           case 'story-choice':
             // Handle story choice synchronization
+            this.handleStoryChoiceSync(message.choiceId)
             break
           case 'child-name-change':
             // Handle child name synchronization
+            this.handleChildNameSync(message.name)
             break
           default:
             console.log('📡 Unknown data channel message type:', message.type)
@@ -251,6 +264,32 @@ class WebRTCManager {
       type: 'child-name-change',
       name,
       timestamp: Date.now()
+    })
+  }
+
+  handleStoryChoiceSync(choiceId: number): void {
+    console.log('📖 Syncing story choice from remote participant:', choiceId)
+    // Import room store dynamically to avoid circular dependencies
+    import('../stores/roomStore').then(({ useRoomStore }) => {
+      const roomStore = useRoomStore.getState()
+      if (roomStore.currentStory) {
+        roomStore.loadScene(choiceId)
+      }
+    }).catch(error => {
+      console.error('❌ Error syncing story choice:', error)
+    })
+  }
+
+  handleChildNameSync(name: string): void {
+    console.log('👤 Syncing child name from remote participant:', name)
+    // Import room store dynamically to avoid circular dependencies
+    import('../stores/roomStore').then(({ useRoomStore }) => {
+      const roomStore = useRoomStore.getState()
+      // Update child name in local storage and state
+      localStorage.setItem('childName', name)
+      roomStore.setChildName(name)
+    }).catch(error => {
+      console.error('❌ Error syncing child name:', error)
     })
   }
 }
