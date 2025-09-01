@@ -108,7 +108,12 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           // Create offer for new participant
           setTimeout(async () => {
             const { webrtcManager } = await import('../services/webrtcManager')
-            webrtcManager.createOffer(payload.clientId)
+            const clientId = get().clientId
+            if (clientId) {
+              webrtcManager.createOffer(payload.clientId)
+            } else {
+              console.warn('⚠️ Client ID not available for creating offer')
+            }
           }, 1000)
         })
         .on('broadcast', { event: 'leave' }, ({ payload }: { payload: any }) => {
@@ -123,11 +128,13 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           set({ signalingSocket: channel, roomId, isConnected: true, isConnecting: false })
           
           // Announce our presence in the room
+          const clientId = `user-${Date.now()}`
+          set({ clientId })
           await channel.send({
             type: 'broadcast',
             event: 'join',
             payload: { 
-              clientId: `user-${Date.now()}`,
+              clientId,
               name: 'Participant'
             }
           })
@@ -341,12 +348,17 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           break
           
         case 'join':
-          console.log('👥 Participant joined:', payload.clientId)
+          console.log('�� Participant joined:', payload.clientId)
           get().addParticipant(payload.clientId, payload.name)
           // Create offer for new participant
           setTimeout(async () => {
             const { webrtcManager } = await import('../services/webrtcManager')
-            webrtcManager.createOffer(payload.clientId)
+            const clientId = get().clientId
+            if (clientId) {
+              webrtcManager.createOffer(payload.clientId)
+            } else {
+              console.warn('⚠️ Client ID not available for creating offer')
+            }
           }, 1000)
           break
           

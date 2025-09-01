@@ -35,8 +35,10 @@ class WebRTCManager {
     // Handle ICE candidates
     peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
-        console.log('🧊 Sending ICE candidate to:', peerId)
+        const clientId = useWebRTCStore.getState().clientId
+        console.log('🧊 Sending ICE candidate from:', clientId, 'to:', peerId)
         useWebRTCStore.getState().sendSignalingMessage('candidate', {
+          from: clientId,
           to: peerId,
           candidate: event.candidate
         })
@@ -81,8 +83,10 @@ class WebRTCManager {
       const offer = await peerConnection.createOffer()
       await peerConnection.setLocalDescription(offer)
       
-      console.log('📤 Sending offer to:', peerId)
+      const clientId = useWebRTCStore.getState().clientId
+      console.log('📤 Sending offer from:', clientId, 'to:', peerId)
       useWebRTCStore.getState().sendSignalingMessage('offer', {
+        from: clientId,
         to: peerId,
         offer
       })
@@ -107,8 +111,10 @@ class WebRTCManager {
       const answer = await peerConnection.createAnswer()
       await peerConnection.setLocalDescription(answer)
       
-      console.log('📤 Sending answer to:', from)
+      const clientId = useWebRTCStore.getState().clientId
+      console.log('📤 Sending answer from:', clientId, 'to:', from)
       useWebRTCStore.getState().sendSignalingMessage('answer', {
+        from: clientId,
         to: from,
         answer
       })
@@ -160,7 +166,7 @@ class WebRTCManager {
     console.log('📡 Setting up data channel for:', peerId)
     
     dataChannel.onopen = () => {
-      console.log('�� Data channel opened for:', peerId)
+      console.log('📡 Data channel opened for:', peerId)
     }
     
     dataChannel.onmessage = (event) => {
