@@ -1,18 +1,31 @@
 import { useState } from 'react'
 import { useRoomStore } from '../stores/roomStore'
+import { supabase } from '../stores/authStore'
 
 export default function StoryPlayer() {
-  const { currentScene, currentStory, loadScene } = useRoomStore()
+  const { currentScene, currentStory } = useRoomStore()
   const [isTransitioning, setIsTransitioning] = useState(false)
 
-  const handleChoice = async (nextSceneId: string) => {
-    if (isTransitioning) return
+  const handleChoice = async (nextSceneOrder: number) => {
+    if (isTransitioning || !currentStory) return
 
     setIsTransitioning(true)
-    console.log('🎯 Making choice, next scene:', nextSceneId)
+    console.log('🎯 Making choice, next scene order:', nextSceneOrder)
 
     try {
-      await loadScene(nextSceneId)
+      // Load scene by order instead of UUID
+      const { data: nextScene, error } = await supabase
+        .from('story_scenes')
+        .select('*')
+        .eq('story_id', currentStory.id)
+        .eq('scene_order', nextSceneOrder)
+        .single()
+
+      if (error) throw error
+
+      console.log('🎬 Next scene loaded:', nextScene.title)
+      // Update the store with the new scene
+      useRoomStore.setState({ currentScene: nextScene })
     } catch (error) {
       console.error('❌ Error loading next scene:', error)
     } finally {
