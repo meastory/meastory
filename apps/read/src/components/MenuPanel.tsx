@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useAuthStore } from '../stores/authStore'
 import RoomManager from './RoomManager'
+import StoryLibrary from './StoryLibrary'
 
 export default function MenuPanel() {
   const [isOpen, setIsOpen] = useState(false)
   const [showRoomManager, setShowRoomManager] = useState(false)
+  const [showStoryLibrary, setShowStoryLibrary] = useState(false)
   const { user, signOut } = useAuthStore()
 
   const toggleMenu = () => setIsOpen(!isOpen)
@@ -26,6 +28,23 @@ export default function MenuPanel() {
             ✕
           </button>
           <RoomManager />
+        </div>
+      </div>
+    )
+  }
+
+  if (showStoryLibrary) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm">
+        <div className="relative">
+          <button
+            onClick={() => setShowStoryLibrary(false)}
+            className="absolute top-4 right-4 z-20 p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors"
+            aria-label="Close story library"
+          >
+            ✕
+          </button>
+          <StoryLibrary />
         </div>
       </div>
     )
@@ -56,7 +75,7 @@ export default function MenuPanel() {
               
               <button
                 onClick={() => {
-                  // TODO: Implement story selection
+                  setShowStoryLibrary(true)
                   setIsOpen(false)
                 }}
                 className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
