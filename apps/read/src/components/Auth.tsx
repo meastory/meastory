@@ -1,18 +1,8 @@
 import { useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
-import type { Database } from '../types/supabase'
+import { useAuthStore } from '../stores/authStore'
 
-// Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
-
-interface AuthProps {
-  onAuthSuccess: () => void
-}
-
-export default function Auth({ onAuthSuccess }: AuthProps) {
+export default function Auth({ onAuthSuccess }: { onAuthSuccess: () => void }) {
+  const { signIn, signUp } = useAuthStore()
   const [isLogin, setIsLogin] = useState(true)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,33 +16,15 @@ export default function Auth({ onAuthSuccess }: AuthProps) {
 
     try {
       if (isLogin) {
-        // Sign in
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        })
-
-        if (error) {
-          setMessage(`Login failed: ${error.message}`)
-        } else {
-          setMessage('Login successful!')
-          onAuthSuccess()
-        }
+        await signIn(email, password)
+        setMessage('Login successful!')
+        onAuthSuccess()
       } else {
-        // Sign up
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        })
-
-        if (error) {
-          setMessage(`Signup failed: ${error.message}`)
-        } else {
-          setMessage('Signup successful! Please check your email to confirm your account.')
-        }
+        await signUp(email, password)
+        setMessage('Signup successful! Please check your email to confirm your account.')
       }
-    } catch (error) {
-      setMessage(`Error: ${error}`)
+    } catch (error: any) {
+      setMessage(`Error: ${error.message}`)
     } finally {
       setLoading(false)
     }

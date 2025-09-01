@@ -1,15 +1,9 @@
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '../stores/authStore'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// Re-export the supabase client from auth store to maintain single instance
+export { supabase }
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables')
-}
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-// Realtime channel helpers
+// Helper functions for real-time subscriptions
 export const createRoomChannel = (roomId: string) => {
   return supabase.channel(`room-${roomId}`)
 }
@@ -18,48 +12,46 @@ export const createStoryChannel = (storyId: string) => {
   return supabase.channel(`story-${storyId}`)
 }
 
-// Database helpers
-export const getStories = async () => {
-  const { data, error } = await supabase
-    .from('stories')
-    .select('*')
-    .order('created_at', { ascending: false })
-  
-  if (error) throw error
-  return data
-}
-
-export const getStory = async (id: string) => {
-  const { data, error } = await supabase
-    .from('stories')
-    .select('*')
-    .eq('id', id)
-    .single()
-  
-  if (error) throw error
-  return data
-}
-
-export const createRoom = async (storyId: string) => {
+// Helper functions for database operations
+export const getRoomByCode = async (code: string) => {
   const { data, error } = await supabase
     .from('rooms')
+    .select('*')
+    .eq('code', code.toUpperCase())
+    .single()
+  
+  return { data, error }
+}
+
+export const getRoomParticipants = async (roomId: string) => {
+  const { data, error } = await supabase
+    .from('room_participants')
+    .select('*')
+    .eq('room_id', roomId)
+  
+  return { data, error }
+}
+
+export const joinRoom = async (roomId: string, userId: string, participantName: string) => {
+  const { data, error } = await supabase
+    .from('room_participants')
     .insert({
-      story_id: storyId,
-    } as any)
+      room_id: roomId,
+      user_id: userId,
+      participant_name: participantName
+    })
     .select()
     .single()
   
-  if (error) throw error
-  return data
+  return { data, error }
 }
 
-export const getRoom = async (id: string) => {
-  const { data, error } = await supabase
-    .from('rooms')
-    .select('*, stories(*)')
-    .eq('id', id)
-    .single()
+export const leaveRoom = async (roomId: string, userId: string) => {
+  const { error } = await supabase
+    .from('room_participants')
+    .delete()
+    .eq('room_id', roomId)
+    .eq('user_id', userId)
   
-  if (error) throw error
-  return data
+  return { error }
 }
