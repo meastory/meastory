@@ -52,13 +52,16 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
       if (roomError) throw roomError
 
-      console.log('📋 Room loaded:', room.name, 'Code:', room.code)
+      console.log('📋 Room loaded:', room.name, 'Code:', room.code, 'Story ID:', room.story_id)
 
       set({ currentRoom: room })
 
       // Load story if one is selected
       if (room.story_id) {
+        console.log('📚 Room has story_id, loading story:', room.story_id)
         await get().loadStory(room.story_id)
+      } else {
+        console.log('⚠️ Room has no story_id - no story will be loaded')
       }
 
       // Load participants
@@ -84,7 +87,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
       if (error) throw error
 
-      console.log('📖 Story loaded:', story.title)
+      console.log('📖 Story loaded:', story.title, 'ID:', story.id)
       set({ currentStory: story })
 
       // Load first scene if it exists
@@ -96,8 +99,10 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
         .single()
 
       if (firstScene) {
-        console.log('🎬 First scene loaded:', firstScene.title)
+        console.log('🎬 First scene loaded:', firstScene.title, 'ID:', firstScene.id)
         set({ currentScene: firstScene })
+      } else {
+        console.log('⚠️ No first scene found for story')
       }
     } catch (error: any) {
       console.error('❌ Error loading story:', error)
@@ -116,7 +121,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
       if (error) throw error
 
-      console.log('🎬 Scene loaded:', scene.title)
+      console.log('🎬 Scene loaded:', scene.title, 'ID:', scene.id)
       set({ currentScene: scene })
     } catch (error: any) {
       console.error('❌ Error loading scene:', error)
