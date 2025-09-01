@@ -22,6 +22,16 @@ function App() {
     initialize()
   }, [initialize])
 
+  // Set up library callback in room store
+  useEffect(() => {
+    useRoomStore.setState({
+      showLibrary: () => {
+        console.log('📚 Opening library from room context')
+        setShowLibrary(true)
+      }
+    })
+  }, [])
+
   // Initialize story text scale from localStorage
   useEffect(() => {
     const savedScale = localStorage.getItem('storyTextScale')
@@ -33,7 +43,7 @@ function App() {
     }
   }, [setStoryTextScale])
 
-  // Check for library navigation flag
+  // Check for library navigation flag (legacy support)
   useEffect(() => {
     const shouldShowLibrary = localStorage.getItem('showLibraryAfterLeave')
     if (shouldShowLibrary === 'true' && !currentRoom && session) {
@@ -48,7 +58,6 @@ function App() {
   }, [storyTextScale])
 
   const handleAuthSuccess = () => {
-    // Auth success is handled by the auth store listener
     console.log('✅ Authentication successful')
   }
 
@@ -70,7 +79,7 @@ function App() {
   }
 
   // Show library if requested
-  if (showLibrary && !currentRoom) {
+  if (showLibrary) {
     return (
       <div className="video-first min-h-screen bg-black text-white">
         <div className="relative">
@@ -81,7 +90,7 @@ function App() {
           >
             ✕
           </button>
-          <StoryLibrary />
+          <StoryLibrary onClose={handleCloseLibrary} />
         </div>
       </div>
     )
@@ -98,7 +107,8 @@ function App() {
         ) : (
           <>
             <VideoContainer />
-            {currentRoom.story_id ? <StoryPlayer /> : <StoryOverlay />}
+            <StoryOverlay />
+            <StoryPlayer />
             <MenuPanel />
           </>
         )}
@@ -106,10 +116,9 @@ function App() {
     )
   }
 
-  // Show room manager if not in a room and not showing library
+  // Default state - show room manager
   return (
     <div className="video-first min-h-screen bg-black text-white">
-      {error && <ErrorMessage message={error} />}
       <MenuPanel />
     </div>
   )

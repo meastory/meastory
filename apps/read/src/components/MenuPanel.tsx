@@ -51,7 +51,7 @@ export default function MenuPanel() {
           >
             ✕
           </button>
-          <StoryLibrary />
+          <StoryLibrary onClose={() => setShowStoryLibrary(false)} />
         </div>
       </div>
     )
@@ -98,10 +98,6 @@ export default function MenuPanel() {
                   >
                     📚 Change Story
                   </button>
-
-                  <p className="text-xs text-gray-400 text-center mt-1">
-                    Change the story for everyone in this room
-                  </p>
 
                   <button
                     onClick={() => {

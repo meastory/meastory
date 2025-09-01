@@ -3,7 +3,7 @@ import { useRoomStore } from '../stores/roomStore'
 import { supabase } from '../stores/authStore'
 
 export default function StoryPlayer() {
-  const { currentScene, currentStory, loadScene, leaveRoom } = useRoomStore()
+  const { currentScene, currentStory, loadScene } = useRoomStore()
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [childName, setChildName] = useState('')
 
@@ -60,11 +60,9 @@ export default function StoryPlayer() {
   }
 
   const handleOpenLibrary = () => {
-    console.log('📚 Opening library - leaving room')
-    // Clear room state and set a flag to show library
-    leaveRoom()
-    // Set a flag in localStorage to show library after leaving room
-    localStorage.setItem('showLibraryAfterLeave', 'true')
+    console.log('📚 Opening library from room context')
+    // Use the room store callback to open library without leaving room
+    useRoomStore.getState().showLibrary()
   }
 
   // Replace {{childName}} with the actual name

@@ -14,6 +14,7 @@ interface RoomState {
   participants: RoomParticipant[]
   isLoading: boolean
   error: string | null
+  childName: string
 }
 
 interface RoomActions {
@@ -24,6 +25,8 @@ interface RoomActions {
   leaveRoom: () => void
   setError: (error: string | null) => void
   setLoading: (loading: boolean) => void
+  setChildName: (name: string) => void
+  showLibrary: () => void
 }
 
 const initialState: RoomState = {
@@ -33,10 +36,24 @@ const initialState: RoomState = {
   participants: [],
   isLoading: false,
   error: null,
+  childName: localStorage.getItem('childName') || 'Alex',
 }
 
 export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
   ...initialState,
+
+  setChildName: (name: string) => {
+    set({ childName: name })
+    localStorage.setItem('childName', name)
+  },
+
+  showLibrary: () => {
+    // This will be set by the App component
+    console.log('📚 Library requested from room context')
+  },
+
+  setError: (error: string | null) => set({ error }),
+  setLoading: (loading: boolean) => set({ isLoading: loading }),
 
   enterRoom: async (roomId: string) => {
     console.log('🎭 Entering room:', roomId)
@@ -99,10 +116,11 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
         .single()
 
       if (firstScene) {
-        console.log('🎬 First scene loaded:', firstScene.title, 'ID:', firstScene.id)
+        console.log('🎬 First scene loaded:', firstScene.title)
         set({ currentScene: firstScene })
       } else {
         console.log('⚠️ No first scene found for story')
+        set({ currentScene: null })
       }
     } catch (error: any) {
       console.error('❌ Error loading story:', error)
@@ -110,34 +128,32 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
     }
   },
 
-  loadScene: async (sceneIdentifier: string | number) => {
-    console.log('🎭 Loading scene:', sceneIdentifier)
-    const { currentStory } = get()
-    
-    if (!currentStory) {
-      console.error('❌ No current story to load scene from')
-      return
-    }
+  loadScene: async (sceneId: string | number) => {
+    console.log('🎬 Loading scene:', sceneId)
 
     try {
       let query = supabase
         .from('story_scenes')
         .select('*')
-        .eq('story_id', currentStory.id)
 
-      // If sceneIdentifier is a number, load by scene_order
-      if (typeof sceneIdentifier === 'number') {
-        query = query.eq('scene_order', sceneIdentifier)
+      if (typeof sceneId === 'string') {
+        query = query.eq('id', sceneId)
       } else {
-        // If it's a string, load by UUID
-        query = query.eq('id', sceneIdentifier)
+        const currentStory = get().currentStory
+        if (currentStory) {
+          query = query
+            .eq('story_id', currentStory.id)
+            .eq('scene_order', sceneId)
+        } else {
+          throw new Error('No current story available')
+        }
       }
 
       const { data: scene, error } = await query.single()
 
       if (error) throw error
 
-      console.log('🎬 Scene loaded:', scene.title, 'ID:', scene.id)
+      console.log('🎭 Scene loaded:', scene.title, 'Order:', scene.scene_order)
       set({ currentScene: scene })
     } catch (error: any) {
       console.error('❌ Error loading scene:', error)
@@ -146,24 +162,21 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
   },
 
   loadParticipants: async (roomId: string) => {
-    console.log('👥 Loading participants for room:', roomId)
     try {
-      const { data, error } = await supabase
+      const { data: participants, error } = await supabase
         .from('room_participants')
         .select('*')
         .eq('room_id', roomId)
 
       if (error) throw error
-
-      console.log('👤 Participants loaded:', data?.length || 0)
-      set({ participants: data || [] })
+      set({ participants: participants || [] })
     } catch (error: any) {
       console.error('❌ Error loading participants:', error)
     }
   },
 
   leaveRoom: () => {
-    console.log('�� Leaving room')
+    console.log('🚪 Leaving room')
     set({
       currentRoom: null,
       currentStory: null,
@@ -172,7 +185,4 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       error: null,
     })
   },
-
-  setError: (error) => set({ error }),
-  setLoading: (loading) => set({ isLoading: loading }),
 }))

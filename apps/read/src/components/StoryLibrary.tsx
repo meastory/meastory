@@ -6,7 +6,11 @@ import type { Tables } from '../types/supabase'
 
 type Story = Tables<'stories'>
 
-export default function StoryLibrary() {
+interface StoryLibraryProps {
+  onClose?: () => void
+}
+
+export default function StoryLibrary({ onClose }: StoryLibraryProps) {
   const { currentRoom, enterRoom } = useRoomStore()
   const { user } = useAuthStore()
   const [stories, setStories] = useState<Story[]>([])
@@ -40,7 +44,7 @@ export default function StoryLibrary() {
     if (currentRoom) {
       // We're in a room, change the story for all participants
       console.log('🔄 Changing room story to:', story.title)
-      setMessage(`Changing story to: ${story.title}...`)
+      setMessage(`Loading ${story.title}...`)
 
       try {
         const { error } = await supabase
@@ -52,7 +56,9 @@ export default function StoryLibrary() {
 
         // Reload the room with the new story
         await enterRoom(currentRoom.id)
-        setMessage(`Story changed to: ${story.title}`)
+        
+        // Auto-close the library
+        onClose?.()
       } catch (error) {
         console.error('❌ Error updating room story:', error)
         setMessage('Error changing story')
@@ -88,8 +94,9 @@ export default function StoryLibrary() {
       console.log('✅ Room created successfully:', data)
       setMessage(`Room created! Code: ${data.code}`)
 
-      // Enter the room
+      // Enter the room and close library
       await enterRoom(data.id)
+      onClose?.()
     } catch (error: any) {
       console.error('❌ Room creation error:', error)
       setMessage(`Error creating room: ${error.message}`)
@@ -117,8 +124,7 @@ export default function StoryLibrary() {
         {!currentRoom && (
           <div className="mb-6 p-4 bg-blue-900/50 rounded-lg border border-blue-500/30">
             <p className="text-blue-200 text-center text-sm">
-              Select a story below to create a new room. Once in a room, you can change stories 
-              anytime without creating new rooms - perfect for multiple storytelling sessions!
+              Select a story below to create a new room and start reading together.
             </p>
           </div>
         )}
@@ -126,8 +132,7 @@ export default function StoryLibrary() {
         {currentRoom && (
           <div className="mb-6 p-4 bg-blue-900/50 rounded-lg border border-blue-500/30">
             <p className="text-blue-200 text-center">
-              🎭 You're in room: <span className="font-semibold">{currentRoom.name}</span><br/>
-              <span className="text-sm">Changing the story will affect all participants in this room</span>
+              🎭 You're in room: <span className="font-semibold">{currentRoom.name}</span>
             </p>
           </div>
         )}
@@ -150,7 +155,7 @@ export default function StoryLibrary() {
                 {story.description || 'No description available'}
               </p>
               <div className="text-xs text-gray-400">
-                {currentRoom ? 'Click to change story for everyone' : 'Click to create room with this story'}
+                {currentRoom ? 'Click to change story' : 'Click to create room'}
               </div>
             </div>
           ))}
