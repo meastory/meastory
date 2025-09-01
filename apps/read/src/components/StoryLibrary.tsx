@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useRoomStore } from '../stores/roomStore'
+import { useAuthStore } from '../stores/authStore'
 import { supabase } from '../stores/authStore'
 import type { Tables } from '../types/supabase'
 
@@ -7,9 +8,11 @@ type Story = Tables<'stories'>
 
 export default function StoryLibrary() {
   const { currentRoom, enterRoom } = useRoomStore()
+  const { user } = useAuthStore()
   const [stories, setStories] = useState<Story[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedStory, setSelectedStory] = useState<Story | null>(null)
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     loadStories()
@@ -27,6 +30,7 @@ export default function StoryLibrary() {
       setStories(data || [])
     } catch (error) {
       console.error('Error loading stories:', error)
+      setMessage('Error loading stories')
     } finally {
       setLoading(false)
     }
@@ -46,12 +50,47 @@ export default function StoryLibrary() {
 
         // Reload the room with the new story
         await enterRoom(currentRoom.id)
+        setMessage(`Story changed to: ${story.title}`)
       } catch (error) {
         console.error('❌ Error updating room story:', error)
+        setMessage('Error changing story')
       }
     } else {
-      // Not in a room, just select the story for later
+      // Not in a room, show preview and option to create room
       setSelectedStory(story)
+    }
+  }
+
+  const handleCreateRoomWithStory = async () => {
+    if (!selectedStory || !user) return
+
+    setMessage('Creating room...')
+
+    try {
+      console.log('🏗️ Creating room with story:', selectedStory.title)
+
+      // Create room with selected story
+      const { data, error } = await supabase
+        .from('rooms')
+        .insert({
+          name: `${selectedStory.title} Room`,
+          host_id: user.id,
+          story_id: selectedStory.id,
+          max_participants: 10
+        })
+        .select('id, name, code, created_at, status')
+        .single()
+
+      if (error) throw error
+
+      console.log('✅ Room created successfully:', data)
+      setMessage(`Room created! Code: ${data.code}`)
+
+      // Enter the room
+      await enterRoom(data.id)
+    } catch (error: any) {
+      console.error('❌ Room creation error:', error)
+      setMessage(`Error creating room: ${error.message}`)
     }
   }
 
@@ -73,6 +112,12 @@ export default function StoryLibrary() {
           {currentRoom ? 'Change Story' : 'Story Library'}
         </h1>
         
+        {message && (
+          <div className="mb-8 p-4 bg-gray-800 rounded-lg text-center">
+            <p className="text-sm">{message}</p>
+          </div>
+        )}
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {stories.map((story) => (
             <div 
@@ -85,7 +130,7 @@ export default function StoryLibrary() {
                 {story.description || 'No description available'}
               </p>
               <div className="text-xs text-gray-400">
-                Tap to select
+                {currentRoom ? 'Tap to select' : 'Tap to preview'}
               </div>
             </div>
           ))}
@@ -121,9 +166,20 @@ export default function StoryLibrary() {
                   <p>Created: {new Date(selectedStory.created_at).toLocaleDateString()}</p>
                 </div>
                 
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                  Select This Story
-                </button>
+                <div className="flex gap-4 justify-center">
+                  <button
+                    onClick={handleCreateRoomWithStory}
+                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                  >
+                    🎭 Create Room & Start Story
+                  </button>
+                  <button
+                    onClick={() => setSelectedStory(null)}
+                    className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -171,6 +171,29 @@ export default function RoomManager() {
     }
   }
 
+  const handleDeleteRoom = async (roomId: string, roomName: string) => {
+    if (!confirm(`Are you sure you want to delete the room "${roomName}"? This action cannot be undone.`)) {
+      return
+    }
+
+    setMessage('Deleting room...')
+
+    try {
+      const { error } = await supabase
+        .from('rooms')
+        .delete()
+        .eq('id', roomId)
+
+      if (error) throw error
+
+      setMessage('Room deleted successfully')
+      loadUserRooms()
+    } catch (error: any) {
+      console.error('❌ Error deleting room:', error)
+      setMessage(`Error deleting room: ${error.message}`)
+    }
+  }
+
   if (!user) {
     return <div>Please log in to manage rooms</div>
   }
@@ -310,12 +333,18 @@ export default function RoomManager() {
                         Status: {room.status} | Created: {new Date(room.created_at).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right space-y-2">
                       <button
                         onClick={() => handleEnterRoom(room)}
-                        className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm"
+                        className="block w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm transition-colors"
                       >
                         Enter Room
+                      </button>
+                      <button
+                        onClick={() => handleDeleteRoom(room.id, room.name)}
+                        className="block w-full bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm transition-colors"
+                      >
+                        Delete Room
                       </button>
                     </div>
                   </div>

@@ -61,7 +61,10 @@ export default function StoryPlayer() {
 
   const handleOpenLibrary = () => {
     console.log('📚 Opening library - leaving room')
+    // Clear room state and set a flag to show library
     leaveRoom()
+    // Set a flag in localStorage to show library after leaving room
+    localStorage.setItem('showLibraryAfterLeave', 'true')
   }
 
   // Replace {{childName}} with the actual name

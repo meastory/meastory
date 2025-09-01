@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useUIStore } from './stores/uiStore'
 import { useAuthStore } from './stores/authStore'
 import { useRoomStore } from './stores/roomStore'
@@ -9,11 +9,13 @@ import LoadingSpinner from './components/LoadingSpinner'
 import ErrorMessage from './components/ErrorMessage'
 import Auth from './components/Auth'
 import StoryPlayer from './components/StoryPlayer'
+import StoryLibrary from './components/StoryLibrary'
 
 function App() {
   const { isLoading, error, storyTextScale, setStoryTextScale } = useUIStore()
   const { session, initialized, initialize } = useAuthStore()
   const { currentRoom } = useRoomStore()
+  const [showLibrary, setShowLibrary] = useState(false)
 
   // Initialize auth state on app load
   useEffect(() => {
@@ -31,6 +33,15 @@ function App() {
     }
   }, [setStoryTextScale])
 
+  // Check for library navigation flag
+  useEffect(() => {
+    const shouldShowLibrary = localStorage.getItem('showLibraryAfterLeave')
+    if (shouldShowLibrary === 'true' && !currentRoom && session) {
+      setShowLibrary(true)
+      localStorage.removeItem('showLibraryAfterLeave')
+    }
+  }, [currentRoom, session])
+
   // Update CSS variable when scale changes
   useEffect(() => {
     document.documentElement.style.setProperty('--story-text-scale', String(storyTextScale))
@@ -39,6 +50,10 @@ function App() {
   const handleAuthSuccess = () => {
     // Auth success is handled by the auth store listener
     console.log('✅ Authentication successful')
+  }
+
+  const handleCloseLibrary = () => {
+    setShowLibrary(false)
   }
 
   if (!initialized) {
@@ -50,6 +65,24 @@ function App() {
     return (
       <div className="video-first min-h-screen bg-black text-white">
         <Auth onAuthSuccess={handleAuthSuccess} />
+      </div>
+    )
+  }
+
+  // Show library if requested
+  if (showLibrary && !currentRoom) {
+    return (
+      <div className="video-first min-h-screen bg-black text-white">
+        <div className="relative">
+          <button
+            onClick={handleCloseLibrary}
+            className="absolute top-4 right-4 z-20 p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors"
+            aria-label="Close library"
+          >
+            ✕
+          </button>
+          <StoryLibrary />
+        </div>
       </div>
     )
   }
@@ -73,7 +106,7 @@ function App() {
     )
   }
 
-  // Show room manager if not in a room
+  // Show room manager if not in a room and not showing library
   return (
     <div className="video-first min-h-screen bg-black text-white">
       {error && <ErrorMessage message={error} />}
