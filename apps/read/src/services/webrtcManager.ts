@@ -3,6 +3,7 @@ import { useWebRTCStore } from '../stores/webrtcStore'
 class WebRTCManager {
   private peerConnections: Map<string, RTCPeerConnection> = new Map()
   private dataChannels: Map<string, RTCDataChannel> = new Map()
+  private iceCandidatesQueue: Map<string, RTCIceCandidateInit[]> = new Map()
   private iceServers: RTCConfiguration = {
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
@@ -18,9 +19,17 @@ class WebRTCManager {
     // Add local stream to peer connection
     const localStream = useWebRTCStore.getState().localStream
     if (localStream) {
+      console.log('📹 Adding local stream tracks:', localStream.getTracks().map(t => ({ 
+        kind: t.kind, 
+        enabled: t.enabled, 
+        readyState: t.readyState 
+      })))
       localStream.getTracks().forEach((track: MediaStreamTrack) => {
+        console.log('📹 Adding track:', track.kind, 'enabled:', track.enabled)
         peerConnection.addTrack(track, localStream)
       })
+    } else {
+      console.warn('⚠️ No local stream available when creating peer connection')
     }
     
     // Handle remote stream
@@ -57,7 +66,7 @@ class WebRTCManager {
       } else if (state === 'connecting') {
         console.log(`🔄 Connecting to ${peerId}...`)
       } else if (state === 'disconnected') {
-        console.log(`🔌 Disconnected from ${peerId}`)
+        console.log(`�� Disconnected from ${peerId}`)
       } else if (state === 'failed') {
         console.error(`❌ Connection failed for ${peerId}`)
         this.handleConnectionFailure(peerId)
@@ -123,6 +132,9 @@ class WebRTCManager {
       const dataChannel = peerConnection.createDataChannel('story-sync')
       this.setupDataChannel(from, dataChannel)
       
+      // Process any queued ICE candidates
+      this.processQueuedIceCandidates(from)
+      
     } catch (error) {
       console.error('❌ Error handling offer:', error)
     }
@@ -141,6 +153,9 @@ class WebRTCManager {
       await peerConnection.setRemoteDescription(new RTCSessionDescription(answer))
       console.log('✅ Answer processed from:', from)
       
+      // Process any queued ICE candidates now that remote description is set
+      this.processQueuedIceCandidates(from)
+      
     } catch (error) {
       console.error('❌ Error handling answer:', error)
     }
@@ -155,11 +170,48 @@ class WebRTCManager {
       return
     }
     
-    try {
-      await peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
-    } catch (error) {
-      console.error('❌ Error adding ICE candidate:', error)
+    // Check if remote description is set before adding ICE candidates
+    if (peerConnection.remoteDescription) {
+      try {
+        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
+      } catch (error) {
+        console.error('❌ Error adding ICE candidate:', error)
+      }
+    } else {
+      console.log('🧊 Queuing ICE candidate until remote description is set')
+      // Queue the candidate to be added later
+      this.queueIceCandidate(from, candidate)
     }
+  }
+
+  queueIceCandidate(peerId: string, candidate: RTCIceCandidateInit): void {
+    if (!this.iceCandidatesQueue.has(peerId)) {
+      this.iceCandidatesQueue.set(peerId, [])
+    }
+    this.iceCandidatesQueue.get(peerId)!.push(candidate)
+  }
+
+  processQueuedIceCandidates(peerId: string): void {
+    const peerConnection = this.peerConnections.get(peerId)
+    if (!peerConnection || !peerConnection.remoteDescription) {
+      console.log('🧊 Cannot process queued ICE candidates - no remote description')
+      return
+    }
+
+    const queuedCandidates = this.iceCandidatesQueue.get(peerId) || []
+    console.log(`🧊 Processing ${queuedCandidates.length} queued ICE candidates for ${peerId}`)
+    
+    queuedCandidates.forEach(async (candidate) => {
+      try {
+        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
+        console.log('✅ Added queued ICE candidate for:', peerId)
+      } catch (error) {
+        console.error('❌ Error adding queued ICE candidate:', error)
+      }
+    })
+    
+    // Clear the queue
+    this.iceCandidatesQueue.delete(peerId)
   }
 
   setupDataChannel(peerId: string, dataChannel: RTCDataChannel): void {
@@ -206,7 +258,7 @@ class WebRTCManager {
     if (dataChannel && dataChannel.readyState === 'open') {
       dataChannel.send(JSON.stringify(message))
     } else {
-      console.warn('📡 Data channel not ready for:', peerId)
+      console.warn('�� Data channel not ready for:', peerId)
     }
   }
 
@@ -239,7 +291,7 @@ class WebRTCManager {
   }
 
   closeAllConnections(): void {
-    console.log('🔌 Closing all WebRTC connections')
+    console.log('�� Closing all WebRTC connections')
     
     // Close peer connections
     this.peerConnections.forEach((peerConnection, peerId) => {
@@ -254,6 +306,9 @@ class WebRTCManager {
       dataChannel.close()
     })
     this.dataChannels.clear()
+
+    // Clear ICE candidate queues
+    this.iceCandidatesQueue.clear()
   }
 
   // Story synchronization methods
