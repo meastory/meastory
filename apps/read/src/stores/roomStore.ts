@@ -26,7 +26,6 @@ interface RoomActions {
   setError: (error: string | null) => void
   setLoading: (loading: boolean) => void
   setChildName: (name: string) => void
-  showLibrary: () => void
 }
 
 const initialState: RoomState = {
@@ -45,11 +44,6 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
   setChildName: (name: string) => {
     set({ childName: name })
     localStorage.setItem('childName', name)
-  },
-
-  showLibrary: () => {
-    // This will be set by the App component
-    console.log('📚 Library requested from room context')
   },
 
   setError: (error: string | null) => set({ error }),
@@ -83,6 +77,19 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
       // Load participants
       await get().loadParticipants(roomId)
+
+      // Connect to WebRTC
+      console.log('🔗 Connecting to WebRTC for room:', room.code)
+      try {
+        // Dynamic import to avoid circular dependency
+        const webrtcModule = await import('./webrtcStore')
+        const webrtcStore = webrtcModule.useWebRTCStore
+        await webrtcStore.getState().connect(roomId, room.code)
+        console.log('✅ WebRTC connected successfully')
+      } catch (webrtcError) {
+        console.error('❌ WebRTC connection failed:', webrtcError)
+        // Don't fail room entry if WebRTC fails, just log it
+      }
 
       console.log('✅ Successfully entered room')
     } catch (error: any) {
@@ -177,6 +184,17 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
   leaveRoom: () => {
     console.log('🚪 Leaving room')
+    
+    // Disconnect from WebRTC
+    try {
+      const webrtcModule = require('./webrtcStore')
+      const webrtcStore = (webrtcModule as any).useWebRTCStore
+      webrtcStore.getState().disconnect()
+    } catch (error) {
+      console.warn('WebRTC store not available for disconnect:', error)
+    }
+    
+    // Reset state
     set({
       currentRoom: null,
       currentStory: null,

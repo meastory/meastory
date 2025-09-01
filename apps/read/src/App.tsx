@@ -24,12 +24,12 @@ function App() {
 
   // Set up library callback in room store
   useEffect(() => {
-    useRoomStore.setState({
-      showLibrary: () => {
-        console.log('📚 Opening library from room context')
-        setShowLibrary(true)
-      }
-    })
+    const roomStore = useRoomStore.getState()
+    const extendedStore = roomStore as any
+    extendedStore.showLibrary = () => {
+      console.log('📚 Opening library from room context')
+      setShowLibrary(true)
+    }
   }, [])
 
   // Initialize story text scale from localStorage

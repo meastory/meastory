@@ -1,12 +1,9 @@
-import VideoBox from './VideoBox'
-import VideoControls from './VideoControls'
+import VideoGrid from './VideoGrid'
 
 export default function VideoContainer() {
   return (
     <div className="video-container">
-      <VideoBox type="local" />
-      <VideoBox type="remote" />
-      <VideoControls />
+      <VideoGrid />
     </div>
   )
 }

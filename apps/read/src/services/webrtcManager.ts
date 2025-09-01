@@ -1,0 +1,259 @@
+import { useWebRTCStore } from '../stores/webrtcStore'
+
+class WebRTCManager {
+  private peerConnections: Map<string, RTCPeerConnection> = new Map()
+  private dataChannels: Map<string, RTCDataChannel> = new Map()
+  private iceServers: RTCConfiguration = {
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' }
+    ]
+  }
+
+  async createPeerConnection(peerId: string): Promise<RTCPeerConnection> {
+    console.log('🔗 Creating peer connection for:', peerId)
+    
+    const peerConnection = new RTCPeerConnection(this.iceServers)
+    
+    // Add local stream to peer connection
+    const localStream = useWebRTCStore.getState().localStream
+    if (localStream) {
+      localStream.getTracks().forEach((track: MediaStreamTrack) => {
+        peerConnection.addTrack(track, localStream)
+      })
+    }
+    
+    // Handle remote stream
+    peerConnection.ontrack = (event) => {
+      console.log('🎥 Received remote stream from:', peerId)
+      const [stream] = event.streams
+      useWebRTCStore.getState().updateParticipantStream(peerId, stream)
+    }
+    
+    // Handle ICE candidates
+    peerConnection.onicecandidate = (event) => {
+      if (event.candidate) {
+        console.log('🧊 Sending ICE candidate to:', peerId)
+        useWebRTCStore.getState().sendSignalingMessage('candidate', {
+          to: peerId,
+          candidate: event.candidate
+        })
+      }
+    }
+    
+    // Handle connection state changes
+    peerConnection.onconnectionstatechange = () => {
+      console.log(`🔗 Connection state for ${peerId}:`, peerConnection.connectionState)
+      
+      if (peerConnection.connectionState === 'connected') {
+        console.log(`✅ Connected to ${peerId}`)
+      } else if (peerConnection.connectionState === 'disconnected') {
+        console.log(`🔌 Disconnected from ${peerId}`)
+      } else if (peerConnection.connectionState === 'failed') {
+        console.error(`❌ Connection failed for ${peerId}`)
+        this.handleConnectionFailure(peerId)
+      }
+    }
+    
+    // Handle data channel
+    peerConnection.ondatachannel = (event) => {
+      const dataChannel = event.channel
+      this.setupDataChannel(peerId, dataChannel)
+    }
+    
+    this.peerConnections.set(peerId, peerConnection)
+    return peerConnection
+  }
+
+  async createOffer(peerId: string): Promise<void> {
+    console.log('📤 Creating offer for:', peerId)
+    
+    const peerConnection = await this.createPeerConnection(peerId)
+    
+    try {
+      const offer = await peerConnection.createOffer()
+      await peerConnection.setLocalDescription(offer)
+      
+      console.log('📤 Sending offer to:', peerId)
+      useWebRTCStore.getState().sendSignalingMessage('offer', {
+        to: peerId,
+        offer
+      })
+      
+      // Create data channel for additional communication
+      const dataChannel = peerConnection.createDataChannel('story-sync')
+      this.setupDataChannel(peerId, dataChannel)
+      
+    } catch (error) {
+      console.error('❌ Error creating offer:', error)
+    }
+  }
+
+  async handleOffer(from: string, offer: RTCSessionDescriptionInit): Promise<void> {
+    console.log('📨 Handling offer from:', from)
+    
+    const peerConnection = await this.createPeerConnection(from)
+    
+    try {
+      await peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
+      
+      const answer = await peerConnection.createAnswer()
+      await peerConnection.setLocalDescription(answer)
+      
+      console.log('📤 Sending answer to:', from)
+      useWebRTCStore.getState().sendSignalingMessage('answer', {
+        to: from,
+        answer
+      })
+      
+    } catch (error) {
+      console.error('❌ Error handling offer:', error)
+    }
+  }
+
+  async handleAnswer(from: string, answer: RTCSessionDescriptionInit): Promise<void> {
+    console.log('📨 Received answer from:', from)
+    
+    const peerConnection = this.peerConnections.get(from)
+    if (!peerConnection) {
+      console.error('❌ No peer connection found for:', from)
+      return
+    }
+    
+    try {
+      await peerConnection.setRemoteDescription(new RTCSessionDescription(answer))
+      console.log('✅ Answer processed from:', from)
+      
+    } catch (error) {
+      console.error('❌ Error handling answer:', error)
+    }
+  }
+
+  async handleCandidate(from: string, candidate: RTCIceCandidateInit): Promise<void> {
+    console.log('🧊 Handling ICE candidate from:', from)
+    
+    const peerConnection = this.peerConnections.get(from)
+    if (!peerConnection) {
+      console.error('❌ No peer connection found for:', from)
+      return
+    }
+    
+    try {
+      await peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
+    } catch (error) {
+      console.error('❌ Error adding ICE candidate:', error)
+    }
+  }
+
+  setupDataChannel(peerId: string, dataChannel: RTCDataChannel): void {
+    console.log('📡 Setting up data channel for:', peerId)
+    
+    dataChannel.onopen = () => {
+      console.log('📡 Data channel opened for:', peerId)
+    }
+    
+    dataChannel.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data)
+        console.log('📡 Data channel message from', peerId, ':', message)
+        
+        // Handle different message types
+        switch (message.type) {
+          case 'story-choice':
+            // Handle story choice synchronization
+            break
+          case 'child-name-change':
+            // Handle child name synchronization
+            break
+          default:
+            console.log('📡 Unknown data channel message type:', message.type)
+        }
+      } catch (error) {
+        console.error('❌ Error parsing data channel message:', error)
+      }
+    }
+    
+    dataChannel.onclose = () => {
+      console.log('📡 Data channel closed for:', peerId)
+      this.dataChannels.delete(peerId)
+    }
+    
+    this.dataChannels.set(peerId, dataChannel)
+  }
+
+  sendDataMessage(peerId: string, message: any): void {
+    const dataChannel = this.dataChannels.get(peerId)
+    
+    if (dataChannel && dataChannel.readyState === 'open') {
+      dataChannel.send(JSON.stringify(message))
+    } else {
+      console.warn('📡 Data channel not ready for:', peerId)
+    }
+  }
+
+  broadcastDataMessage(message: any): void {
+    this.dataChannels.forEach((dataChannel: RTCDataChannel) => {
+      if (dataChannel.readyState === 'open') {
+        dataChannel.send(JSON.stringify(message))
+      }
+    })
+  }
+
+  handleConnectionFailure(peerId: string): void {
+    console.error(`❌ Connection failed for ${peerId}`)
+    
+    // Clean up peer connection
+    const peerConnection = this.peerConnections.get(peerId)
+    if (peerConnection) {
+      peerConnection.close()
+      this.peerConnections.delete(peerId)
+    }
+    
+    // Remove participant
+    useWebRTCStore.getState().removeParticipant(peerId)
+    
+    // Attempt reconnection after a delay
+    setTimeout(() => {
+      console.log(`🔄 Attempting reconnection to ${peerId}`)
+      this.createOffer(peerId)
+    }, 3000)
+  }
+
+  closeAllConnections(): void {
+    console.log('🔌 Closing all WebRTC connections')
+    
+    // Close peer connections
+    this.peerConnections.forEach((peerConnection, peerId) => {
+      console.log('🔌 Closing connection to:', peerId)
+      peerConnection.close()
+    })
+    this.peerConnections.clear()
+    
+    // Close data channels
+    this.dataChannels.forEach((dataChannel, peerId) => {
+      console.log('🔌 Closing data channel to:', peerId)
+      dataChannel.close()
+    })
+    this.dataChannels.clear()
+  }
+
+  // Story synchronization methods
+  syncStoryChoice(choiceId: number): void {
+    this.broadcastDataMessage({
+      type: 'story-choice',
+      choiceId,
+      timestamp: Date.now()
+    })
+  }
+
+  syncChildName(name: string): void {
+    this.broadcastDataMessage({
+      type: 'child-name-change',
+      name,
+      timestamp: Date.now()
+    })
+  }
+}
+
+// Export singleton instance
+export const webrtcManager = new WebRTCManager()

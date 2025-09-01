@@ -22,6 +22,17 @@ export default function StoryPlayer() {
   useEffect(() => {
     if (childName) {
       localStorage.setItem('childName', childName)
+      
+      // Sync child name with other participants
+      const syncChildName = async () => {
+        try {
+          const { webrtcManager } = await import('../services/webrtcManager') as any
+          webrtcManager.syncChildName(childName)
+        } catch (webrtcError) {
+          console.warn('WebRTC sync failed:', webrtcError)
+        }
+      }
+      syncChildName()
     }
   }, [childName])
 
@@ -45,6 +56,15 @@ export default function StoryPlayer() {
       console.log('🎬 Next scene loaded:', nextScene.title)
       // Update the store with the new scene
       useRoomStore.setState({ currentScene: nextScene })
+
+      // Sync choice with other participants via WebRTC data channels
+      try {
+        const { webrtcManager } = await import('../services/webrtcManager') as any
+        webrtcManager.syncStoryChoice(nextSceneOrder)
+      } catch (webrtcError) {
+        console.warn('WebRTC sync failed:', webrtcError)
+      }
+      
     } catch (error) {
       console.error('❌ Error loading next scene:', error)
     } finally {
@@ -62,7 +82,15 @@ export default function StoryPlayer() {
   const handleOpenLibrary = () => {
     console.log('📚 Opening library from room context')
     // Use the room store callback to open library without leaving room
-    useRoomStore.getState().showLibrary()
+    try {
+      const roomState = useRoomStore.getState()
+      const extendedState = roomState as any
+      if (extendedState.showLibrary) {
+        extendedState.showLibrary()
+      }
+    } catch (error) {
+      console.warn('Could not open library:', error)
+    }
   }
 
   // Replace {{childName}} with the actual name
