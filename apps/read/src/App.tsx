@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
+import { useAuthStore } from './stores/authStore'
 import { useUIStore } from './stores/uiStore'
+import Auth from './components/Auth'
 import VideoContainer from './components/VideoContainer'
 import StoryOverlay from './components/StoryOverlay'
 import MenuPanel from './components/MenuPanel'
@@ -7,7 +9,15 @@ import LoadingSpinner from './components/LoadingSpinner'
 import ErrorMessage from './components/ErrorMessage'
 
 function App() {
-  const { isLoading, error, storyTextScale, setStoryTextScale } = useUIStore()
+  const { user, session, loading: authLoading, initialized, initialize } = useAuthStore()
+  const { isLoading: uiLoading, error, storyTextScale, setStoryTextScale } = useUIStore()
+
+  // Initialize authentication on app start
+  useEffect(() => {
+    if (!initialized) {
+      initialize()
+    }
+  }, [initialized, initialize])
 
   // Initialize story text scale from localStorage
   useEffect(() => {
@@ -25,22 +35,33 @@ function App() {
     document.documentElement.style.setProperty('--story-text-scale', String(storyTextScale))
   }, [storyTextScale])
 
+  // Show loading spinner during auth initialization
+  if (authLoading && !initialized) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    )
+  }
+
+  // Show auth component if not authenticated
+  if (!session || !user) {
+    return <Auth onAuthSuccess={() => {}} />
+  }
+
+  // Main app content
   return (
-    <div className="video-first-layout">
-      <VideoContainer />
-      <StoryOverlay />
-      <MenuPanel />
-      
-      {error && (
-        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-50">
-          <ErrorMessage message={error} />
-        </div>
-      )}
-      
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/50">
-          <LoadingSpinner />
-        </div>
+    <div className="video-first min-h-screen bg-black text-white">
+      {error && <ErrorMessage message={error} />}
+
+      {uiLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          <VideoContainer />
+          <StoryOverlay />
+          <MenuPanel />
+        </>
       )}
     </div>
   )
