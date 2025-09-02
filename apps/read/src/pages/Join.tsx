@@ -3,6 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useWebRTCStore } from '../stores/webrtcStore'
 import VideoGrid from '../components/VideoGrid'
 import { supabase } from '../stores/authStore'
+import StoryOverlay from '../components/StoryOverlay'
+import StoryPlayer from '../components/StoryPlayer'
+import InRoomStoryPicker from '../components/InRoomStoryPicker'
+import { useRoomStore } from '../stores/roomStore'
 
 interface DeviceOption {
   deviceId: string
@@ -17,6 +21,7 @@ export default function Join() {
   const normalized = String(code).toUpperCase()
 
   const { connect, isConnected, participants } = useWebRTCStore()
+  const { currentStory } = useRoomStore()
 
   const [cameraDevices, setCameraDevices] = useState<DeviceOption[]>([])
   const [micDevices, setMicDevices] = useState<DeviceOption[]>([])
@@ -30,6 +35,7 @@ export default function Join() {
 
   const [curated, setCurated] = useState<StoryOption[]>([])
   const [selectedStoryId, setSelectedStoryId] = useState<string>('')
+  const [showPicker, setShowPicker] = useState(false)
 
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const rafRef = useRef<number | null>(null)
@@ -265,11 +271,25 @@ export default function Join() {
     )
   }
 
+  // connecting/connected: render call UI + story overlay
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-      <div className="w-full max-w-6xl h-[70vh]">
+    <div className="min-h-screen bg-black text-white">
+      <div className="w-full max-w-6xl h-[70vh] mx-auto">
         <VideoGrid />
       </div>
+      <StoryOverlay />
+      <StoryPlayer />
+      {!currentStory && (
+        <button
+          onClick={() => setShowPicker(true)}
+          className="fixed top-6 right-6 z-[100] px-3 py-2 rounded bg-green-600 hover:bg-green-700 text-white"
+        >
+          Pick
+        </button>
+      )}
+      {showPicker && (
+        <InRoomStoryPicker onClose={() => setShowPicker(false)} />
+      )}
     </div>
   )
 } 
