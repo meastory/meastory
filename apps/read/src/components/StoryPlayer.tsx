@@ -82,10 +82,30 @@ export default function StoryPlayer() {
     }
   }
 
-  const handleReadAgain = () => {
+  const handleReadAgain = async () => {
     console.log('🔄 Reading story again - loading first scene')
     if (currentStory) {
-      loadScene(1) // Load the first scene
+      try {
+        // Resolve first scene by order to get its ID, then sync by ID
+        const { data: firstScene } = await supabase
+          .from('story_scenes')
+          .select('id')
+          .eq('story_id', currentStory.id)
+          .eq('scene_order', 1)
+          .single()
+        await loadScene(1) // Load the first scene locally
+        if (firstScene?.id) {
+          try {
+            const { webrtcManager } = await import('../services/webrtcManager')
+            webrtcManager.syncStoryChoice(firstScene.id)
+          } catch (e) {
+            console.warn('Sync Read Again failed:', e)
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to resolve first scene for Read Again:', e)
+        await loadScene(1)
+      }
     }
   }
 
