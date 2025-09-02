@@ -125,3 +125,31 @@
 
 *Last Updated: $(date)*
 *Status Version: 1.0*
+
+## Sprint Update — WebRTC & Story Sync (Today)
+
+### Highlights
+- ✅ Remote video feeds now render reliably (local and remote) in `VideoGrid`/`VideoFeed`.
+- ✅ Story choices and "Read Again" sync across peers via RTC data channel with Supabase fallback.
+- ✅ Signaling is recipient-filtered; self-messages ignored; offerer-only data channel creation.
+- ✅ ICE resilience added (iceconnectionstatechange + offer-side ICE restarts).
+- ✅ Type hygiene pass: replaced most `any` with proper types/unknown + narrowing; fixed exhaustive-deps.
+
+### Key Changes
+- `services/webrtcManager.ts`: ontrack stream wiring; data channel setup; queued message broadcast; story-choice and story-change sync; ICE restart handling; logging.
+- `stores/webrtcStore.ts`: Supabase Realtime filtering by `to`/self; participant stream updates; typed signaling; fallbacks for story-choice/story-change.
+- `components/StoryPlayer.tsx`: load-by-id/order; sync on choice and "Read Again".
+- `components/StoryLibrary.tsx`: broadcast story-change after room update.
+- `components/VideoFeed.tsx`: robust MediaStream attachment and autoplay fallback; logging.
+- Type cleanup across `authStore`, `roomStore`, `uiStore`, `VideoGrid`, `Auth`, hooks.
+
+### Current State
+- Build: passing
+- Dev: Vite runs; rooms, video, and story sync functioning
+- Known warnings: chunking notices due to dynamic+static imports (cosmetic)
+
+### Next Focus
+- Connection health UI (peer/data-channel states)
+- Error toasts for signaling/RTC failures
+- E2E flow tests and room lifecycle edge cases (refresh/rejoin)
+- Performance pass (track replace and teardown paths)
