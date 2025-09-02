@@ -68,11 +68,19 @@ export default function Join() {
         videoRef.current.srcObject = stream
         await videoRef.current.play().catch(() => {})
       }
+      // If no selection yet, set from stream settings
+      const vTrack = stream.getVideoTracks()[0]
+      const aTrack = stream.getAudioTracks()[0]
+      const vDevice = (vTrack?.getSettings().deviceId as string | undefined) || ''
+      const aDevice = (aTrack?.getSettings().deviceId as string | undefined) || ''
+      if (!selectedCamera && vDevice) setSelectedCamera(vDevice)
+      if (!selectedMic && aDevice) setSelectedMic(aDevice)
+
       const devices = await navigator.mediaDevices.enumerateDevices()
-      const camLabel = devices.find(d => d.deviceId === selectedCamera)?.label || ''
-      const micLabel = devices.find(d => d.deviceId === selectedMic)?.label || ''
-      localStorage.setItem('preferredCameraId', selectedCamera)
-      localStorage.setItem('preferredMicId', selectedMic)
+      const camLabel = devices.find(d => d.deviceId === (vDevice || selectedCamera))?.label || ''
+      const micLabel = devices.find(d => d.deviceId === (aDevice || selectedMic))?.label || ''
+      if (vDevice || selectedCamera) localStorage.setItem('preferredCameraId', vDevice || selectedCamera)
+      if (aDevice || selectedMic) localStorage.setItem('preferredMicId', aDevice || selectedMic)
       localStorage.setItem('preferredCameraLabel', camLabel)
       localStorage.setItem('preferredMicLabel', micLabel)
 
@@ -123,8 +131,8 @@ export default function Join() {
   const passed = useMemo(() => {
     const audioTracks = previewStream?.getAudioTracks() || []
     const videoTracks = previewStream?.getVideoTracks() || []
-    const audioOk = audioTracks.some(t => t.enabled)
-    const videoOk = selectedCamera ? videoTracks.some(t => t.enabled) : true
+    const audioOk = audioTracks.some(t => t.readyState === 'live') || audioTracks.length > 0
+    const videoOk = selectedCamera ? (videoTracks.some(t => t.readyState === 'live') || videoTracks.length > 0) : true
     return audioOk && videoOk
   }, [previewStream, selectedCamera])
 
