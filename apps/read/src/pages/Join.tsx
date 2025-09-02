@@ -1,11 +1,15 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useWebRTCStore } from '../stores/webrtcStore'
+import VideoGrid from '../components/VideoGrid'
+import { supabase } from '../stores/authStore'
 
 interface DeviceOption {
   deviceId: string
   label: string
 }
+
+interface StoryOption { id: string; title: string }
 
 export default function Join() {
   const { code = '' } = useParams()
@@ -24,6 +28,9 @@ export default function Join() {
   const [error, setError] = useState<string | null>(null)
   const [phase, setPhase] = useState<'preflight' | 'waiting' | 'connecting' | 'connected'>('preflight')
 
+  const [curated, setCurated] = useState<StoryOption[]>([])
+  const [selectedStoryId, setSelectedStoryId] = useState<string>('')
+
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const rafRef = useRef<number | null>(null)
   const previewStreamRef = useRef<MediaStream | null>(null)
@@ -33,6 +40,20 @@ export default function Join() {
   useEffect(() => {
     if (isConnected) setPhase('connected')
   }, [isConnected])
+
+  useEffect(() => {
+    // Load 3 curated stories (simple: top 3 published by title)
+    const loadCurated = async () => {
+      const { data } = await supabase
+        .from('stories')
+        .select('id, title')
+        .eq('status', 'published')
+        .order('title', { ascending: true })
+        .limit(3)
+      if (data) setCurated(data as StoryOption[])
+    }
+    loadCurated()
+  }, [])
 
   const stopPreview = useCallback(() => {
     const s = previewStreamRef.current
@@ -142,6 +163,9 @@ export default function Join() {
   }, [previewStream, selectedCamera])
 
   const continueToWaiting = async () => {
+    if (!passed) {
+      try { await startPreview() } catch (e) { console.warn('Auto-test failed', e) }
+    }
     stopMeter()
     stopPreview()
     setPhase('waiting')
@@ -200,7 +224,7 @@ export default function Join() {
             <button onClick={startPreview} disabled={checking} className="flex-1 bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 rounded text-lg">
               {checking ? 'Testing…' : 'Test'}
             </button>
-            <button onClick={continueToWaiting} disabled={!passed} className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-700 text-white px-4 py-3 rounded text-lg">
+            <button onClick={continueToWaiting} className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded text-lg">
               Continue
             </button>
             <button onClick={() => navigate(`/invite/${normalized}`)} className="ml-auto text-sm text-gray-300 underline">Invite</button>
@@ -213,11 +237,29 @@ export default function Join() {
   if (phase === 'waiting') {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-        <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow text-center space-y-4">
-          <h1 className="text-3xl font-bold">Waiting…</h1>
-          <div className="text-gray-300">Share this link:</div>
-          <div className="bg-gray-800 rounded p-3 break-all select-all text-sm">{inviteUrl}</div>
-          <div className="text-gray-400 text-sm">We will connect automatically</div>
+        <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow space-y-4">
+          <h1 className="text-3xl font-bold text-center">Waiting…</h1>
+          <div className="text-gray-300 text-center">Share this link with the other device:</div>
+          <div className="bg-gray-800 rounded p-3 break-all select-all text-sm text-center">{inviteUrl}</div>
+
+          <div className="pt-2">
+            <div className="text-sm text-gray-300 mb-2 text-center">Pick a story</div>
+            <div className="grid grid-cols-1 gap-2">
+              {curated.map(s => (
+                <button
+                  key={s.id}
+                  onClick={async () => {
+                    setSelectedStoryId(s.id)
+                    const { useRoomStore } = await import('../stores/roomStore')
+                    await useRoomStore.getState().loadStory(s.id)
+                  }}
+                  className={`w-full px-4 py-3 rounded ${selectedStoryId === s.id ? 'bg-green-600' : 'bg-gray-700 hover:bg-gray-600'} text-white text-left`}
+                >
+                  {s.title}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -225,8 +267,8 @@ export default function Join() {
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-      <div className="w-full max-w-md text-center">
-        <p className="text-2xl font-bold">{phase === 'connecting' ? 'Connecting…' : 'Connected'}</p>
+      <div className="w-full max-w-6xl h-[70vh]">
+        <VideoGrid />
       </div>
     </div>
   )

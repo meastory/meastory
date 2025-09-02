@@ -10,7 +10,6 @@ interface StoryOption {
 
 export default function Start() {
   const navigate = useNavigate()
-  const [roomName, setRoomName] = useState('Story Time')
   const [stories, setStories] = useState<StoryOption[]>([])
   const [selectedStoryId, setSelectedStoryId] = useState<string>('')
   const [loading, setLoading] = useState(false)
@@ -34,7 +33,7 @@ export default function Start() {
     setError(null)
 
     try {
-      const { data, error } = await createGuestRoom(roomName.trim() || 'Story Time', selectedStoryId || null)
+      const { data, error } = await createGuestRoom('Story Time', selectedStoryId || null)
       if (error) throw error
       const room = Array.isArray(data) ? data[0] : data
       const code = String(room.code || '').toUpperCase()
@@ -55,23 +54,13 @@ export default function Start() {
 
         <form onSubmit={handleCreate} className="space-y-4">
           <div>
-            <label className="block text-sm mb-1">Room name</label>
-            <input
-              value={roomName}
-              onChange={(e) => setRoomName(e.target.value)}
-              className="w-full px-3 py-3 text-lg rounded bg-gray-800 text-white border border-gray-700 focus:outline-none"
-              placeholder="Story Time"
-            />
-          </div>
-
-          <div>
             <label className="block text-sm mb-1">Story (optional)</label>
             <select
               value={selectedStoryId}
               onChange={(e) => setSelectedStoryId(e.target.value)}
               className="w-full px-3 py-3 text-lg rounded bg-gray-800 text-white border border-gray-700 focus:outline-none"
             >
-              <option value="">No story selected</option>
+              <option value="">Choose later</option>
               {stories.map((s) => (
                 <option key={s.id} value={s.id}>{s.title}</option>
               ))}
