@@ -184,9 +184,8 @@ class WebRTCManager {
         answer
       })
       
-      // Create data channel for the answering side
-      const dataChannel = peerConnection.createDataChannel('story-sync')
-      this.setupDataChannel(from, dataChannel)
+      // Do NOT create a data channel on the answering side.
+      // Data channel will be established from the offerer.
       
       // Process any queued ICE candidates
       this.processQueuedIceCandidates(from)
@@ -206,6 +205,11 @@ class WebRTCManager {
     }
     
     try {
+      // Only set remote answer if we are in the correct state
+      if (peerConnection.signalingState !== 'have-local-offer') {
+        console.warn('⚠️ Ignoring unexpected answer in state:', peerConnection.signalingState)
+        return
+      }
       await peerConnection.setRemoteDescription(new RTCSessionDescription(answer))
       console.log('✅ Answer processed from:', from)
       

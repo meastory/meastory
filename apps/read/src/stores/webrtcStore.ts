@@ -92,29 +92,39 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
       channel
         .on('broadcast', { event: 'offer' }, ({ payload }: { payload: any }) => {
           console.log('📨 Received offer via Supabase Realtime')
+          const clientId = get().clientId
+          if (!clientId) return
+          if (payload.from === clientId) return
+          if (payload.to && payload.to !== clientId) return
           get().handleOffer(payload.from, payload.offer)
         })
         .on('broadcast', { event: 'answer' }, ({ payload }: { payload: any }) => {
           console.log('📨 Received answer via Supabase Realtime')
+          const clientId = get().clientId
+          if (!clientId) return
+          if (payload.from === clientId) return
+          if (payload.to && payload.to !== clientId) return
           get().handleAnswer(payload.from, payload.answer)
         })
         .on('broadcast', { event: 'candidate' }, ({ payload }: { payload: any }) => {
           console.log('🧊 Received ICE candidate via Supabase Realtime')
+          const clientId = get().clientId
+          if (!clientId) return
+          if (payload.from === clientId) return
+          if (payload.to && payload.to !== clientId) return
           get().handleCandidate(payload.from, payload.candidate)
         })
         .on('broadcast', { event: 'join' }, ({ payload }: { payload: any }) => {
           console.log('👥 Participant joined via Supabase Realtime:', payload.clientId)
+          const clientId = get().clientId
+          if (!clientId) return
+          if (payload.clientId === clientId) return // ignore our own join
           get().addParticipant(payload.clientId, payload.name)
           // Create offer for new participant
           setTimeout(async () => {
             const { webrtcManager } = await import('../services/webrtcManager')
-            const clientId = get().clientId
-            if (clientId) {
-              webrtcManager.createOffer(payload.clientId)
-            } else {
-              console.warn('⚠️ Client ID not available for creating offer')
-            }
-          }, 1000)
+            webrtcManager.createOffer(payload.clientId)
+          }, 500)
         })
         .on('broadcast', { event: 'leave' }, ({ payload }: { payload: any }) => {
           console.log('👋 Participant left via Supabase Realtime:', payload.clientId)
