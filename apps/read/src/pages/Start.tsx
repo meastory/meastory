@@ -13,6 +13,7 @@ export default function Start() {
     setError(null)
 
     try {
+      // Always create with default name and no initial story
       const { data, error } = await createGuestRoom('Story Time', null)
       if (error) throw error
       const room = Array.isArray(data) ? data[0] : data
@@ -31,10 +32,8 @@ export default function Start() {
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow">
         <h1 className="text-3xl font-bold mb-6 text-center">Start</h1>
-
         <form onSubmit={handleCreate} className="space-y-4">
           {error && <div className="text-red-400 text-sm">{error}</div>}
-
           <button
             type="submit"
             disabled={loading}
@@ -43,6 +42,9 @@ export default function Start() {
             {loading ? 'Creating…' : 'Create Room'}
           </button>
         </form>
+        <div className="text-center mt-4">
+          <button onClick={() => navigate('/')} className="text-sm text-gray-300 underline">Sign in</button>
+        </div>
       </div>
     </div>
   )
