@@ -100,9 +100,10 @@ export default function StoryLibrary({ onClose }: StoryLibraryProps) {
       // Enter the room and close library
       await enterRoom(data.id)
       onClose?.()
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Room creation error:', error)
-      setMessage(`Error creating room: ${error.message}`)
+      const msg = (error as { message?: string })?.message || 'Unknown error'
+      setMessage(`Error creating room: ${msg}`)
     }
   }
 

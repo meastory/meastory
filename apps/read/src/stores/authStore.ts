@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { createClient } from '@supabase/supabase-js'
 import type { Database, Tables } from '../types/supabase'
+import type { Session } from '@supabase/supabase-js'
 
 // Environment variable validation
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
@@ -17,7 +18,7 @@ if (!supabaseAnonKey) {
 // Validate URL format
 try {
   new URL(supabaseUrl)
-} catch (error) {
+} catch {
   throw new Error(`Invalid VITE_SUPABASE_URL format: ${supabaseUrl}`)
 }
 
@@ -34,7 +35,7 @@ type User = Tables<'user_profiles'>
 
 interface AuthState {
   user: User | null
-  session: any | null
+  session: Session | null
   loading: boolean
   initialized: boolean
 }
@@ -44,7 +45,7 @@ interface AuthActions {
   signUp: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
   setUser: (user: User | null) => void
-  setSession: (session: any | null) => void
+  setSession: (session: Session | null) => void
   setLoading: (loading: boolean) => void
   initialize: () => Promise<void>
 }

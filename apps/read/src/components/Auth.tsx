@@ -23,8 +23,9 @@ export default function Auth({ onAuthSuccess }: { onAuthSuccess: () => void }) {
         await signUp(email, password)
         setMessage('Signup successful! Please check your email to confirm your account.')
       }
-    } catch (error: any) {
-      setMessage(`Error: ${error.message}`)
+    } catch (error: unknown) {
+      const msg = (error as { message?: string })?.message || 'Unknown error'
+      setMessage(`Error: ${msg}`)
     } finally {
       setLoading(false)
     }

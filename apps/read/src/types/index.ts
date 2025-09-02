@@ -36,7 +36,7 @@ export interface Choice {
 export interface Condition {
   type: 'variable' | 'choice';
   key: string;
-  value: any;
+  value: unknown;
 }
 
 export interface Room {
@@ -68,7 +68,7 @@ export interface Session {
 export interface StoryProgress {
   currentSceneId: string;
   completedScenes: string[];
-  variables: Record<string, any>;
+  variables: Record<string, unknown>;
   choiceHistory: ChoiceHistory[];
 }
 

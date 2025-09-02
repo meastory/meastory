@@ -25,8 +25,8 @@ function App() {
   // Set up library callback in room store
   useEffect(() => {
     const roomStore = useRoomStore.getState()
-    const extendedStore = roomStore as any
-    extendedStore.showLibrary = () => {
+    const withLibrary = roomStore as typeof roomStore & { showLibrary?: () => void }
+    withLibrary.showLibrary = () => {
       console.log('📚 Opening library from room context')
       setShowLibrary(true)
     }

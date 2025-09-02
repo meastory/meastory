@@ -43,7 +43,7 @@ export const useUIStore = create<UIState & UIActions>((set) => ({
     // Persist to localStorage
     try {
       localStorage.setItem('storyTextScale', String(clampedScale))
-    } catch (e) {
+    } catch {
       console.warn('Failed to save text scale to localStorage')
     }
     

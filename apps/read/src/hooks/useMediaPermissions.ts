@@ -63,18 +63,19 @@ export function useMediaPermissions(): MediaPermissions & {
       // Re-check permissions after request
       await checkPermissions()
       
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error requesting media permissions:', err)
       
       let errorMessage = 'Failed to access camera and microphone'
+      const e = err as { name?: string }
       
-      if (err.name === 'NotAllowedError') {
+      if (e.name === 'NotAllowedError') {
         errorMessage = 'Camera and microphone access denied. Please allow access in your browser settings.'
-      } else if (err.name === 'NotFoundError') {
+      } else if (e.name === 'NotFoundError') {
         errorMessage = 'No camera or microphone found on this device.'
-      } else if (err.name === 'NotSupportedError') {
+      } else if (e.name === 'NotSupportedError') {
         errorMessage = 'Media access is not supported in this browser.'
-      } else if (err.name === 'SecurityError') {
+      } else if (e.name === 'SecurityError') {
         errorMessage = 'Media access blocked due to security restrictions.'
       }
       

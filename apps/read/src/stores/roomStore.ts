@@ -92,9 +92,10 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       }
 
       console.log('✅ Successfully entered room')
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error entering room:', error)
-      set({ error: error.message })
+      const msg = (error as { message?: string })?.message || 'Unknown error'
+      set({ error: msg })
     } finally {
       set({ isLoading: false })
     }
@@ -129,9 +130,10 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
         console.log('⚠️ No first scene found for story')
         set({ currentScene: null })
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error loading story:', error)
-      set({ error: error.message })
+      const msg = (error as { message?: string })?.message || 'Unknown error'
+      set({ error: msg })
     }
   },
 
@@ -162,9 +164,10 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
       console.log('🎭 Scene loaded:', scene.title, 'Order:', scene.scene_order)
       set({ currentScene: scene })
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error loading scene:', error)
-      set({ error: error.message })
+      const msg = (error as { message?: string })?.message || 'Unknown error'
+      set({ error: msg })
     }
   },
 
@@ -177,7 +180,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
       if (error) throw error
       set({ participants: participants || [] })
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error loading participants:', error)
     }
   },
@@ -203,9 +206,10 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       await get().loadStory(storyId)
       
       console.log('✅ Story changed successfully without disconnecting WebRTC')
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error changing story:', error)
-      set({ error: error.message })
+      const msg = (error as { message?: string })?.message || 'Unknown error'
+      set({ error: msg })
     }
   },
 

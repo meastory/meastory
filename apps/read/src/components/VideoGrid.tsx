@@ -1,6 +1,7 @@
 import { useWebRTCStore } from '../stores/webrtcStore'
 import { useMediaPermissions } from '../hooks/useMediaPermissions'
 import VideoFeed from './VideoFeed'
+import type { Participant as RTCParticipant } from '../stores/webrtcStore'
 
 export default function VideoGrid() {
   const { participants, isConnected, isConnecting } = useWebRTCStore()
@@ -105,7 +106,7 @@ export default function VideoGrid() {
         />
         
         {/* Remote participant video feeds */}
-        {participantList.map((participant: any) => (
+        {participantList.map((participant: RTCParticipant) => (
           <VideoFeed
             key={participant.id}
             participantId={participant.id}

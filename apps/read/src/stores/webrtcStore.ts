@@ -1,7 +1,8 @@
 import { create } from 'zustand'
 import { supabase } from './authStore'
+import type { RealtimeChannel } from '@supabase/supabase-js'
 
-interface Participant {
+export interface Participant {
   id: string
   stream: MediaStream | null
   isMuted: boolean
@@ -25,7 +26,7 @@ interface WebRTCState {
   isConnecting: boolean
   
   // Signaling
-  signalingSocket: any
+  signalingSocket: RealtimeChannel | null
 }
 
 interface WebRTCActions {
@@ -39,7 +40,7 @@ interface WebRTCActions {
   toggleVideo: () => void
   
   // Signaling
-  sendSignalingMessage: (type: string, payload?: any) => Promise<void>
+  sendSignalingMessage: (type: string, payload?: unknown) => Promise<void>
   
   // Participant management
   addParticipant: (id: string, name?: string) => void
@@ -53,7 +54,7 @@ interface WebRTCActions {
   handleCandidate: (from: string, candidate: RTCIceCandidateInit) => Promise<void>
   
   // Signaling message handling
-  handleSignalingMessage: (message: any) => void
+  handleSignalingMessage: (message: unknown) => void
   
   // Error handling
   setError: (error: string) => void
@@ -90,37 +91,35 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
       
       // Handle signaling messages
       channel
-        .on('broadcast', { event: 'offer' }, ({ payload }: { payload: any }) => {
+        .on('broadcast', { event: 'offer' }, ({ payload }: { payload: unknown }) => {
           console.log('📨 Received offer via Supabase Realtime')
-          const clientId = get().clientId
-          if (!clientId) return
-          if (payload.from === clientId) return
-          if (payload.to && payload.to !== clientId) return
-          get().handleOffer(payload.from, payload.offer)
+          const p = payload as Record<string, unknown>
+          const from = typeof p.from === 'string' ? p.from : undefined
+          const offer = p.offer as RTCSessionDescriptionInit | undefined
+          if (from && offer) get().handleOffer(from, offer)
         })
-        .on('broadcast', { event: 'answer' }, ({ payload }: { payload: any }) => {
+        .on('broadcast', { event: 'answer' }, ({ payload }: { payload: unknown }) => {
           console.log('📨 Received answer via Supabase Realtime')
-          const clientId = get().clientId
-          if (!clientId) return
-          if (payload.from === clientId) return
-          if (payload.to && payload.to !== clientId) return
-          get().handleAnswer(payload.from, payload.answer)
+          const p = payload as Record<string, unknown>
+          const from = typeof p.from === 'string' ? p.from : undefined
+          const answer = p.answer as RTCSessionDescriptionInit | undefined
+          if (from && answer) get().handleAnswer(from, answer)
         })
-        .on('broadcast', { event: 'candidate' }, ({ payload }: { payload: any }) => {
+        .on('broadcast', { event: 'candidate' }, ({ payload }: { payload: unknown }) => {
           console.log('🧊 Received ICE candidate via Supabase Realtime')
-          const clientId = get().clientId
-          if (!clientId) return
-          if (payload.from === clientId) return
-          if (payload.to && payload.to !== clientId) return
-          get().handleCandidate(payload.from, payload.candidate)
+          const p = payload as Record<string, unknown>
+          const from = typeof p.from === 'string' ? p.from : undefined
+          const candidate = p.candidate as RTCIceCandidateInit | undefined
+          if (from && candidate) get().handleCandidate(from, candidate)
         })
-        .on('broadcast', { event: 'story-choice' }, async ({ payload }: { payload: any }) => {
+        .on('broadcast', { event: 'story-choice' }, async ({ payload }: { payload: unknown }) => {
           try {
             const clientId = get().clientId
             if (!clientId) return
-            if (payload.from === clientId) return
-            const msg = payload.payload
-            if (msg?.type === 'choice' && msg.nextSceneId) {
+            const p = payload as Record<string, unknown>
+            if (p.from === clientId) return
+            const msg = p.payload as Record<string, unknown> | undefined
+            if (msg && msg.type === 'choice' && typeof msg.nextSceneId === 'string') {
               console.log('📖 Signaling fallback: applying story choice for scene:', msg.nextSceneId)
               const { useRoomStore } = await import('./roomStore')
               useRoomStore.getState().loadScene(msg.nextSceneId)
@@ -129,13 +128,14 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
             console.warn('Failed to apply signaling story-choice:', e)
           }
         })
-        .on('broadcast', { event: 'story-change' }, async ({ payload }: { payload: any }) => {
+        .on('broadcast', { event: 'story-change' }, async ({ payload }: { payload: unknown }) => {
           try {
             const clientId = get().clientId
             if (!clientId) return
-            if (payload.from === clientId) return
-            const msg = payload.payload
-            if (msg?.type === 'story-change' && msg.storyId) {
+            const p = payload as Record<string, unknown>
+            if (p.from === clientId) return
+            const msg = p.payload as Record<string, unknown> | undefined
+            if (msg && msg.type === 'story-change' && typeof msg.storyId === 'string') {
               console.log('📚 Signaling fallback: applying story change for story:', msg.storyId)
               const { useRoomStore } = await import('./roomStore')
               await useRoomStore.getState().changeStory(msg.storyId)
@@ -144,21 +144,26 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
             console.warn('Failed to apply signaling story-change:', e)
           }
         })
-        .on('broadcast', { event: 'join' }, ({ payload }: { payload: any }) => {
-          console.log('👥 Participant joined via Supabase Realtime:', payload.clientId)
+        .on('broadcast', { event: 'join' }, ({ payload }: { payload: unknown }) => {
+          const p = payload as Record<string, unknown>
+          console.log('👥 Participant joined via Supabase Realtime:', p.clientId)
+          const joinedId = typeof p.clientId === 'string' ? p.clientId : undefined
+          const name = typeof p.name === 'string' ? p.name : undefined
           const clientId = get().clientId
           if (!clientId) return
-          if (payload.clientId === clientId) return // ignore our own join
-          get().addParticipant(payload.clientId, payload.name)
+          if (joinedId === clientId) return // ignore our own join
+          if (joinedId) get().addParticipant(joinedId, name)
           // Create offer for new participant
           setTimeout(async () => {
             const { webrtcManager } = await import('../services/webrtcManager')
-            webrtcManager.createOffer(payload.clientId)
+            if (joinedId) webrtcManager.createOffer(joinedId)
           }, 500)
         })
-        .on('broadcast', { event: 'leave' }, ({ payload }: { payload: any }) => {
-          console.log('👋 Participant left via Supabase Realtime:', payload.clientId)
-          get().removeParticipant(payload.clientId)
+        .on('broadcast', { event: 'leave' }, ({ payload }: { payload: unknown }) => {
+          const p = payload as Record<string, unknown>
+          console.log('👋 Participant left via Supabase Realtime:', p.clientId)
+          const leftId = typeof p.clientId === 'string' ? p.clientId : undefined
+          if (leftId) get().removeParticipant(leftId)
         })
 
       // Subscribe to the channel
@@ -191,10 +196,11 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
         }
       })
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Connection error:', error)
       set({ isConnecting: false })
-      get().setError(error.message)
+      const msg = (error as { message?: string })?.message || 'Connection error'
+      get().setError(msg)
     }
   },
 
@@ -243,12 +249,13 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
       set({ localStream: stream })
       console.log('✅ Local stream initialized')
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Failed to get media stream:', error)
+      const e = error as { name?: string }
       
-      if (error.name === 'NotAllowedError') {
+      if (e.name === 'NotAllowedError') {
         throw new Error('Camera and microphone permissions are required')
-      } else if (error.name === 'NotFoundError') {
+      } else if (e.name === 'NotFoundError') {
         throw new Error('No camera or microphone found')
       } else {
         throw new Error('Failed to access camera and microphone')
@@ -280,7 +287,7 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
     }
   },
 
-  sendSignalingMessage: async (type: string, payload?: any) => {
+  sendSignalingMessage: async (type: string, payload?: unknown) => {
     const { signalingSocket } = get()
     
     if (signalingSocket && typeof signalingSocket.send === 'function') {
@@ -374,38 +381,52 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
     webrtcManager.handleCandidate(from, candidate)
   },
 
-  handleSignalingMessage: (message: any) => {
+  handleSignalingMessage: (message: unknown) => {
     console.log('📡 Signaling message:', message)
     
     // Handle Supabase Realtime broadcast messages
-    if (message.type === 'broadcast') {
-      const { event, payload } = message
+    const msg = message as Record<string, unknown>
+    if (msg.type === 'broadcast') {
+      const event = msg.event as string
+      const payload = msg.payload as Record<string, unknown>
       
       switch (event) {
         case 'offer':
-          console.log('📨 Processing offer from:', payload.from)
-          get().handleOffer(payload.from, payload.offer)
+          {
+            const p = payload as Record<string, unknown>
+            console.log('📨 Processing offer from:', p?.from)
+          }
+          {
+            const p = payload as Record<string, unknown>
+            if (typeof p.from === 'string' && p.offer) get().handleOffer(p.from as string, p.offer as RTCSessionDescriptionInit)
+          }
           break
           
         case 'answer':
-          console.log('📨 Processing answer from:', payload.from)
-          get().handleAnswer(payload.from, payload.answer)
+          {
+            const p = payload as Record<string, unknown>
+            console.log('📨 Processing answer from:', p?.from)
+          }
+          {
+            const p = payload as Record<string, unknown>
+            if (typeof p.from === 'string' && p.answer) get().handleAnswer(p.from as string, p.answer as RTCSessionDescriptionInit)
+          }
           break
           
         case 'candidate':
-          console.log('🧊 Processing ICE candidate from:', payload.from)
-          get().handleCandidate(payload.from, payload.candidate)
+          console.log('🧊 Processing ICE candidate from:', payload?.from)
+          if (typeof payload?.from === 'string' && payload?.candidate) get().handleCandidate(payload.from as string, payload.candidate as RTCIceCandidateInit)
           break
           
         case 'join':
           console.log('👥 Participant joined:', payload.clientId)
-          get().addParticipant(payload.clientId, payload.name)
+          if (typeof payload?.clientId === 'string') get().addParticipant(payload.clientId as string, typeof payload?.name === 'string' ? payload.name as string : undefined)
           // Create offer for new participant
           setTimeout(async () => {
             const { webrtcManager } = await import('../services/webrtcManager')
             const clientId = get().clientId
             if (clientId) {
-              webrtcManager.createOffer(payload.clientId)
+              if (typeof payload?.clientId === 'string') webrtcManager.createOffer(payload.clientId as string)
             } else {
               console.warn('⚠️ Client ID not available for creating offer')
             }
@@ -414,7 +435,7 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           
         case 'leave':
           console.log('👋 Participant left:', payload.clientId)
-          get().removeParticipant(payload.clientId)
+          if (typeof payload?.clientId === 'string') get().removeParticipant(payload.clientId as string)
           break
           
         default:
@@ -422,7 +443,11 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
       }
     } else {
       // Handle legacy WebSocket messages (fallback)
-      const { type, clientId, roomId, peerCount } = message
+      const legacy = msg
+      const type = legacy.type as string
+      const clientId = legacy.clientId as string | undefined
+      const roomId = legacy.roomId as string | undefined
+      const peerCount = legacy.peerCount as number | undefined
       
       switch (type) {
         case 'hello':
@@ -434,32 +459,32 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           break
           
         case 'start-call':
-          get().startCall(message.role)
+          get().startCall((legacy.role as 'caller' | 'callee') || 'caller')
           break
           
         case 'peer-joined':
-          get().addParticipant(message.clientId)
+          if (typeof legacy.clientId === 'string') get().addParticipant(legacy.clientId as string)
           break
           
         case 'peer-left':
-          get().removeParticipant(message.clientId)
+          if (typeof legacy.clientId === 'string') get().removeParticipant(legacy.clientId as string)
           break
           
         case 'offer':
-          get().handleOffer(message.from, message.payload)
+          if (typeof legacy.from === 'string' && legacy.payload) get().handleOffer(legacy.from as string, legacy.payload as RTCSessionDescriptionInit)
           break
           
         case 'answer':
-          get().handleAnswer(message.from, message.payload)
+          if (typeof legacy.from === 'string' && legacy.payload) get().handleAnswer(legacy.from as string, legacy.payload as RTCSessionDescriptionInit)
           break
           
         case 'candidate':
-          get().handleCandidate(message.from, message.payload)
+          if (typeof legacy.from === 'string' && legacy.payload) get().handleCandidate(legacy.from as string, legacy.payload as RTCIceCandidateInit)
           break
           
         case 'error':
-          console.error('❌ Signaling error:', message.error)
-          get().setError(message.error)
+          console.error('❌ Signaling error:', legacy.error)
+          if (typeof legacy.error === 'string') get().setError(legacy.error)
           break
           
         default:

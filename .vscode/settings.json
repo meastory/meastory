@@ -22,9 +22,24 @@
     "editor.defaultFormatter": "denoland.vscode-deno"
   },
   "cSpell.words": [
+    "fkey",
+    "Fraunces",
+    "Neue",
+    "njsproj",
+    "nosniff",
+    "Noto",
+    "ntvs",
+    "Nunito",
+    "PGRST",
+    "Postgrest",
+    "rgba",
+    "Roboto",
+    "Segoe",
     "Supabase",
     "titlebar",
     "trycloudflare",
-    "webrtc"
+    "VITE",
+    "webrtc",
+    "XVCJ"
   ]
 }

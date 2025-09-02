@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuthStore, supabase } from '../stores/authStore'
 import { useRoomStore } from '../stores/roomStore'
 import type { Tables } from '../types/supabase'
@@ -18,15 +18,7 @@ export default function RoomManager() {
   const [message, setMessage] = useState('')
   const [activeTab, setActiveTab] = useState<'create' | 'join'>('create')
 
-  // Load user's rooms and available stories
-  useEffect(() => {
-    if (user) {
-      loadUserRooms()
-      loadStories()
-    }
-  }, [user])
-
-  const loadUserRooms = async () => {
+  const loadUserRooms = useCallback(async () => {
     try {
       // Load rooms where user is host OR participant
       const { data: hostedRooms, error: hostedError } = await supabase
@@ -74,9 +66,9 @@ export default function RoomManager() {
     } catch (error) {
       console.error('Error loading rooms:', error)
     }
-  }
+  }, [user])
 
-  const loadStories = async () => {
+  const loadStories = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('stories')
@@ -89,7 +81,14 @@ export default function RoomManager() {
     } catch (error) {
       console.error('Error loading stories:', error)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      loadUserRooms()
+      loadStories()
+    }
+  }, [user, loadUserRooms, loadStories])
 
   const createRoom = async () => {
     if (!user || !roomName.trim()) return
@@ -140,9 +139,10 @@ export default function RoomManager() {
 
       // Reload rooms to show the new room
       loadUserRooms()
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error creating room:', error)
-      setMessage(`Error creating room: ${error.message}`)
+      const msg = (error as { message?: string })?.message || 'Unknown error'
+      setMessage(`Error creating room: ${msg}`)
     } finally {
       setLoading(false)
     }
@@ -197,9 +197,10 @@ export default function RoomManager() {
 
       // Reload rooms to show the joined room
       loadUserRooms()
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Room join error:', error)
-      setMessage(`Error joining room: ${error.message}`)
+      const msg = (error as { message?: string })?.message || 'Unknown error'
+      setMessage(`Error joining room: ${msg}`)
     } finally {
       setLoading(false)
     }
@@ -209,9 +210,10 @@ export default function RoomManager() {
     console.log('🚪 Entering room:', room.name)
     try {
       await enterRoom(room.id)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error entering room:', error)
-      setMessage(`Error entering room: ${error.message}`)
+      const msg = (error as { message?: string })?.message || 'Unknown error'
+      setMessage(`Error entering room: ${msg}`)
     }
   }
 
@@ -232,9 +234,10 @@ export default function RoomManager() {
 
       setMessage('Room deleted successfully')
       loadUserRooms()
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error deleting room:', error)
-      setMessage(`Error deleting room: ${error.message}`)
+      const msg = (error as { message?: string })?.message || 'Unknown error'
+      setMessage(`Error deleting room: ${msg}`)
     }
   }
 
