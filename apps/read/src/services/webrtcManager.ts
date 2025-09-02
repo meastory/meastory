@@ -3,11 +3,13 @@ import { useWebRTCStore } from '../stores/webrtcStore'
 type DataMessage =
   | { type: 'choice'; nextSceneId: string }
   | { type: 'child-name-change'; name: string; timestamp?: number }
+  | { type: 'story-change'; storyId: string }
 
 class WebRTCManager {
   private peerConnections: Map<string, RTCPeerConnection> = new Map()
   private dataChannels: Map<string, RTCDataChannel> = new Map()
   private iceCandidatesQueue: Map<string, RTCIceCandidateInit[]> = new Map()
+  private pendingMessages: Map<string, DataMessage[]> = new Map()
   private audioSender: RTCRtpSender | null = null
   private videoSender: RTCRtpSender | null = null
   private iceServers: RTCConfiguration = {
@@ -305,6 +307,13 @@ class WebRTCManager {
     
     dataChannel.onopen = () => {
       console.log('📡 Data channel opened for:', peerId)
+      // Flush any queued messages
+      const queued = this.pendingMessages.get(peerId) || []
+      if (queued.length) {
+        console.log(`📤 Flushing ${queued.length} queued messages to`, peerId)
+        queued.forEach(msg => { try { dataChannel.send(JSON.stringify(msg)) } catch (e) { console.warn('Queue send failed:', e) } })
+        this.pendingMessages.delete(peerId)
+      }
     }
     
     dataChannel.onmessage = (event) => {
@@ -321,6 +330,10 @@ class WebRTCManager {
           case 'child-name-change':
             // Handle child name synchronization
             this.handleChildNameSync(message.name)
+            break
+          case 'story-change':
+            // Handle story change synchronization
+            this.handleStoryChangeSync(message.storyId)
             break
           default:
             console.log('📡 Unknown data channel message type')
@@ -345,7 +358,10 @@ class WebRTCManager {
       console.log('📤 Sending data message to', peerId, ':', message)
       dataChannel.send(JSON.stringify(message))
     } else {
-      console.warn('📡 Data channel not ready for:', peerId)
+      console.warn('📡 Data channel not ready for:', peerId, '– queuing message')
+      const queue = this.pendingMessages.get(peerId) || []
+      queue.push(message)
+      this.pendingMessages.set(peerId, queue)
     }
   }
 
@@ -357,7 +373,10 @@ class WebRTCManager {
         console.log('📤 →', peerId)
         dataChannel.send(JSON.stringify(message))
       } else {
-        console.warn('📡 Channel not open for', peerId, 'state:', dataChannel.readyState)
+        console.warn('📡 Channel not open for', peerId, 'state:', dataChannel.readyState, '– queuing')
+        const queue = this.pendingMessages.get(peerId) || []
+        queue.push(message)
+        this.pendingMessages.set(peerId, queue)
       }
     })
   }
@@ -430,6 +449,21 @@ class WebRTCManager {
     })
   }
 
+  syncStoryChange(storyId: string): void {
+    const payload: DataMessage = { type: 'story-change', storyId }
+    this.broadcastDataMessage(payload)
+    // Fallback via signaling
+    try {
+      const clientId = useWebRTCStore.getState().clientId
+      useWebRTCStore.getState().sendSignalingMessage('story-change', {
+        from: clientId,
+        payload
+      })
+    } catch (e) {
+      console.warn('Signaling fallback failed (story-change):', e)
+    }
+  }
+
   handleStoryChoiceSync(nextSceneId: string): void {
     console.log('📖 Syncing story choice to scene:', nextSceneId)
     // Navigate to the scene by ID
@@ -447,6 +481,17 @@ class WebRTCManager {
       })
     } catch (error) {
       console.error('❌ Error syncing story choice:', error)
+    }
+  }
+
+  async handleStoryChangeSync(storyId: string): Promise<void> {
+    console.log('📚 Syncing story change to story:', storyId)
+    try {
+      const { useRoomStore } = await import('../stores/roomStore')
+      const room = useRoomStore.getState()
+      await room.changeStory(storyId)
+    } catch (error) {
+      console.error('❌ Error syncing story change:', error)
     }
   }
 

@@ -50,6 +50,14 @@ export default function StoryLibrary({ onClose }: StoryLibraryProps) {
         // Change story without disconnecting WebRTC
         await changeStory(story.id)
         
+        // Broadcast to peers
+        try {
+          const { webrtcManager } = await import('../services/webrtcManager')
+          webrtcManager.syncStoryChange(story.id)
+        } catch (e) {
+          console.warn('Story-change broadcast failed:', e)
+        }
+        
         // Auto-close the library
         onClose?.()        
         // Auto-close the library

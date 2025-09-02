@@ -129,6 +129,21 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
             console.warn('Failed to apply signaling story-choice:', e)
           }
         })
+        .on('broadcast', { event: 'story-change' }, async ({ payload }: { payload: any }) => {
+          try {
+            const clientId = get().clientId
+            if (!clientId) return
+            if (payload.from === clientId) return
+            const msg = payload.payload
+            if (msg?.type === 'story-change' && msg.storyId) {
+              console.log('📚 Signaling fallback: applying story change for story:', msg.storyId)
+              const { useRoomStore } = await import('./roomStore')
+              await useRoomStore.getState().changeStory(msg.storyId)
+            }
+          } catch (e) {
+            console.warn('Failed to apply signaling story-change:', e)
+          }
+        })
         .on('broadcast', { event: 'join' }, ({ payload }: { payload: any }) => {
           console.log('👥 Participant joined via Supabase Realtime:', payload.clientId)
           const clientId = get().clientId
