@@ -59,8 +59,8 @@ export const leaveRoom = async (roomId: string, userId: string) => {
 // S1: Guest room RPC helper (return type unknown until types are regenerated)
 export const createGuestRoom = async (name: string, storyId?: string | null) => {
   const { data, error } = await supabase.rpc('rpc_create_guest_room' as unknown as never, {
-    name,
-    story_id: storyId || null,
+    p_name: name,
+    p_story_id: storyId || null,
   } as unknown as never)
   return { data: data as unknown, error }
 }
