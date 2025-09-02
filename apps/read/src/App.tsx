@@ -55,7 +55,6 @@ function App() {
     document.documentElement.style.setProperty('--story-text-scale', String(storyTextScale))
   }, [storyTextScale])
 
-  // Auto-open picker when a room is entered with no story loaded
   useEffect(() => {
     if (currentRoom && !currentStory) {
       setShowPicker(true)
@@ -74,7 +73,6 @@ function App() {
     return <LoadingSpinner />
   }
 
-  // Guest-only flow: if no session and flag is enabled, go to /start
   if (!session && import.meta.env.VITE_FEATURE_GUEST_FLOW === 'true') {
     return <Navigate to="/start" replace />
   }
@@ -118,14 +116,21 @@ function App() {
             <StoryPlayer />
             <MenuPanel />
 
-            {/* Floating Pick Story button if no story loaded */}
             {!currentStory && (
-              <button
-                onClick={() => setShowPicker(true)}
-                className="fixed bottom-4 left-4 z-40 px-4 py-3 rounded bg-green-600 hover:bg-green-700 text-white"
-              >
-                Pick a Story
-              </button>
+              <>
+                <button
+                  onClick={() => setShowPicker(true)}
+                  className="fixed bottom-6 left-6 z-[100] px-4 py-3 rounded bg-green-600 hover:bg-green-700 text-white pointer-events-auto"
+                >
+                  Pick a Story
+                </button>
+                <button
+                  onClick={() => setShowPicker(true)}
+                  className="fixed top-6 right-20 z-[100] px-3 py-2 rounded bg-green-600 hover:bg-green-700 text-white pointer-events-auto"
+                >
+                  Pick
+                </button>
+              </>
             )}
 
             {showPicker && (
