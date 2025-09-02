@@ -1,31 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createGuestRoom } from '../lib/supabase'
-import { supabase } from '../stores/authStore'
-
-interface StoryOption {
-  id: string
-  title: string
-}
 
 export default function Start() {
   const navigate = useNavigate()
-  const [stories, setStories] = useState<StoryOption[]>([])
-  const [selectedStoryId, setSelectedStoryId] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    const loadStories = async () => {
-      const { data, error } = await supabase
-        .from('stories')
-        .select('id, title')
-        .eq('status', 'published')
-        .order('title', { ascending: true })
-      if (!error && data) setStories(data as StoryOption[])
-    }
-    loadStories()
-  }, [])
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,7 +13,7 @@ export default function Start() {
     setError(null)
 
     try {
-      const { data, error } = await createGuestRoom('Story Time', selectedStoryId || null)
+      const { data, error } = await createGuestRoom('Story Time', null)
       if (error) throw error
       const room = Array.isArray(data) ? data[0] : data
       const code = String(room.code || '').toUpperCase()
@@ -53,20 +33,6 @@ export default function Start() {
         <h1 className="text-3xl font-bold mb-6 text-center">Start</h1>
 
         <form onSubmit={handleCreate} className="space-y-4">
-          <div>
-            <label className="block text-sm mb-1">Story (optional)</label>
-            <select
-              value={selectedStoryId}
-              onChange={(e) => setSelectedStoryId(e.target.value)}
-              className="w-full px-3 py-3 text-lg rounded bg-gray-800 text-white border border-gray-700 focus:outline-none"
-            >
-              <option value="">Choose later</option>
-              {stories.map((s) => (
-                <option key={s.id} value={s.id}>{s.title}</option>
-              ))}
-            </select>
-          </div>
-
           {error && <div className="text-red-400 text-sm">{error}</div>}
 
           <button

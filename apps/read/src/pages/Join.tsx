@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useWebRTCStore } from '../stores/webrtcStore'
 import VideoGrid from '../components/VideoGrid'
-import { supabase } from '../stores/authStore'
 import StoryOverlay from '../components/StoryOverlay'
 import StoryPlayer from '../components/StoryPlayer'
 import InRoomStoryPicker from '../components/InRoomStoryPicker'
@@ -12,8 +11,6 @@ interface DeviceOption {
   deviceId: string
   label: string
 }
-
-interface StoryOption { id: string; title: string }
 
 export default function Join() {
   const { code = '' } = useParams()
@@ -32,8 +29,6 @@ export default function Join() {
   const [error, setError] = useState<string | null>(null)
   const [phase, setPhase] = useState<'preflight' | 'waiting' | 'connecting' | 'connected'>('preflight')
 
-  const [curated, setCurated] = useState<StoryOption[]>([])
-  const [selectedStoryId, setSelectedStoryId] = useState<string>('')
   const [showPicker, setShowPicker] = useState(false)
   const [nameInput, setNameInput] = useState(childName || 'Alex')
 
@@ -46,19 +41,6 @@ export default function Join() {
   useEffect(() => {
     if (isConnected) setPhase('connected')
   }, [isConnected])
-
-  useEffect(() => {
-    const loadCurated = async () => {
-      const { data } = await supabase
-        .from('stories')
-        .select('id, title')
-        .eq('status', 'published')
-        .order('title', { ascending: true })
-        .limit(3)
-      if (data) setCurated(data as StoryOption[])
-    }
-    loadCurated()
-  }, [])
 
   // Allow StoryPlayer's "Open Library" button to open the in-room picker in guest context
   useEffect(() => {
@@ -194,6 +176,17 @@ export default function Join() {
     }
   }, [participants.size, phase])
 
+  useEffect(() => {
+    if (phase === 'connected' || phase === 'connecting') {
+      if (!currentStory) setShowPicker(true)
+    }
+  }, [phase, currentStory])
+
+  // When story becomes available (from local pick or remote sync), close picker if open
+  useEffect(() => {
+    if (currentStory && showPicker) setShowPicker(false)
+  }, [currentStory, showPicker])
+
   if (phase === 'preflight') {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
@@ -249,33 +242,10 @@ export default function Join() {
   if (phase === 'waiting') {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-        <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow space-y-4">
-          <h1 className="text-3xl font-bold text-center">Waiting…</h1>
-          <div className="text-gray-300 text-center">Share this link with the other device:</div>
-          <div className="bg-gray-800 rounded p-3 break-all select-all text-sm text-center">{inviteUrl}</div>
-
-          <div className="pt-2">
-            <div className="text-sm text-gray-300 mb-2 text-center">Pick a story</div>
-            <div className="grid grid-cols-1 gap-2">
-              {curated.map(s => (
-                <button
-                  key={s.id}
-                  onClick={async () => {
-                    setSelectedStoryId(s.id)
-                    const { useRoomStore } = await import('../stores/roomStore')
-                    await useRoomStore.getState().changeStory(s.id)
-                    try {
-                      const { webrtcManager } = await import('../services/webrtcManager')
-                      webrtcManager.syncStoryChange(s.id)
-                    } catch (e) { console.warn('sync story-change failed:', e) }
-                  }}
-                  className={`w-full px-4 py-3 rounded ${selectedStoryId === s.id ? 'bg-green-600' : 'bg-gray-700 hover:bg-gray-600'} text-white text-left`}
-                >
-                  {s.title}
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow space-y-4 text-center">
+          <h1 className="text-3xl font-bold">Waiting…</h1>
+          <div className="text-gray-300">Share this link with the other device:</div>
+          <div className="bg-gray-800 rounded p-3 break-all select-all text-sm">{inviteUrl}</div>
         </div>
       </div>
     )
