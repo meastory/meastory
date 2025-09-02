@@ -83,6 +83,29 @@ class WebRTCManager {
         this.handleConnectionFailure(peerId)
       }
     }
+
+    // Handle ICE connection state for resilience
+    peerConnection.oniceconnectionstatechange = async () => {
+      const iceState = peerConnection.iceConnectionState
+      console.log(`🧊 ICE state for ${peerId}:`, iceState)
+      if (iceState === 'failed' || iceState === 'disconnected') {
+        // Only initiator should attempt restart
+        const clientId = useWebRTCStore.getState().clientId
+        if (!clientId) return
+        try {
+          console.log('🧊 Attempting ICE restart to', peerId)
+          const offer = await peerConnection.createOffer({ iceRestart: true })
+          await peerConnection.setLocalDescription(offer)
+          useWebRTCStore.getState().sendSignalingMessage('offer', {
+            from: clientId,
+            to: peerId,
+            offer
+          })
+        } catch (e) {
+          console.warn('ICE restart failed:', e)
+        }
+      }
+    }
     
     // Handle data channel
     peerConnection.ondatachannel = (event) => {
@@ -327,11 +350,14 @@ class WebRTCManager {
   }
 
   broadcastDataMessage(message: DataMessage): void {
-    console.log('📤 Broadcasting data message:', message)
+    const channels = Array.from(this.dataChannels.entries()).map(([peerId, ch]) => ({ peerId, state: ch.readyState }))
+    console.log('📤 Broadcasting data message:', message, 'channels:', channels)
     this.dataChannels.forEach((dataChannel: RTCDataChannel, peerId) => {
       if (dataChannel.readyState === 'open') {
         console.log('📤 →', peerId)
         dataChannel.send(JSON.stringify(message))
+      } else {
+        console.warn('📡 Channel not open for', peerId, 'state:', dataChannel.readyState)
       }
     })
   }
@@ -379,10 +405,21 @@ class WebRTCManager {
 
   // Story synchronization methods
   syncStoryChoice(sceneId: string): void {
-    this.broadcastDataMessage({
-      type: 'choice',
+    const payload = {
+      type: 'choice' as const,
       nextSceneId: sceneId
-    })
+    }
+    this.broadcastDataMessage(payload)
+    // Fallback via signaling in case data channel isn't open yet
+    try {
+      const clientId = useWebRTCStore.getState().clientId
+      useWebRTCStore.getState().sendSignalingMessage('story-choice', {
+        from: clientId,
+        payload
+      })
+    } catch (e) {
+      console.warn('Signaling fallback failed:', e)
+    }
   }
 
   syncChildName(name: string): void {
