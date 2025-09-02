@@ -81,6 +81,13 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
     try {
       await get().initializeLocalStream()
 
+      // Ensure previous channel is closed before creating a new one
+      const prev = get().signalingSocket
+      if (prev && typeof prev.unsubscribe === 'function') {
+        try { await prev.unsubscribe() } catch (e) { console.warn('Prev unsubscribe failed', e) }
+        set({ signalingSocket: null })
+      }
+
       let clientId = get().clientId
       if (!clientId) {
         clientId = `u-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
@@ -135,7 +142,6 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
             deviceLabel: typeof meta.deviceLabel === 'string' ? meta.deviceLabel : undefined,
           })
           recomputeFromLocalPresence()
-          // Only host should initiate, and never offer to self
           setTimeout(async () => {
             if (get().role === 'host' && key !== selfId) {
               const { webrtcManager } = await import('../services/webrtcManager')
@@ -150,6 +156,7 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           recomputeFromLocalPresence()
         })
 
+      // Broadcast message handlers (story sync + signaling)
       channel
         .on('broadcast', { event: 'offer' }, ({ payload }: { payload: unknown }) => {
           const p = payload as Record<string, unknown>
@@ -169,35 +176,72 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           const candidate = p.candidate as RTCIceCandidateInit | undefined
           if (from && candidate) get().handleCandidate(from, candidate)
         })
-
-      await channel.subscribe(async (status: string) => {
-        if (status === 'SUBSCRIBED') {
-          console.log('📡 Supabase Realtime connected')
-          set({ signalingSocket: channel, roomId, isConnected: true, isConnecting: false })
-
-          const deviceLabel = getSavedDeviceLabel()
+        .on('broadcast', { event: 'story-choice' }, async ({ payload }: { payload: unknown }) => {
           try {
-            await channel.track({
-              clientId,
-              name: 'Guest',
-              deviceLabel,
-              ts: Date.now(),
-            })
-            presenceMetaByKey.set(clientId, { ts: Date.now(), name: 'Guest', deviceLabel })
-            recomputeFromLocalPresence()
+            const selfId = get().clientId
+            if (!selfId) return
+            const p = payload as Record<string, unknown>
+            if (p.from === selfId) return
+            const msg = p.payload as Record<string, unknown> | undefined
+            if (msg && msg.type === 'choice' && typeof msg.nextSceneId === 'string') {
+              const { useRoomStore } = await import('./roomStore')
+              useRoomStore.getState().loadScene(msg.nextSceneId)
+            }
           } catch (e) {
-            console.warn('Presence track failed:', e)
+            console.warn('story-choice apply failed:', e)
           }
-        } else if (status === 'CHANNEL_ERROR') {
-          console.error('❌ Supabase Realtime channel error')
-          set({ isConnecting: false })
-          get().setError('Failed to connect to signaling channel')
-        } else if (status === 'TIMED_OUT') {
-          console.error('❌ Supabase Realtime connection timed out')
-          set({ isConnecting: false })
-          get().setError('Signaling connection timed out')
-        }
-      })
+        })
+        .on('broadcast', { event: 'story-change' }, async ({ payload }: { payload: unknown }) => {
+          try {
+            const selfId = get().clientId
+            if (!selfId) return
+            const p = payload as Record<string, unknown>
+            if (p.from === selfId) return
+            const msg = p.payload as Record<string, unknown> | undefined
+            if (msg && msg.type === 'story-change' && typeof msg.storyId === 'string') {
+              const { useRoomStore } = await import('./roomStore')
+              await useRoomStore.getState().changeStory(msg.storyId)
+            }
+          } catch (e) {
+            console.warn('story-change apply failed:', e)
+          }
+        })
+
+      // Subscribe with retry
+      const subscribeWithRetry = async (attempt = 1) => {
+        await channel.subscribe(async (status: string) => {
+          if (status === 'SUBSCRIBED') {
+            console.log('📡 Supabase Realtime connected')
+            set({ signalingSocket: channel, roomId, isConnected: true, isConnecting: false })
+
+            const deviceLabel = getSavedDeviceLabel()
+            try {
+              await channel.track({
+                clientId,
+                name: 'Guest',
+                deviceLabel,
+                ts: Date.now(),
+              })
+              presenceMetaByKey.set(clientId!, { ts: Date.now(), name: 'Guest', deviceLabel })
+              recomputeFromLocalPresence()
+            } catch (e) {
+              console.warn('Presence track failed:', e)
+            }
+          } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+            console.error(status === 'CHANNEL_ERROR' ? '❌ Supabase Realtime channel error' : '❌ Supabase Realtime connection timed out')
+            if (attempt < 3) {
+              const backoff = 500 * Math.pow(2, attempt - 1)
+              console.log(`⏳ Retrying subscribe in ${backoff}ms (attempt ${attempt + 1}/3)`) 
+              setTimeout(() => { subscribeWithRetry(attempt + 1) }, backoff)
+            } else {
+              set({ isConnecting: false })
+              get().setError('Failed to connect to signaling channel')
+            }
+          }
+        })
+      }
+
+      await subscribeWithRetry(1)
 
     } catch (error: unknown) {
       console.error('❌ Connection error:', error)
@@ -213,7 +257,7 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
     const { signalingSocket, localStream } = get()
     
     if (signalingSocket && typeof signalingSocket.unsubscribe === 'function') {
-      signalingSocket.unsubscribe()
+      try { await signalingSocket.unsubscribe() } catch (e) { console.warn('Unsubscribe failed', e) }
     }
     
     const { webrtcManager } = await import('../services/webrtcManager')
@@ -404,6 +448,32 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
         case 'candidate':
           console.log('🧊 Processing ICE candidate from:', payload?.from)
           if (typeof payload?.from === 'string' && payload?.candidate) get().handleCandidate(payload.from as string, payload.candidate as RTCIceCandidateInit)
+          break
+          
+        case 'story-choice':
+          {
+            const p = payload as Record<string, unknown>
+            const selfId = get().clientId
+            if (selfId && p.from !== selfId && p.payload && (p.payload as Record<string, unknown>).type === 'choice') {
+              const nextId = (p.payload as Record<string, unknown>).nextSceneId as string
+              import('./roomStore').then(({ useRoomStore }) => {
+                useRoomStore.getState().loadScene(nextId)
+              })
+            }
+          }
+          break
+          
+        case 'story-change':
+          {
+            const p = payload as Record<string, unknown>
+            const selfId = get().clientId
+            if (selfId && p.from !== selfId && p.payload && (p.payload as Record<string, unknown>).type === 'story-change') {
+              const storyId = (p.payload as Record<string, unknown>).storyId as string
+              import('./roomStore').then(async ({ useRoomStore }) => {
+                await useRoomStore.getState().changeStory(storyId)
+              })
+            }
+          }
           break
           
         default:

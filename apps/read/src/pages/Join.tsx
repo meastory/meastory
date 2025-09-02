@@ -21,14 +21,13 @@ export default function Join() {
   const normalized = String(code).toUpperCase()
 
   const { connect, isConnected, participants } = useWebRTCStore()
-  const { currentStory } = useRoomStore()
+  const { currentStory, setChildName, childName } = useRoomStore()
 
   const [cameraDevices, setCameraDevices] = useState<DeviceOption[]>([])
   const [micDevices, setMicDevices] = useState<DeviceOption[]>([])
   const [selectedCamera, setSelectedCamera] = useState<string>('')
   const [selectedMic, setSelectedMic] = useState<string>('')
   const [previewStream, setPreviewStream] = useState<MediaStream | null>(null)
-  const [micLevel, setMicLevel] = useState(0)
   const [checking, setChecking] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [phase, setPhase] = useState<'preflight' | 'waiting' | 'connecting' | 'connected'>('preflight')
@@ -36,6 +35,7 @@ export default function Join() {
   const [curated, setCurated] = useState<StoryOption[]>([])
   const [selectedStoryId, setSelectedStoryId] = useState<string>('')
   const [showPicker, setShowPicker] = useState(false)
+  const [nameInput, setNameInput] = useState(childName || 'Alex')
 
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const rafRef = useRef<number | null>(null)
@@ -48,7 +48,6 @@ export default function Join() {
   }, [isConnected])
 
   useEffect(() => {
-    // Load 3 curated stories (simple: top 3 published by title)
     const loadCurated = async () => {
       const { data } = await supabase
         .from('stories')
@@ -125,13 +124,6 @@ export default function Join() {
 
         const loop = () => {
           analyser.getByteTimeDomainData(dataArray)
-          let sum = 0
-          for (let i = 0; i < dataArray.length; i++) {
-            const v = (dataArray[i] - 128) / 128
-            sum += v * v
-          }
-          const rms = Math.sqrt(sum / dataArray.length)
-          setMicLevel(rms)
           rafRef.current = requestAnimationFrame(loop)
         }
         rafRef.current = requestAnimationFrame(loop)
@@ -172,6 +164,13 @@ export default function Join() {
     if (!passed) {
       try { await startPreview() } catch (e) { console.warn('Auto-test failed', e) }
     }
+    try {
+      if (nameInput && nameInput !== childName) {
+        setChildName(nameInput)
+        const { webrtcManager } = await import('../services/webrtcManager')
+        webrtcManager.syncChildName(nameInput)
+      }
+    } catch (e) { console.warn('Name sync failed', e) }
     stopMeter()
     stopPreview()
     setPhase('waiting')
@@ -211,17 +210,15 @@ export default function Join() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-            <div className="bg-black rounded overflow-hidden">
-              <video ref={videoRef} playsInline muted className="w-full aspect-video bg-black" />
-            </div>
-            <div>
-              <div className="mb-2 text-sm">Mic Level</div>
-              <div className="h-4 bg-gray-800 rounded">
-                <div className="h-4 bg-green-500 rounded" style={{ width: `${Math.min(100, Math.floor(micLevel * 200))}%` }} />
-              </div>
-              <div className="text-xs text-gray-400 mt-2">Say hello to test</div>
-            </div>
+          <div className="pt-2">
+            <label className="block text-sm mb-2">Child's Name</label>
+            <input
+              type="text"
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+              className="w-full px-3 py-3 text-lg rounded bg-gray-800 text-white border border-gray-700 focus:outline-none"
+              placeholder="Alex"
+            />
           </div>
 
           {error && <div className="text-red-400 text-sm text-center">{error}</div>}
@@ -271,7 +268,6 @@ export default function Join() {
     )
   }
 
-  // connecting/connected: render call UI + story overlay
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="w-full max-w-6xl h-[70vh] mx-auto">

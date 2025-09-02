@@ -251,3 +251,57 @@ A small, fluffy brown bear with a distinctive white patch shaped like a star on 
 - **Growth-Oriented**: Want Luna to develop independence while staying connected to family
 - **Seasonal Awareness**: Understand that spring is the natural time for young ones to explore more
 - **Balanced Approach**: Neither overly protective nor carelessly permissive
+
+### Flint (Young Badger Kit)
+
+**Role**: Represents the experience of being "the new kid" - dealing with different family traditions and feeling misunderstood in new social situations
+
+**Appearance**: Smallest badger kit, with distinctive black and white markings like adult badgers but in miniature. Still has kit-soft fur and slightly oversized paws. Related to Hazel (nephew).
+
+**Age/Development**: Equivalent to 4-5 year old child
+- Has good vocabulary but speaks carefully when nervous
+- Understands complex social situations but lacks experience navigating them
+- Polite and well-mannered (good family upbringing)
+- Eager to fit in but unsure how to do so
+
+**Core Personality Traits**:
+- Polite and well-behaved (clearly from a loving, structured family)
+- Eager to make friends but uncertain about social norms in new place
+- Sensitive to feeling excluded or misunderstood
+- Thoughtful and reflective, thinks before speaking when calm
+- Takes family traditions seriously (they give him security)
+- Quick to assume he's done something wrong when conflicts arise
+
+**Speech Patterns & Vocabulary**:
+- **Polite expressions**: "Please," "Thank you," "Excuse me" - automatic good manners
+- **Family references**: "In my family..." "My papa says..." "My mama taught me..." - seeking security in familiar rules
+- **Uncertainty markers**: "I think..." "Maybe..." "I'm not sure..." when feeling insecure
+- **Careful explanations**: Takes time to express himself clearly when not upset
+- **Present tense with family rules**: "We always..." "My family does..."
+
+**Behavioral Habits**:
+- Fidgets with small objects (pebbles, sticks) when nervous
+- Looks to adults for approval and reassurance
+- Tries to follow rules carefully, even when unsure what they are
+- Shoulders sag when feeling misunderstood or rejected
+- Brightens visibly when included and understood
+- References family traditions as anchoring points when uncertain
+
+**Character Growth Areas**:
+- Learning that different doesn't mean wrong
+- Building confidence to speak up for himself respectfully
+- Understanding that friendship allows for different family backgrounds
+- Developing ability to explain his perspective calmly when upset
+
+**Relationship to Other Characters**:
+- **Hazel**: Beloved aunt who provides security and familiarity
+- **Bramble**: Appreciates Bramble's genuine desire to understand and help
+- **Pip**: Initially confused by Pip's different approach, but grows to appreciate his energy
+- **Willow**: Responds well to her patient, thoughtful guidance
+
+**Family Background**:
+- From a badger family that values consideration and inclusion
+- "Youngest goes first" rule reflects family's care for making small members feel important
+- Parents likely taught him to be thoughtful about others' feelings
+- Staying with Aunt Hazel for extended visit (summer), away from immediate family
+- Family traditions provide emotional security in unfamiliar environment
