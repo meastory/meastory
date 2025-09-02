@@ -17,19 +17,63 @@ export default function VideoFeed({ participantId, className = '', showControls 
   
   useEffect(() => {
     const videoElement = videoRef.current
-    if (videoElement && stream) {
-      videoElement.srcObject = stream
-      videoElement.play().catch(error => {
-        console.error('❌ Error playing video:', error)
-      })
+    if (!videoElement) return
+
+    if (stream) {
+      try {
+        console.log(`🎞️ Assigning stream to video (${isLocal ? 'local' : `remote:${participantId}`})`, {
+          tracks: stream.getTracks().map(t => ({ kind: t.kind, enabled: t.enabled, readyState: t.readyState })),
+        })
+        // Always reassign to ensure the element attaches latest tracks
+        videoElement.srcObject = stream
+        
+        const tryPlay = async () => {
+          try {
+            await videoElement.play()
+            console.log('▶️ Video play started successfully')
+          } catch (err) {
+            console.warn('⚠️ Autoplay failed, retrying with muted video...', err)
+            const originallyMuted = videoElement.muted
+            videoElement.muted = true
+            try {
+              await videoElement.play()
+              console.log('▶️ Video play succeeded after muting')
+            } catch (err2) {
+              console.error('❌ Video play failed even after muting:', err2)
+            } finally {
+              // Keep muted state if local, otherwise restore original to allow audio when user interacts elsewhere
+              if (!isLocal) {
+                videoElement.muted = originallyMuted
+              }
+            }
+          }
+        }
+
+        if (videoElement.readyState >= 2) {
+          // HAVE_CURRENT_DATA
+          tryPlay()
+        } else {
+          const onLoaded = () => {
+            videoElement.removeEventListener('loadedmetadata', onLoaded)
+            tryPlay()
+          }
+          videoElement.addEventListener('loadedmetadata', onLoaded)
+        }
+      } catch (error) {
+        console.error('❌ Error attaching stream to video element:', error)
+      }
+    } else {
+      console.log(`⏳ No stream available for ${isLocal ? 'local' : `remote:${participantId}`}; clearing srcObject`)
+      videoElement.srcObject = null
     }
-  }, [stream])
+  }, [stream, participantId, isLocal])
   
   // Handle participant leaving
   useEffect(() => {
     if (participantId && !participant) {
       const videoElement = videoRef.current
       if (videoElement) {
+        console.log(`👋 Participant ${participantId} left; clearing video srcObject`)
         videoElement.srcObject = null
       }
     }
@@ -71,7 +115,7 @@ export default function VideoFeed({ participantId, className = '', showControls 
         <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
           <div className="text-center">
             <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-2">
-              <span className="text-2xl">��</span>
+              <span className="text-2xl"></span>
             </div>
             <p className="text-gray-300 text-sm">Camera off</p>
           </div>
@@ -114,7 +158,7 @@ export default function VideoFeed({ participantId, className = '', showControls 
                 title={isMicMuted ? 'Unmute microphone' : 'Mute microphone'}
               >
                 <span className="text-sm">
-                  {isMicMuted ? '🔇' : '��'}
+                  {isMicMuted ? '🔇' : ''}
                 </span>
               </button>
               

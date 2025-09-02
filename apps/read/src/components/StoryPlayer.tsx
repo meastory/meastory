@@ -36,24 +36,23 @@ export default function StoryPlayer() {
     }
   }, [childName])
 
-  const handleChoice = async (nextSceneOrder: number) => {
+  const handleChoice = async (nextSceneId: string) => {
     if (isTransitioning || !currentStory) return
 
     setIsTransitioning(true)
-    console.log('🎯 Making choice, next scene order:', nextSceneOrder)
+    console.log('🎯 Making choice, next scene id:', nextSceneId)
 
     try {
-      // Load scene by order instead of UUID
+      // Load scene by ID directly
       const { data: nextScene, error } = await supabase
         .from('story_scenes')
         .select('*')
-        .eq('story_id', currentStory.id)
-        .eq('scene_order', nextSceneOrder)
+        .eq('id', nextSceneId)
         .single()
 
       if (error) throw error
 
-      console.log('🎬 Next scene loaded:', nextScene.title)
+      console.log('🎬 Next scene loaded by id:', nextScene.title)
       // Update the store with the new scene
       useRoomStore.setState({ currentScene: nextScene })
 
@@ -65,7 +64,7 @@ export default function StoryPlayer() {
         console.warn('WebRTC sync failed:', webrtcError)
       }      
     } catch (error) {
-      console.error('❌ Error loading next scene:', error)
+      console.error('❌ Error loading next scene by id:', error)
     } finally {
       setIsTransitioning(false)
     }
@@ -83,10 +82,8 @@ export default function StoryPlayer() {
     // Use the room store callback to open library without leaving room
     try {
       const roomState = useRoomStore.getState()
-      const extendedState = roomState as any
-      if (extendedState.showLibrary) {
-        extendedState.showLibrary()
-      }
+      const maybeWithLibrary = roomState as unknown as { showLibrary?: () => void }
+      maybeWithLibrary.showLibrary?.()
     } catch (error) {
       console.warn('Could not open library:', error)
     }
@@ -99,23 +96,23 @@ export default function StoryPlayer() {
 
   // Safely parse choices array
   const getChoices = () => {
-    if (!currentScene?.choices) return []
+    if (!currentScene?.choices) return [] as { label: string; next_scene_id: string }[]
     
     // If choices is already an array, return it
     if (Array.isArray(currentScene.choices)) {
-      return currentScene.choices
+      return currentScene.choices as { label: string; next_scene_id: string }[]
     }
     
     // If choices is a JSON string, parse it
     if (typeof currentScene.choices === 'string') {
       try {
-        return JSON.parse(currentScene.choices)
+        return JSON.parse(currentScene.choices) as { label: string; next_scene_id: string }[]
       } catch {
-        return []
+        return [] as { label: string; next_scene_id: string }[]
       }
     }
     
-    return []
+    return [] as { label: string; next_scene_id: string }[]
   }
 
   const choices = getChoices()
@@ -168,7 +165,7 @@ export default function StoryPlayer() {
         {/* Scene Choices */}
         {choices.length > 0 && (
           <div className="story-choices">
-            {choices.map((choice: any, index: number) => (
+            {choices.map((choice, index) => (
               <button
                 key={index}
                 onClick={() => handleChoice(choice.next_scene_id)}

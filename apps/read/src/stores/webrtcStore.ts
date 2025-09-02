@@ -278,17 +278,27 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
 
   updateParticipantStream: (id: string, stream: MediaStream) => {
     const participants = new Map(get().participants)
-    const participant = participants.get(id)
-    
-    if (participant) {
-      // Clean up old stream
-      if (participant.stream) {
-        participant.stream.getTracks().forEach(track => track.stop())
-      }
-      
-      participants.set(id, { ...participant, stream })
+    const existingParticipant = participants.get(id)
+
+    // If participant does not exist yet (race condition), create it
+    if (!existingParticipant) {
+      participants.set(id, {
+        id,
+        stream,
+        isMuted: false,
+        isVideoOff: false,
+        name: undefined,
+      })
       set({ participants })
+      return
     }
+
+    // Do NOT stop tracks of the previous remote stream here.
+    // Remote streams can be the same MediaStream reference with new tracks added later.
+    // Stopping tracks would kill the remote media.
+    const updatedParticipant = { ...existingParticipant, stream }
+    participants.set(id, updatedParticipant)
+    set({ participants })
   },
 
   startCall: async (role: 'caller' | 'callee') => {
@@ -348,7 +358,7 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           break
           
         case 'join':
-          console.log('�� Participant joined:', payload.clientId)
+          console.log('👥 Participant joined:', payload.clientId)
           get().addParticipant(payload.clientId, payload.name)
           // Create offer for new participant
           setTimeout(async () => {
