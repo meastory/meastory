@@ -60,6 +60,15 @@ export default function Join() {
     loadCurated()
   }, [])
 
+  // Allow StoryPlayer's "Open Library" button to open the in-room picker in guest context
+  useEffect(() => {
+    const roomStore = useRoomStore.getState()
+    const withLibrary = roomStore as typeof roomStore & { showLibrary?: () => void }
+    withLibrary.showLibrary = () => {
+      setShowPicker(true)
+    }
+  }, [])
+
   const stopPreview = useCallback(() => {
     const s = previewStreamRef.current
     s?.getTracks()?.forEach(t => t.stop())
@@ -254,7 +263,11 @@ export default function Join() {
                   onClick={async () => {
                     setSelectedStoryId(s.id)
                     const { useRoomStore } = await import('../stores/roomStore')
-                    await useRoomStore.getState().loadStory(s.id)
+                    await useRoomStore.getState().changeStory(s.id)
+                    try {
+                      const { webrtcManager } = await import('../services/webrtcManager')
+                      webrtcManager.syncStoryChange(s.id)
+                    } catch (e) { console.warn('sync story-change failed:', e) }
                   }}
                   className={`w-full px-4 py-3 rounded ${selectedStoryId === s.id ? 'bg-green-600' : 'bg-gray-700 hover:bg-gray-600'} text-white text-left`}
                 >

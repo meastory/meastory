@@ -24,7 +24,11 @@ export default function InRoomStoryPicker({ onClose }: { onClose?: () => void })
 
   const handlePick = async (storyId: string) => {
     const { useRoomStore } = await import('../stores/roomStore')
-    await useRoomStore.getState().loadStory(storyId)
+    await useRoomStore.getState().changeStory(storyId)
+    try {
+      const { webrtcManager } = await import('../services/webrtcManager')
+      webrtcManager.syncStoryChange(storyId)
+    } catch (e) { console.warn('sync story-change failed:', e) }
     if (onClose) onClose()
   }
 
