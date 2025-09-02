@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { supabase } from './authStore'
 import type { RealtimeChannel } from '@supabase/supabase-js'
+import { useAuthStore } from './authStore'
 
 export interface Participant {
   id: string
@@ -231,14 +232,16 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
             set({ signalingSocket: channel, roomId, isConnected: true, isConnecting: false })
 
             const deviceLabel = getSavedDeviceLabel()
+            const auth = useAuthStore.getState()
+            const displayName = auth.user?.display_name || 'Guest'
             try {
               await channel.track({
                 clientId,
-                name: 'Guest',
+                name: displayName,
                 deviceLabel,
                 ts: Date.now(),
               })
-              presenceMetaByKey.set(clientId!, { ts: Date.now(), name: 'Guest', deviceLabel })
+              presenceMetaByKey.set(clientId!, { ts: Date.now(), name: displayName, deviceLabel })
               recomputeFromLocalPresence()
             } catch (e) {
               console.warn('Presence track failed:', e)

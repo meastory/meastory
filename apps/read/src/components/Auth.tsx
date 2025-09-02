@@ -1,13 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuthStore } from '../stores/authStore'
 
-export default function Auth({ onAuthSuccess }: { onAuthSuccess: () => void }) {
+export default function Auth({ onAuthSuccess, mode, showToggle = true }: { onAuthSuccess: () => void; mode?: 'login' | 'register'; showToggle?: boolean }) {
   const { signIn, signUp } = useAuthStore()
   const [isLogin, setIsLogin] = useState(true)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    if (mode === 'login') setIsLogin(true)
+    if (mode === 'register') setIsLogin(false)
+  }, [mode])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,7 +42,6 @@ export default function Auth({ onAuthSuccess }: { onAuthSuccess: () => void }) {
         <h2 className="text-2xl font-bold mb-6 text-center">
           {isLogin ? 'Welcome Back' : 'Create Account'}
         </h2>
-        
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2">Email</label>
@@ -49,7 +53,6 @@ export default function Auth({ onAuthSuccess }: { onAuthSuccess: () => void }) {
               required
             />
           </div>
-          
           <div>
             <label className="block text-sm font-medium mb-2">Password</label>
             <input
@@ -61,7 +64,6 @@ export default function Auth({ onAuthSuccess }: { onAuthSuccess: () => void }) {
               minLength={6}
             />
           </div>
-          
           <button
             type="submit"
             disabled={loading}
@@ -70,22 +72,21 @@ export default function Auth({ onAuthSuccess }: { onAuthSuccess: () => void }) {
             {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Sign Up')}
           </button>
         </form>
-        
         {message && (
           <div className="mt-4 p-3 bg-gray-800 rounded-lg text-sm">
             {message}
           </div>
         )}
-        
-        <div className="mt-6 text-center">
-          <button
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-blue-400 hover:text-blue-300 text-sm"
-          >
-            {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
-          </button>
-        </div>
-        
+        {showToggle && (
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => setIsLogin(!isLogin)}
+              className="text-blue-400 hover:text-blue-300 text-sm"
+            >
+              {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+            </button>
+          </div>
+        )}
         <div className="mt-4 text-center text-gray-400 text-xs">
           For testing: Use any email/password combination
         </div>

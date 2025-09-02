@@ -79,6 +79,14 @@ export default function VideoGrid() {
     )
   }
   
+  const deviceLabels = (() => {
+    const labels: string[] = []
+    const localLabel = localStorage.getItem('preferredCameraLabel') || localStorage.getItem('preferredMicLabel')
+    if (localLabel) labels.push(localLabel)
+    participantList.forEach(p => { if (p.deviceLabel) labels.push(p.deviceLabel) })
+    return labels
+  })()
+
   return (
     <div className="h-full p-4">
       <div className={`grid ${getGridLayout()} gap-4 h-full`}>
@@ -95,12 +103,16 @@ export default function VideoGrid() {
           />
         ))}
       </div>
-      
-      <div className="absolute top-4 right-4">
-        <div className="flex items-center space-x-2 bg-black/50 rounded-full px-3 py-1">
+      <div className="absolute top-4 right-4 text-right">
+        <div className="inline-flex items-center space-x-2 bg-black/50 rounded-full px-3 py-1">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-white text-sm">{participantList.length + 1} in call {role ? `• ${role}` : ''}</span>
+          <span className="text-white text-sm">Connected: {participantList.length + 1} {role ? `(${role})` : ''}</span>
         </div>
+        {deviceLabels.length > 0 && (
+          <div className="text-[10px] text-white/70 mt-1 truncate max-w-[240px]">
+            Devices: {deviceLabels.join(', ')}
+          </div>
+        )}
       </div>
     </div>
   )
