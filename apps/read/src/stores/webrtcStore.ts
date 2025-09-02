@@ -69,7 +69,6 @@ function getSavedDeviceLabel() {
   return [camera, microphone].filter(Boolean).join(' • ')
 }
 
-// In-memory presence tracker (avoid channel.presenceState for compatibility)
 const presenceMetaByKey: Map<string, { ts: number; name?: string; deviceLabel?: string }> = new Map()
 
 export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => ({
@@ -118,7 +117,6 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
         const newRole: 'host' | 'guest' | null = myId && hostId ? (myId === hostId ? 'host' : 'guest') : null
         if (newRole !== get().role) {
           set({ role: newRole })
-          try { channel.track({ role: newRole || 'guest' }) } catch (e) { console.warn('Presence role track failed:', e) }
         }
       }
 
@@ -128,6 +126,7 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           recomputeFromLocalPresence()
         })
         .on('presence', { event: 'join' }, ({ key, newPresences }: { key: string; newPresences: Array<Record<string, unknown>> }) => {
+          const selfId = get().clientId
           console.log('👥 Participant joined:', key)
           const meta = newPresences?.[0] || {}
           presenceMetaByKey.set(key, {
@@ -136,8 +135,9 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
             deviceLabel: typeof meta.deviceLabel === 'string' ? meta.deviceLabel : undefined,
           })
           recomputeFromLocalPresence()
+          // Only host should initiate, and never offer to self
           setTimeout(async () => {
-            if (get().role === 'host') {
+            if (get().role === 'host' && key !== selfId) {
               const { webrtcManager } = await import('../services/webrtcManager')
               webrtcManager.createOffer(key)
             }
@@ -168,36 +168,6 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           const from = typeof p.from === 'string' ? p.from : undefined
           const candidate = p.candidate as RTCIceCandidateInit | undefined
           if (from && candidate) get().handleCandidate(from, candidate)
-        })
-        .on('broadcast', { event: 'story-choice' }, async ({ payload }: { payload: unknown }) => {
-          try {
-            const selfId = get().clientId
-            if (!selfId) return
-            const p = payload as Record<string, unknown>
-            if (p.from === selfId) return
-            const msg = p.payload as Record<string, unknown> | undefined
-            if (msg && msg.type === 'choice' && typeof msg.nextSceneId === 'string') {
-              const { useRoomStore } = await import('./roomStore')
-              useRoomStore.getState().loadScene(msg.nextSceneId)
-            }
-          } catch (e) {
-            console.warn('story-choice apply failed:', e)
-          }
-        })
-        .on('broadcast', { event: 'story-change' }, async ({ payload }: { payload: unknown }) => {
-          try {
-            const selfId = get().clientId
-            if (!selfId) return
-            const p = payload as Record<string, unknown>
-            if (p.from === selfId) return
-            const msg = p.payload as Record<string, unknown> | undefined
-            if (msg && msg.type === 'story-change' && typeof msg.storyId === 'string') {
-              const { useRoomStore } = await import('./roomStore')
-              await useRoomStore.getState().changeStory(msg.storyId)
-            }
-          } catch (e) {
-            console.warn('story-change apply failed:', e)
-          }
         })
 
       await channel.subscribe(async (status: string) => {
