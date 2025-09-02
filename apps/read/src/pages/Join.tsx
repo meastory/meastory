@@ -35,6 +35,7 @@ export default function Join() {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const rafRef = useRef<number | null>(null)
   const previewStreamRef = useRef<MediaStream | null>(null)
+  const autoPickerRef = useRef(false)
 
   const inviteUrl = useMemo(() => `${location.origin}/join/${normalized}`, [normalized])
 
@@ -47,12 +48,14 @@ export default function Join() {
     const roomStore = useRoomStore.getState()
     const withLibrary = roomStore as typeof roomStore & { showLibrary?: () => void }
     withLibrary.showLibrary = () => {
+      autoPickerRef.current = false
       setShowPicker(true)
     }
   }, [])
 
+  // Listen to custom event to open in-room picker (guest)
   useEffect(() => {
-    const handler = () => setShowPicker(true)
+    const handler = () => { autoPickerRef.current = false; setShowPicker(true) }
     window.addEventListener('open-inroom-picker' as unknown as keyof WindowEventMap, handler as EventListener)
     return () => {
       window.removeEventListener('open-inroom-picker' as unknown as keyof WindowEventMap, handler as EventListener)
@@ -184,15 +187,20 @@ export default function Join() {
     }
   }, [participants.size, phase])
 
+  // Auto-open picker when we first enter the room without a story
   useEffect(() => {
-    if (phase === 'connected' || phase === 'connecting') {
-      if (!currentStory) setShowPicker(true)
+    if ((phase === 'connected' || phase === 'connecting') && !currentStory) {
+      autoPickerRef.current = true
+      setShowPicker(true)
     }
   }, [phase, currentStory])
 
-  // When story becomes available (from local pick or remote sync), close picker if open
+  // Auto-close only if picker was auto-opened and a story becomes available
   useEffect(() => {
-    if (currentStory && showPicker) setShowPicker(false)
+    if (autoPickerRef.current && currentStory && showPicker) {
+      autoPickerRef.current = false
+      setShowPicker(false)
+    }
   }, [currentStory, showPicker])
 
   if (phase === 'preflight') {
@@ -266,14 +274,12 @@ export default function Join() {
       </div>
       <StoryOverlay />
       <StoryPlayer />
-      {!currentStory && (
-        <button
-          onClick={() => setShowPicker(true)}
-          className="fixed top-6 left-6 z-[100] px-3 py-2 rounded bg-green-600 hover:bg-green-700 text-white"
-        >
-          📚
-        </button>
-      )}
+      <button
+        onClick={() => { autoPickerRef.current = false; setShowPicker(true) }}
+        className="fixed top-6 left-6 z-[100] px-3 py-2 rounded bg-green-600 hover:bg-green-700 text-white"
+      >
+        📚
+      </button>
       {showPicker && (
         <InRoomStoryPicker onClose={() => setShowPicker(false)} />
       )}
