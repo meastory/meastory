@@ -3,11 +3,13 @@ import { useAuthStore } from '../stores/authStore'
 import { useRoomStore } from '../stores/roomStore'
 import RoomManager from './RoomManager'
 import StoryLibrary from './StoryLibrary'
+import InRoomStoryPicker from './InRoomStoryPicker'
 
 export default function MenuPanel() {
   const [isOpen, setIsOpen] = useState(false)
   const [showRoomManager, setShowRoomManager] = useState(false)
   const [showStoryLibrary, setShowStoryLibrary] = useState(false)
+  const [showInRoomPicker, setShowInRoomPicker] = useState(false)
   const { user, signOut } = useAuthStore()
   const { currentRoom, leaveRoom } = useRoomStore()
 
@@ -57,6 +59,12 @@ export default function MenuPanel() {
     )
   }
 
+  if (showInRoomPicker) {
+    return (
+      <InRoomStoryPicker onClose={() => setShowInRoomPicker(false)} />
+    )
+  }
+
   return (
     <>
       {/* Menu Button - positioned in top-right corner */}
@@ -91,22 +99,22 @@ export default function MenuPanel() {
 
                   <button
                     onClick={() => {
-                      setShowStoryLibrary(true)
+                      setShowInRoomPicker(true)
                       setIsOpen(false)
                     }}
                     className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
                   >
-                    📚 Change Story
+                    📚 Pick a Story
                   </button>
 
                   <button
                     onClick={() => {
-                      // TODO: Implement room settings
+                      setShowStoryLibrary(true)
                       setIsOpen(false)
                     }}
                     className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
                   >
-                    ⚙️ Room Settings
+                    Library
                   </button>
                 </>
               ) : (
@@ -134,12 +142,11 @@ export default function MenuPanel() {
                   
                   <button
                     onClick={() => {
-                      // TODO: Implement settings
                       setIsOpen(false)
                     }}
                     className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
                   >
-                    ⚙️ Settings
+                    Settings
                   </button>
                 </>
               )}
