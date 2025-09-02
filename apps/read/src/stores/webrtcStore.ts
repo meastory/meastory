@@ -184,6 +184,7 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
             if (p.from === selfId) return
             const msg = p.payload as Record<string, unknown> | undefined
             if (msg && msg.type === 'choice' && typeof msg.nextSceneId === 'string') {
+              console.log('🪄 Applying remote story choice via Realtime to scene', msg.nextSceneId)
               const { useRoomStore } = await import('./roomStore')
               useRoomStore.getState().loadScene(msg.nextSceneId)
             }
@@ -204,6 +205,21 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
             }
           } catch (e) {
             console.warn('story-change apply failed:', e)
+          }
+        })
+        .on('broadcast', { event: 'child-name-change' }, async ({ payload }: { payload: unknown }) => {
+          try {
+            const selfId = get().clientId
+            if (!selfId) return
+            const p = payload as Record<string, unknown>
+            if (p.from === selfId) return
+            const msg = p.payload as Record<string, unknown> | undefined
+            if (msg && msg.type === 'child-name-change' && typeof msg.name === 'string') {
+              const { useRoomStore } = await import('./roomStore')
+              useRoomStore.getState().setChildName(msg.name)
+            }
+          } catch (e) {
+            console.warn('child-name-change apply failed:', e)
           }
         })
 

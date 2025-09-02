@@ -442,11 +442,22 @@ class WebRTCManager {
   }
 
   syncChildName(name: string): void {
-    this.broadcastDataMessage({
+    const payload: DataMessage = {
       type: 'child-name-change',
       name,
       timestamp: Date.now()
-    })
+    }
+    this.broadcastDataMessage(payload)
+    // Fallback via signaling as well
+    try {
+      const clientId = useWebRTCStore.getState().clientId
+      useWebRTCStore.getState().sendSignalingMessage('child-name-change', {
+        from: clientId,
+        payload
+      })
+    } catch (e) {
+      console.warn('Signaling fallback failed (child-name-change):', e)
+    }
   }
 
   syncStoryChange(storyId: string): void {
