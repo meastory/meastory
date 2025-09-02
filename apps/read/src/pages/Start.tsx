@@ -1,12 +1,32 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createGuestRoom } from '../lib/supabase'
+import { supabase } from '../stores/authStore'
+
+interface StoryOption {
+  id: string
+  title: string
+}
 
 export default function Start() {
   const navigate = useNavigate()
   const [roomName, setRoomName] = useState('Story Time')
+  const [stories, setStories] = useState<StoryOption[]>([])
+  const [selectedStoryId, setSelectedStoryId] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const loadStories = async () => {
+      const { data, error } = await supabase
+        .from('stories')
+        .select('id, title')
+        .eq('status', 'published')
+        .order('title', { ascending: true })
+      if (!error && data) setStories(data as StoryOption[])
+    }
+    loadStories()
+  }, [])
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -14,7 +34,7 @@ export default function Start() {
     setError(null)
 
     try {
-      const { data, error } = await createGuestRoom(roomName.trim() || 'Story Time', null)
+      const { data, error } = await createGuestRoom(roomName.trim() || 'Story Time', selectedStoryId || null)
       if (error) throw error
       const room = Array.isArray(data) ? data[0] : data
       const code = String(room.code || '').toUpperCase()
@@ -42,6 +62,20 @@ export default function Start() {
               className="w-full px-3 py-3 text-lg rounded bg-gray-800 text-white border border-gray-700 focus:outline-none"
               placeholder="Story Time"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm mb-1">Story (optional)</label>
+            <select
+              value={selectedStoryId}
+              onChange={(e) => setSelectedStoryId(e.target.value)}
+              className="w-full px-3 py-3 text-lg rounded bg-gray-800 text-white border border-gray-700 focus:outline-none"
+            >
+              <option value="">No story selected</option>
+              {stories.map((s) => (
+                <option key={s.id} value={s.id}>{s.title}</option>
+              ))}
+            </select>
           </div>
 
           {error && <div className="text-red-400 text-sm">{error}</div>}
