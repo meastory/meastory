@@ -26,6 +26,7 @@ export default function Join() {
 
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const rafRef = useRef<number | null>(null)
+  const previewStreamRef = useRef<MediaStream | null>(null)
 
   const inviteUrl = useMemo(() => `${location.origin}/join/${normalized}`, [normalized])
 
@@ -34,9 +35,11 @@ export default function Join() {
   }, [isConnected])
 
   const stopPreview = useCallback(() => {
-    previewStream?.getTracks()?.forEach(t => t.stop())
+    const s = previewStreamRef.current
+    s?.getTracks()?.forEach(t => t.stop())
+    previewStreamRef.current = null
     setPreviewStream(null)
-  }, [previewStream])
+  }, [])
 
   const enumerate = async () => {
     try {
@@ -59,16 +62,16 @@ export default function Join() {
     setError(null)
     try {
       const constraints: MediaStreamConstraints = {
-        video: selectedCamera ? { deviceId: { exact: selectedCamera } } : true,
+        video: selectedCamera ? { deviceId: { exact: selectedCamera } } : { facingMode: 'user' },
         audio: selectedMic ? { deviceId: { exact: selectedMic }, echoCancellation: true, noiseSuppression: true } as MediaTrackConstraints : { echoCancellation: true, noiseSuppression: true }
       }
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
+      previewStreamRef.current = stream
       setPreviewStream(stream)
       if (videoRef.current) {
         videoRef.current.srcObject = stream
         await videoRef.current.play().catch(() => {})
       }
-      // If no selection yet, set from stream settings
       const vTrack = stream.getVideoTracks()[0]
       const aTrack = stream.getAudioTracks()[0]
       const vDevice = (vTrack?.getSettings().deviceId as string | undefined) || ''
@@ -123,10 +126,12 @@ export default function Join() {
   useEffect(() => {
     enumerate()
     return () => {
-      stopMeter()
-      stopPreview()
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      const s = previewStreamRef.current
+      s?.getTracks()?.forEach(t => t.stop())
+      previewStreamRef.current = null
     }
-  }, [stopMeter, stopPreview])
+  }, [])
 
   const passed = useMemo(() => {
     const audioTracks = previewStream?.getAudioTracks() || []
