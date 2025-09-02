@@ -1,5 +1,9 @@
 import { useWebRTCStore } from '../stores/webrtcStore'
 
+type DataMessage =
+  | { type: 'choice'; nextSceneId: string }
+  | { type: 'child-name-change'; name: string; timestamp?: number }
+
 class WebRTCManager {
   private peerConnections: Map<string, RTCPeerConnection> = new Map()
   private dataChannels: Map<string, RTCDataChannel> = new Map()
@@ -118,9 +122,9 @@ class WebRTCManager {
     const audioTrack = localStream.getAudioTracks()[0]
     if (audioTrack) {
       if (this.audioSender && this.audioSender.track !== audioTrack) {
-        try { this.audioSender.replaceTrack(audioTrack) } catch (_) {}
+        try { this.audioSender.replaceTrack(audioTrack) } catch (e) { console.warn('Audio replaceTrack failed:', e) }
       } else if (!this.audioSender) {
-        try { this.audioSender = peerConnection.addTrack(audioTrack, localStream) } catch (_) {}
+        try { this.audioSender = peerConnection.addTrack(audioTrack, localStream) } catch (e) { console.warn('Audio addTrack failed:', e) }
       }
     }
     
@@ -128,9 +132,9 @@ class WebRTCManager {
     const videoTrack = localStream.getVideoTracks()[0]
     if (videoTrack) {
       if (this.videoSender && this.videoSender.track !== videoTrack) {
-        try { this.videoSender.replaceTrack(videoTrack) } catch (_) {}
+        try { this.videoSender.replaceTrack(videoTrack) } catch (e) { console.warn('Video replaceTrack failed:', e) }
       } else if (!this.videoSender) {
-        try { this.videoSender = peerConnection.addTrack(videoTrack, localStream) } catch (_) {}
+        try { this.videoSender = peerConnection.addTrack(videoTrack, localStream) } catch (e) { console.warn('Video addTrack failed:', e) }
       }
     }
   }
@@ -278,7 +282,7 @@ class WebRTCManager {
     
     dataChannel.onmessage = (event) => {
       try {
-        const message = JSON.parse(event.data)
+        const message = JSON.parse(event.data) as DataMessage
         console.log('📡 Data channel message from', peerId, ':', message)
         
         // Handle different message types
@@ -292,7 +296,7 @@ class WebRTCManager {
             this.handleChildNameSync(message.name)
             break
           default:
-            console.log('📡 Unknown data channel message type:', message.type)
+            console.log('📡 Unknown data channel message type')
         }
       } catch (error) {
         console.error('❌ Error parsing data channel message:', error)
@@ -307,19 +311,22 @@ class WebRTCManager {
     this.dataChannels.set(peerId, dataChannel)
   }
 
-  sendDataMessage(peerId: string, message: any): void {
+  sendDataMessage(peerId: string, message: DataMessage): void {
     const dataChannel = this.dataChannels.get(peerId)
     
     if (dataChannel && dataChannel.readyState === 'open') {
+      console.log('📤 Sending data message to', peerId, ':', message)
       dataChannel.send(JSON.stringify(message))
     } else {
       console.warn('📡 Data channel not ready for:', peerId)
     }
   }
 
-  broadcastDataMessage(message: any): void {
-    this.dataChannels.forEach((dataChannel: RTCDataChannel) => {
+  broadcastDataMessage(message: DataMessage): void {
+    console.log('📤 Broadcasting data message:', message)
+    this.dataChannels.forEach((dataChannel: RTCDataChannel, peerId) => {
       if (dataChannel.readyState === 'open') {
+        console.log('📤 →', peerId)
         dataChannel.send(JSON.stringify(message))
       }
     })
@@ -389,8 +396,10 @@ class WebRTCManager {
       // Use a simple approach - update the room store directly
       import('../stores/roomStore').then(({ useRoomStore }) => {
         const roomStore = useRoomStore.getState()
-        if (roomStore.currentStory && nextSceneId) {
+        if (nextSceneId) {
           roomStore.loadScene(nextSceneId)
+        } else {
+          console.warn('⚠️ Received invalid nextSceneId for story sync')
         }
       }).catch(error => {
         console.error('❌ Error syncing story choice:', error)
