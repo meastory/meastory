@@ -11,12 +11,14 @@ import Auth from './components/Auth'
 import StoryPlayer from './components/StoryPlayer'
 import StoryLibrary from './components/StoryLibrary'
 import { Navigate } from 'react-router-dom'
+import InRoomStoryPicker from './components/InRoomStoryPicker'
 
 function App() {
   const { isLoading, error, storyTextScale, setStoryTextScale } = useUIStore()
   const { session, initialized, initialize } = useAuthStore()
-  const { currentRoom } = useRoomStore()
+  const { currentRoom, currentStory } = useRoomStore()
   const [showLibrary, setShowLibrary] = useState(false)
+  const [showPicker, setShowPicker] = useState(false)
 
   useEffect(() => {
     initialize()
@@ -52,6 +54,13 @@ function App() {
   useEffect(() => {
     document.documentElement.style.setProperty('--story-text-scale', String(storyTextScale))
   }, [storyTextScale])
+
+  // Auto-open picker when a room is entered with no story loaded
+  useEffect(() => {
+    if (currentRoom && !currentStory) {
+      setShowPicker(true)
+    }
+  }, [currentRoom, currentStory])
 
   const handleAuthSuccess = () => {
     console.log('✅ Authentication successful')
@@ -108,6 +117,20 @@ function App() {
             <StoryOverlay />
             <StoryPlayer />
             <MenuPanel />
+
+            {/* Floating Pick Story button if no story loaded */}
+            {!currentStory && (
+              <button
+                onClick={() => setShowPicker(true)}
+                className="fixed bottom-4 left-4 z-40 px-4 py-3 rounded bg-green-600 hover:bg-green-700 text-white"
+              >
+                Pick a Story
+              </button>
+            )}
+
+            {showPicker && (
+              <InRoomStoryPicker onClose={() => setShowPicker(false)} />
+            )}
           </>
         )}
       </div>
