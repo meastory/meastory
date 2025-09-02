@@ -156,3 +156,98 @@ A small, fluffy brown bear with a distinctive white patch shaped like a star on 
 - Celebration of effort and growth over perfection
 - Gentle humor that includes both children and adults
 - Always hopeful, even in challenging moments
+
+---
+
+## Ancillary Characters
+
+### Luna the Fox Kit
+
+**Role**: Represents the "little one" needing help, teaches about balancing protection with fostering independence
+
+**Appearance**: Tiny fox kit with fluffy russet fur and bright, curious eyes. Small black nose that twitches when she's thinking or exploring.
+
+**Age/Development**: Equivalent to 24-month-old child
+- Limited vocabulary (10-20 core words)
+- Communicates primarily through gestures, pointing, and body language
+- Short attention span, easily distracted by interesting things
+- Physical needs (gets tired, needs comfort when overwhelmed)
+
+**Core Personality Traits**:
+- Naturally curious and adventurous
+- Easily distracted by beautiful or interesting things
+- Trusts friendly adults quickly once initial uncertainty passes
+- Proud when she accomplishes something or learns something new
+- Quick emotional transitions (upset to delighted in moments)
+
+**Speech Patterns & Limited Vocabulary**:
+- **Core Words**: "Mama," "Papa," "home," "scared," "pretty," "want," "no," "yes," "help"
+- **Action Words**: "go," "see," "find"  
+- **Emotional Words**: "happy," "sad," "tired"
+- **Simple Combinations**: "Find Mama," "Go home," "Pretty flower," "Luna tired"
+- **Present Tense Only**: "Luna want," "Luna see," "Luna go"
+
+**Primary Communication Methods**:
+- **Pointing**: At objects, people, directions she wants to go
+- **Tugging**: On clothes/fur to get attention or show direction
+- **Reaching**: Arms up when wants to be picked up, reaching toward things she wants
+- **Facial Expressions**: Wide eyes for wonder/fear, smiling for happiness, furrowed brow for confusion
+- **Body Language**: Bouncing when excited, sitting down when tired, hiding behind adults when nervous
+- **Physical Actions**: Touching objects to show interest, clapping when pleased, nodding/head shaking
+
+**Behavioral Habits**:
+- Gets distracted by spring flowers, butterflies, interesting rocks
+- Mimics actions she sees older animals doing
+- Tests boundaries gently (wandering just a bit further each time)
+- Seeks approval from trusted adults when she accomplishes something
+- Quick to tire but also quick to recover with rest or comfort
+
+### Fern (Luna's Mother)
+
+**Role**: Represents parental perspective on balancing safety with independence
+
+**Appearance**: Elegant fox with gentle features, similar coloring to Luna but more refined. Moves with quiet grace.
+
+**Personality Traits**:
+- Loving but not overprotective
+- Recognizes Luna's need for independence
+- Grateful for community support with child-rearing
+- Thoughtful about parenting decisions
+- Balances concern with confidence in Luna's abilities
+
+**Speech Patterns**:
+- Warm, gentle tone
+- Asks thoughtful questions about Luna's experiences
+- Expresses gratitude genuinely
+- Uses "our little one" or "our kit" when referring to Luna
+- Speaks calmly even when worried
+
+**Parenting Philosophy**: Believes in guided exploration - letting Luna learn and grow while maintaining reasonable safety
+
+### Russet (Luna's Father)
+
+**Role**: Represents collaborative parenting and community involvement
+
+**Appearance**: Sturdy fox with bright, alert eyes like Luna's. More robust build than Fern, suggesting he's often the "adventure parent."
+
+**Personality Traits**:
+- Playful and encouraging
+- Proud of Luna's developing skills
+- Values independence and confidence-building
+- Appreciates when others teach rather than just solve problems
+- Balances fun with responsibility
+
+**Speech Patterns**:
+- Enthusiastic about Luna's accomplishments
+- Uses encouraging language ("our clever kit," "what a smart thing to learn")
+- Quick to praise effort over results
+- Speaks with warmth and pride about his family
+
+**Parenting Philosophy**: Believes in building confidence through supported challenges - let Luna try things with safety nets in place
+
+### Family Dynamic
+- **Collaborative Partners**: Fern and Russet support each other's parenting approaches
+- **Community-Minded**: Welcome help from woodland neighbors and appreciate different perspectives
+- **Growth-Oriented**: Want Luna to develop independence while staying connected to family
+- **Seasonal Awareness**: Understand that spring is the natural time for young ones to explore more
+- **Balanced Approach**: Neither overly protective nor carelessly permissive

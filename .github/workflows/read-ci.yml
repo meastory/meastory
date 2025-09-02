@@ -9,28 +9,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: apps/read/package-lock.json
       - name: Install deps
-        run: |
-          cd apps/read
-          npm ci
+        run: npm ci
       - name: Lint
-        run: |
-          cd apps/read
-          npm run lint
+        run: npm run lint
       - name: Typecheck
-        run: |
-          cd apps/read
-          npx tsc -b --pretty false
+        run: npx tsc -b --pretty false
       - name: Build
-        run: |
-          cd apps/read
-          npm run build
+        run: npm run build
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
         with:

@@ -10,6 +10,7 @@ import ErrorMessage from './components/ErrorMessage'
 import Auth from './components/Auth'
 import StoryPlayer from './components/StoryPlayer'
 import StoryLibrary from './components/StoryLibrary'
+import { Navigate } from 'react-router-dom'
 
 function App() {
   const { isLoading, error, storyTextScale, setStoryTextScale } = useUIStore()
@@ -17,12 +18,10 @@ function App() {
   const { currentRoom } = useRoomStore()
   const [showLibrary, setShowLibrary] = useState(false)
 
-  // Initialize auth state on app load
   useEffect(() => {
     initialize()
   }, [initialize])
 
-  // Set up library callback in room store
   useEffect(() => {
     const roomStore = useRoomStore.getState()
     const withLibrary = roomStore as typeof roomStore & { showLibrary?: () => void }
@@ -32,7 +31,6 @@ function App() {
     }
   }, [])
 
-  // Initialize story text scale from localStorage
   useEffect(() => {
     const savedScale = localStorage.getItem('storyTextScale')
     if (savedScale) {
@@ -43,7 +41,6 @@ function App() {
     }
   }, [setStoryTextScale])
 
-  // Check for library navigation flag (legacy support)
   useEffect(() => {
     const shouldShowLibrary = localStorage.getItem('showLibraryAfterLeave')
     if (shouldShowLibrary === 'true' && !currentRoom && session) {
@@ -52,7 +49,6 @@ function App() {
     }
   }, [currentRoom, session])
 
-  // Update CSS variable when scale changes
   useEffect(() => {
     document.documentElement.style.setProperty('--story-text-scale', String(storyTextScale))
   }, [storyTextScale])
@@ -69,7 +65,11 @@ function App() {
     return <LoadingSpinner />
   }
 
-  // Show auth if no session
+  // Guest-only flow: if no session and flag is enabled, go to /start
+  if (!session && import.meta.env.VITE_FEATURE_GUEST_FLOW === 'true') {
+    return <Navigate to="/start" replace />
+  }
+
   if (!session) {
     return (
       <div className="video-first min-h-screen bg-black text-white">
@@ -78,7 +78,6 @@ function App() {
     )
   }
 
-  // Show library if requested
   if (showLibrary) {
     return (
       <div className="video-first min-h-screen bg-black text-white">
@@ -96,7 +95,6 @@ function App() {
     )
   }
 
-  // Show room interface if in a room
   if (currentRoom) {
     return (
       <div className="video-first min-h-screen bg-black text-white">
@@ -116,7 +114,6 @@ function App() {
     )
   }
 
-  // Default state - show room manager
   return (
     <div className="video-first min-h-screen bg-black text-white">
       <MenuPanel />
