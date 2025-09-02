@@ -8,55 +8,37 @@ export interface Participant {
   isMuted: boolean
   isVideoOff: boolean
   name?: string
+  deviceLabel?: string
 }
 
 interface WebRTCState {
-  // Connection state
   isConnected: boolean
   roomId: string | null
   clientId: string | null
-  
-  // Media state
+  role: 'host' | 'guest' | null
   localStream: MediaStream | null
   participants: Map<string, Participant>
-  
-  // UI state
   isMicMuted: boolean
   isVideoOff: boolean
   isConnecting: boolean
-  
-  // Signaling
   signalingSocket: RealtimeChannel | null
 }
 
 interface WebRTCActions {
-  // Connection management
   connect: (roomId: string, roomCode: string) => Promise<void>
   disconnect: () => Promise<void>
-  
-  // Media management
   initializeLocalStream: () => Promise<void>
   toggleMic: () => void
   toggleVideo: () => void
-  
-  // Signaling
   sendSignalingMessage: (type: string, payload?: unknown) => Promise<void>
-  
-  // Participant management
-  addParticipant: (id: string, name?: string) => void
+  addParticipant: (id: string, name?: string, deviceLabel?: string) => void
   removeParticipant: (id: string) => void
   updateParticipantStream: (id: string, stream: MediaStream) => void
-  
-  // Call management
   startCall: (role: 'caller' | 'callee') => Promise<void>
   handleOffer: (from: string, offer: RTCSessionDescriptionInit) => Promise<void>
   handleAnswer: (from: string, answer: RTCSessionDescriptionInit) => Promise<void>
   handleCandidate: (from: string, candidate: RTCIceCandidateInit) => Promise<void>
-  
-  // Signaling message handling
   handleSignalingMessage: (message: unknown) => void
-  
-  // Error handling
   setError: (error: string) => void
 }
 
@@ -64,12 +46,39 @@ const initialState: WebRTCState = {
   isConnected: false,
   roomId: null,
   clientId: null,
+  role: null,
   localStream: null,
   participants: new Map(),
   isMicMuted: false,
   isVideoOff: false,
   isConnecting: false,
   signalingSocket: null,
+}
+
+function getSavedDeviceIds() {
+  const audioId = localStorage.getItem('preferredMicId') || undefined
+  const videoId = localStorage.getItem('preferredCameraId') || undefined
+  return { audioId, videoId }
+}
+
+function getSavedDeviceLabel() {
+  const cam = localStorage.getItem('preferredCameraLabel')
+  const mic = localStorage.getItem('preferredMicLabel')
+  const camera = cam ? `Camera: ${cam.slice(0, 32)}` : undefined
+  const microphone = mic ? `Mic: ${mic.slice(0, 32)}` : undefined
+  return [camera, microphone].filter(Boolean).join(' • ')
+}
+
+// Minimal typed wrapper for presence state
+type PresenceMeta = { clientId?: string; name?: string; deviceLabel?: string; role?: string; ts?: number }
+function getPresenceState(channel: RealtimeChannel): Record<string, PresenceMeta[]> {
+  try {
+    const presenceFn = (channel as unknown as { presenceState: () => Record<string, PresenceMeta[]> }).presenceState
+    return typeof presenceFn === 'function' ? presenceFn() : {}
+  } catch (e) {
+    console.warn('Presence state not available:', e)
+    return {}
+  }
 }
 
 export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => ({
@@ -80,33 +89,92 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
     set({ isConnecting: true })
 
     try {
-      // Initialize local media stream first
       await get().initializeLocalStream()
 
-      // Use Supabase Realtime for signaling instead of custom WebSocket
-      console.log('📡 Setting up Supabase Realtime signaling for room:', roomCode)
-      
-      // Subscribe to room-specific signaling channel
-      const channel = supabase.channel(`webrtc-${roomCode}`)
-      
-      // Handle signaling messages
+      let clientId = get().clientId
+      if (!clientId) {
+        clientId = `u-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
+        set({ clientId })
+      }
+
+      console.log('📡 Setting up Supabase Realtime channel for:', roomCode)
+
+      const channel = supabase.channel(`webrtc-${roomCode}`, {
+        config: { presence: { key: clientId } }
+      })
+
+      const recomputeParticipantsFromPresence = () => {
+        const state = getPresenceState(channel)
+        const entries = Object.entries(state).map(([key, metas]) => ({ key, metas }))
+        const myId = get().clientId
+        const participants = new Map(get().participants)
+        const fresh = new Map<string, Participant>()
+        entries.forEach(({ key, metas }) => {
+          const first = metas[0] || {}
+          const pid = String(key)
+          const deviceLabel = typeof first.deviceLabel === 'string' ? first.deviceLabel : undefined
+          const name = typeof first.name === 'string' ? first.name : undefined
+          if (pid !== myId) {
+            fresh.set(pid, {
+              id: pid,
+              stream: participants.get(pid)?.stream || null,
+              isMuted: false,
+              isVideoOff: false,
+              name,
+              deviceLabel,
+            })
+          }
+        })
+        set({ participants: fresh })
+        const allPeers = entries.map(({ key, metas }) => ({ key, ts: Number((metas[0]?.ts) || Date.now()) }))
+        const sorted = allPeers.sort((a, b) => a.ts - b.ts || a.key.localeCompare(b.key))
+        const hostId = sorted[0]?.key
+        const newRole: 'host' | 'guest' | null = myId && hostId ? (myId === hostId ? 'host' : 'guest') : null
+        if (newRole !== get().role) {
+          set({ role: newRole })
+          try {
+            channel.track({ role: newRole || 'guest' })
+          } catch (e) {
+            console.warn('Presence track role update failed:', e)
+          }
+        }
+      }
+
+      channel
+        .on('presence', { event: 'sync' }, () => {
+          console.log('👥 Presence sync')
+          recomputeParticipantsFromPresence()
+        })
+        .on('presence', { event: 'join' }, ({ key }: { key: string }) => {
+          console.log('👥 Participant joined:', key)
+          recomputeParticipantsFromPresence()
+          setTimeout(async () => {
+            if (get().role === 'host') {
+              const { webrtcManager } = await import('../services/webrtcManager')
+              webrtcManager.createOffer(key)
+            }
+          }, 500)
+        })
+        .on('presence', { event: 'leave' }, ({ key }: { key: string }) => {
+          console.log('👋 Participant left:', key)
+          get().removeParticipant(key)
+          recomputeParticipantsFromPresence()
+        })
+
       channel
         .on('broadcast', { event: 'offer' }, ({ payload }: { payload: unknown }) => {
-          console.log('📨 Received offer via Supabase Realtime')
           const p = payload as Record<string, unknown>
           const from = typeof p.from === 'string' ? p.from : undefined
           const offer = p.offer as RTCSessionDescriptionInit | undefined
           if (from && offer) get().handleOffer(from, offer)
         })
         .on('broadcast', { event: 'answer' }, ({ payload }: { payload: unknown }) => {
-          console.log('📨 Received answer via Supabase Realtime')
           const p = payload as Record<string, unknown>
           const from = typeof p.from === 'string' ? p.from : undefined
           const answer = p.answer as RTCSessionDescriptionInit | undefined
           if (from && answer) get().handleAnswer(from, answer)
         })
         .on('broadcast', { event: 'candidate' }, ({ payload }: { payload: unknown }) => {
-          console.log('🧊 Received ICE candidate via Supabase Realtime')
           const p = payload as Record<string, unknown>
           const from = typeof p.from === 'string' ? p.from : undefined
           const candidate = p.candidate as RTCIceCandidateInit | undefined
@@ -114,77 +182,51 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
         })
         .on('broadcast', { event: 'story-choice' }, async ({ payload }: { payload: unknown }) => {
           try {
-            const clientId = get().clientId
-            if (!clientId) return
+            const selfId = get().clientId
+            if (!selfId) return
             const p = payload as Record<string, unknown>
-            if (p.from === clientId) return
+            if (p.from === selfId) return
             const msg = p.payload as Record<string, unknown> | undefined
             if (msg && msg.type === 'choice' && typeof msg.nextSceneId === 'string') {
-              console.log('📖 Signaling fallback: applying story choice for scene:', msg.nextSceneId)
               const { useRoomStore } = await import('./roomStore')
               useRoomStore.getState().loadScene(msg.nextSceneId)
             }
           } catch (e) {
-            console.warn('Failed to apply signaling story-choice:', e)
+            console.warn('story-choice apply failed:', e)
           }
         })
         .on('broadcast', { event: 'story-change' }, async ({ payload }: { payload: unknown }) => {
           try {
-            const clientId = get().clientId
-            if (!clientId) return
+            const selfId = get().clientId
+            if (!selfId) return
             const p = payload as Record<string, unknown>
-            if (p.from === clientId) return
+            if (p.from === selfId) return
             const msg = p.payload as Record<string, unknown> | undefined
             if (msg && msg.type === 'story-change' && typeof msg.storyId === 'string') {
-              console.log('📚 Signaling fallback: applying story change for story:', msg.storyId)
               const { useRoomStore } = await import('./roomStore')
               await useRoomStore.getState().changeStory(msg.storyId)
             }
           } catch (e) {
-            console.warn('Failed to apply signaling story-change:', e)
+            console.warn('story-change apply failed:', e)
           }
         })
-        .on('broadcast', { event: 'join' }, ({ payload }: { payload: unknown }) => {
-          const p = payload as Record<string, unknown>
-          console.log('👥 Participant joined via Supabase Realtime:', p.clientId)
-          const joinedId = typeof p.clientId === 'string' ? p.clientId : undefined
-          const name = typeof p.name === 'string' ? p.name : undefined
-          const clientId = get().clientId
-          if (!clientId) return
-          if (joinedId === clientId) return // ignore our own join
-          if (joinedId) get().addParticipant(joinedId, name)
-          // Create offer for new participant
-          setTimeout(async () => {
-            const { webrtcManager } = await import('../services/webrtcManager')
-            if (joinedId) webrtcManager.createOffer(joinedId)
-          }, 500)
-        })
-        .on('broadcast', { event: 'leave' }, ({ payload }: { payload: unknown }) => {
-          const p = payload as Record<string, unknown>
-          console.log('👋 Participant left via Supabase Realtime:', p.clientId)
-          const leftId = typeof p.clientId === 'string' ? p.clientId : undefined
-          if (leftId) get().removeParticipant(leftId)
-        })
 
-      // Subscribe to the channel
       await channel.subscribe(async (status: string) => {
         if (status === 'SUBSCRIBED') {
-          console.log('📡 Supabase Realtime signaling connected')
+          console.log('📡 Supabase Realtime connected')
           set({ signalingSocket: channel, roomId, isConnected: true, isConnecting: false })
-          
-          // Announce our presence in the room
-          const clientId = `user-${Date.now()}`
-          set({ clientId })
-          await channel.send({
-            type: 'broadcast',
-            event: 'join',
-            payload: { 
+
+          const deviceLabel = getSavedDeviceLabel()
+          try {
+            await channel.track({
               clientId,
-              name: 'Participant'
-            }
-          })
-          
-          console.log('✅ Successfully connected to WebRTC signaling')
+              name: 'Guest',
+              deviceLabel,
+              ts: Date.now(),
+            })
+          } catch (e) {
+            console.warn('Presence track failed:', e)
+          }
         } else if (status === 'CHANNEL_ERROR') {
           console.error('❌ Supabase Realtime channel error')
           set({ isConnecting: false })
@@ -195,7 +237,7 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           get().setError('Signaling connection timed out')
         }
       })
-      
+
     } catch (error: unknown) {
       console.error('❌ Connection error:', error)
       set({ isConnecting: false })
@@ -209,21 +251,17 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
     
     const { signalingSocket, localStream } = get()
     
-    // Close Supabase Realtime channel
     if (signalingSocket && typeof signalingSocket.unsubscribe === 'function') {
       signalingSocket.unsubscribe()
     }
     
-    // Close WebRTC manager connections
     const { webrtcManager } = await import('../services/webrtcManager')
     webrtcManager.closeAllConnections()
     
-    // Stop local stream
     if (localStream) {
       localStream.getTracks().forEach(track => track.stop())
     }
     
-    // Reset state
     set({
       ...initialState,
       signalingSocket: null
@@ -233,19 +271,12 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
   initializeLocalStream: async () => {
     try {
       console.log('🎥 Initializing local media stream')
-      
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          width: { ideal: 640 },
-          height: { ideal: 480 },
-          facingMode: 'user'
-        },
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true
-        }
-      })
-      
+      const { audioId, videoId } = getSavedDeviceIds()
+      const constraints: MediaStreamConstraints = {
+        video: videoId ? { deviceId: { exact: videoId } } : { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: 'user' },
+        audio: audioId ? { deviceId: { exact: audioId }, echoCancellation: true, noiseSuppression: true } as MediaTrackConstraints : { echoCancellation: true, noiseSuppression: true }
+      }
+      const stream = await navigator.mediaDevices.getUserMedia(constraints)
       set({ localStream: stream })
       console.log('✅ Local stream initialized')
       
@@ -299,14 +330,15 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
     }
   },
 
-  addParticipant: (id: string, name?: string) => {
+  addParticipant: (id: string, name?: string, deviceLabel?: string) => {
     const participants = new Map(get().participants)
     participants.set(id, {
       id,
       stream: null,
       isMuted: false,
       isVideoOff: false,
-      name
+      name,
+      deviceLabel,
     })
     set({ participants })
   },
@@ -327,7 +359,6 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
     const participants = new Map(get().participants)
     const existingParticipant = participants.get(id)
 
-    // If participant does not exist yet (race condition), create it
     if (!existingParticipant) {
       participants.set(id, {
         id,
@@ -340,9 +371,6 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
       return
     }
 
-    // Do NOT stop tracks of the previous remote stream here.
-    // Remote streams can be the same MediaStream reference with new tracks added later.
-    // Stopping tracks would kill the remote media.
     const updatedParticipant = { ...existingParticipant, stream }
     participants.set(id, updatedParticipant)
     set({ participants })
@@ -351,11 +379,9 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
   startCall: async (role: 'caller' | 'callee') => {
     console.log('📞 Starting call as:', role)
     
-    // Get current participants
     const { participants } = get()
     
     if (role === 'caller' && participants.size > 0) {
-      // Create offers for all participants
       const { webrtcManager } = await import('../services/webrtcManager')
       participants.forEach((_, peerId) => {
         webrtcManager.createOffer(peerId)
@@ -384,7 +410,6 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
   handleSignalingMessage: (message: unknown) => {
     console.log('📡 Signaling message:', message)
     
-    // Handle Supabase Realtime broadcast messages
     const msg = message as Record<string, unknown>
     if (msg.type === 'broadcast') {
       const event = msg.event as string
@@ -418,31 +443,10 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           if (typeof payload?.from === 'string' && payload?.candidate) get().handleCandidate(payload.from as string, payload.candidate as RTCIceCandidateInit)
           break
           
-        case 'join':
-          console.log('👥 Participant joined:', payload.clientId)
-          if (typeof payload?.clientId === 'string') get().addParticipant(payload.clientId as string, typeof payload?.name === 'string' ? payload.name as string : undefined)
-          // Create offer for new participant
-          setTimeout(async () => {
-            const { webrtcManager } = await import('../services/webrtcManager')
-            const clientId = get().clientId
-            if (clientId) {
-              if (typeof payload?.clientId === 'string') webrtcManager.createOffer(payload.clientId as string)
-            } else {
-              console.warn('⚠️ Client ID not available for creating offer')
-            }
-          }, 1000)
-          break
-          
-        case 'leave':
-          console.log('👋 Participant left:', payload.clientId)
-          if (typeof payload?.clientId === 'string') get().removeParticipant(payload.clientId as string)
-          break
-          
         default:
           console.log('📡 Unknown broadcast event:', event)
       }
     } else {
-      // Handle legacy WebSocket messages (fallback)
       const legacy = msg
       const type = legacy.type as string
       const clientId = legacy.clientId as string | undefined
@@ -495,6 +499,5 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
 
   setError: (error: string) => {
     console.error('❌ WebRTC Error:', error)
-    // You could integrate this with your UI error handling
   }
 }))

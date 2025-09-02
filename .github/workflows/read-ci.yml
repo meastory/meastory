@@ -1,0 +1,38 @@
+name: Read App CI
+
+on:
+  pull_request:
+    paths:
+      - 'apps/read/**'
+      - '.github/workflows/read-ci.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install deps
+        run: |
+          cd apps/read
+          npm ci
+      - name: Lint
+        run: |
+          cd apps/read
+          npm run lint
+      - name: Typecheck
+        run: |
+          cd apps/read
+          npx tsc -b --pretty false
+      - name: Build
+        run: |
+          cd apps/read
+          npm run build
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: read-dist
+          path: apps/read/dist 

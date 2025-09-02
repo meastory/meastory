@@ -1,0 +1,216 @@
+{
+  "_comment": "Interactive Story Template - Fill in the bracketed values with your story content",
+  "_instructions": "Replace all [BRACKETED_VALUES] with your actual content. Remove this instruction section before using.",
+  
+  "id": "[THEME_NAME]-[UNIQUE_IDENTIFIER]",
+  "title": "[STORY_TITLE]",
+  "ageRange": [[MIN_AGE], [MAX_AGE]],
+  "themes": ["[PRIMARY_THEME]", "[SECONDARY_THEME]", "[TERTIARY_THEME]", "[OPTIONAL_THEME]"],
+  
+  "scenes": [
+    {
+      "_comment": "OPENING SCENE - Introduce protagonist and initial situation",
+      "id": "opening-1",
+      "background": "[OPENING_BACKGROUND_SVG]",
+      "text": "{{childName}} [PROTAGONIST_INTRODUCTION_1-2_SENTENCES]. [SETTING_DESCRIPTION]. [INITIAL_SITUATION_HOOK].",
+      "choices": [
+        { 
+          "label": "[CHOICE_A_LABEL_DP1 - CLEAR_AND_ENGAGING]", 
+          "nextSceneId": "branch-a-1" 
+        },
+        { 
+          "label": "[CHOICE_B_LABEL_DP1 - DISTINCT_FROM_CHOICE_A]", 
+          "nextSceneId": "branch-b-1" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "BRANCH A - Direct/Primary Approach Journey",
+      "id": "branch-a-1",
+      "background": "[BRANCH_A_BACKGROUND_SVG]",
+      "text": "[CONTINUE_STORY_FROM_DP1_CHOICE_A]. [DEVELOP_CHARACTER_RELATIONSHIPS]. [SETUP_NEXT_DECISION].",
+      "choices": [
+        { 
+          "label": "[CONTINUE_TO_DP2_CHOICE]", 
+          "nextSceneId": "dp2-a-1" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "BRANCH B - Alternative/Careful Approach Journey", 
+      "id": "branch-b-1",
+      "background": "[BRANCH_B_BACKGROUND_SVG]",
+      "text": "[CONTINUE_STORY_FROM_DP1_CHOICE_B]. [SHOW_DIFFERENT_PERSPECTIVE]. [BUILD_TENSION_OR_DISCOVERY].",
+      "choices": [
+        { 
+          "label": "[CONTINUE_TO_DP2_CHOICE]", 
+          "nextSceneId": "dp2-b-1" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "DECISION POINT 2-A - For Branch A pathway",
+      "id": "dp2-a-1",
+      "background": "[DP2_A_BACKGROUND_SVG]",
+      "text": "[PRESENT_NEW_SITUATION_FOR_DP2]. [SHOW_CONSEQUENCES_OF_DP1_CHOICE]. [SETUP_SECONDARY_DECISION].",
+      "choices": [
+        { 
+          "label": "[DP2_CHOICE_A_LABEL - CONSISTENT_WITH_DP1_A]", 
+          "nextSceneId": "journey-1a2a-1" 
+        },
+        { 
+          "label": "[DP2_CHOICE_B_LABEL - ALTERNATIVE_WITHIN_DP1_A]", 
+          "nextSceneId": "journey-1a2b-1" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "DECISION POINT 2-B - For Branch B pathway",
+      "id": "dp2-b-1", 
+      "background": "[DP2_B_BACKGROUND_SVG]",
+      "text": "[PRESENT_NEW_SITUATION_FOR_DP2]. [SHOW_CONSEQUENCES_OF_DP1_CHOICE]. [SETUP_SECONDARY_DECISION].",
+      "choices": [
+        { 
+          "label": "[DP2_CHOICE_A_LABEL - CONSISTENT_WITH_DP1_B]", 
+          "nextSceneId": "journey-1b2a-1" 
+        },
+        { 
+          "label": "[DP2_CHOICE_B_LABEL - ALTERNATIVE_WITHIN_DP1_B]", 
+          "nextSceneId": "journey-1b2b-1" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "JOURNEY 1A2A - Consistent Primary Direction",
+      "id": "journey-1a2a-1",
+      "background": "[JOURNEY_BACKGROUND_SVG]",
+      "text": "[CONTINUE_STORY_FROM_1A2A_CHOICES]. [DEVELOP_CHARACTER_GROWTH]. [BUILD_TOWARD_RESOLUTION].",
+      "choices": [
+        { 
+          "label": "[CONTINUE_JOURNEY_OR_FINAL_CHOICE]", 
+          "nextSceneId": "journey-1a2a-2" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "JOURNEY 1A2A - Continued",
+      "id": "journey-1a2a-2",
+      "background": "[JOURNEY_BACKGROUND_SVG]",
+      "text": "[DEVELOP_CLIMAX_OF_1A2A_PATHWAY]. [SHOW_LEARNING_MOMENTS]. [SETUP_ENDING_TRANSITION].",
+      "choices": [
+        { 
+          "label": "[FINAL_CHOICE_FOR_THIS_PATHWAY]", 
+          "nextSceneId": "ending-consistent-primary" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "JOURNEY 1A2B - Mixed Approach (Primary + Alternative)",
+      "id": "journey-1a2b-1",
+      "background": "[JOURNEY_BACKGROUND_SVG]",
+      "text": "[CONTINUE_STORY_FROM_1A2B_CHOICES]. [SHOW_BALANCED_LEARNING]. [DEVELOP_CHARACTER_GROWTH].",
+      "choices": [
+        { 
+          "label": "[CONTINUE_JOURNEY_OR_FINAL_CHOICE]", 
+          "nextSceneId": "journey-1a2b-2" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "JOURNEY 1A2B - Continued",
+      "id": "journey-1a2b-2",
+      "background": "[JOURNEY_BACKGROUND_SVG]",
+      "text": "[DEVELOP_CLIMAX_OF_1A2B_PATHWAY]. [SHOW_INTEGRATED_LEARNING]. [SETUP_ENDING_TRANSITION].",
+      "choices": [
+        { 
+          "label": "[FINAL_CHOICE_FOR_THIS_PATHWAY]", 
+          "nextSceneId": "ending-balanced" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "JOURNEY 1B2A - Mixed Approach (Alternative + Primary)",
+      "id": "journey-1b2a-1",
+      "background": "[JOURNEY_BACKGROUND_SVG]",
+      "text": "[CONTINUE_STORY_FROM_1B2A_CHOICES]. [SHOW_BALANCED_LEARNING]. [DEVELOP_CHARACTER_GROWTH].",
+      "choices": [
+        { 
+          "label": "[CONTINUE_JOURNEY_OR_FINAL_CHOICE]", 
+          "nextSceneId": "journey-1b2a-2" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "JOURNEY 1B2A - Continued",
+      "id": "journey-1b2a-2",
+      "background": "[JOURNEY_BACKGROUND_SVG]",
+      "text": "[DEVELOP_CLIMAX_OF_1B2A_PATHWAY]. [SHOW_INTEGRATED_LEARNING]. [SETUP_ENDING_TRANSITION].",
+      "choices": [
+        { 
+          "label": "[FINAL_CHOICE_FOR_THIS_PATHWAY]", 
+          "nextSceneId": "ending-balanced" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "JOURNEY 1B2B - Consistent Secondary Direction",
+      "id": "journey-1b2b-1",
+      "background": "[JOURNEY_BACKGROUND_SVG]",
+      "text": "[CONTINUE_STORY_FROM_1B2B_CHOICES]. [DEVELOP_CHARACTER_GROWTH]. [BUILD_TOWARD_RESOLUTION].",
+      "choices": [
+        { 
+          "label": "[CONTINUE_JOURNEY_OR_FINAL_CHOICE]", 
+          "nextSceneId": "journey-1b2b-2" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "JOURNEY 1B2B - Continued",
+      "id": "journey-1b2b-2",
+      "background": "[JOURNEY_BACKGROUND_SVG]",
+      "text": "[DEVELOP_CLIMAX_OF_1B2B_PATHWAY]. [SHOW_LEARNING_MOMENTS]. [SETUP_ENDING_TRANSITION].",
+      "choices": [
+        { 
+          "label": "[FINAL_CHOICE_FOR_THIS_PATHWAY]", 
+          "nextSceneId": "ending-consistent-secondary" 
+        }
+      ]
+    },
+    
+    {
+      "_comment": "ENDING - Consistent Primary Direction Theme",
+      "id": "ending-consistent-primary",
+      "background": "[ENDING_BACKGROUND_SVG]",
+      "text": "[RESOLUTION_FOR_CONSISTENT_PRIMARY_APPROACH]. [SHOW_CHARACTER_GROWTH]. [CONNECT_BACK_TO_THEMES]. [PROVIDE_SATISFYING_CLOSURE].",
+      "choices": []
+    },
+    
+    {
+      "_comment": "ENDING - Consistent Secondary Direction Theme",
+      "id": "ending-consistent-secondary", 
+      "background": "[ENDING_BACKGROUND_SVG]",
+      "text": "[RESOLUTION_FOR_CONSISTENT_SECONDARY_APPROACH]. [SHOW_CHARACTER_GROWTH]. [CONNECT_BACK_TO_THEMES]. [PROVIDE_SATISFYING_CLOSURE].",
+      "choices": []
+    },
+    
+    {
+      "_comment": "ENDING - Balanced/Integrated Approaches Theme",
+      "id": "ending-balanced",
+      "background": "[ENDING_BACKGROUND_SVG]",
+      "text": "[RESOLUTION_FOR_BALANCED_MIXED_APPROACHES]. [SHOW_CHARACTER_GROWTH]. [CONNECT_BACK_TO_THEMES]. [PROVIDE_SATISFYING_CLOSURE].",
+      "choices": []
+    }
+  ]
+}

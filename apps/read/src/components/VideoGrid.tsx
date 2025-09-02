@@ -4,42 +4,27 @@ import VideoFeed from './VideoFeed'
 import type { Participant as RTCParticipant } from '../stores/webrtcStore'
 
 export default function VideoGrid() {
-  const { participants, isConnected, isConnecting } = useWebRTCStore()
+  const { participants, isConnected, isConnecting, role } = useWebRTCStore()
   const { camera, microphone, isLoading: permissionsLoading, error: permissionsError, requestPermissions } = useMediaPermissions()
   
-  // Convert participants map to array for easier rendering
   const participantList = Array.from(participants.values())
   
-  // Calculate grid layout based on number of participants
   const getGridLayout = () => {
-    const totalParticipants = participantList.length + 1 // +1 for local user
-    
-    if (totalParticipants === 1) {
-      return 'grid-cols-1'
-    } else if (totalParticipants === 2) {
-      return 'grid-cols-2'
-    } else if (totalParticipants <= 4) {
-      return 'grid-cols-2'
-    } else if (totalParticipants <= 6) {
-      return 'grid-cols-3'
-    } else {
-      return 'grid-cols-3'
-    }
+    const totalParticipants = participantList.length + 1
+    if (totalParticipants === 1) return 'grid-cols-1'
+    if (totalParticipants === 2) return 'grid-cols-2'
+    if (totalParticipants <= 4) return 'grid-cols-2'
+    if (totalParticipants <= 6) return 'grid-cols-3'
+    return 'grid-cols-3'
   }
   
   const getVideoSize = () => {
     const totalParticipants = participantList.length + 1
-    
-    if (totalParticipants === 1) {
-      return 'aspect-video max-w-2xl mx-auto'
-    } else if (totalParticipants === 2) {
-      return 'aspect-video'
-    } else {
-      return 'aspect-square'
-    }
+    if (totalParticipants === 1) return 'aspect-video max-w-2xl mx-auto'
+    if (totalParticipants === 2) return 'aspect-video'
+    return 'aspect-square'
   }
   
-  // Show permissions prompt if needed
   if ((camera === 'denied' || microphone === 'denied') && !isConnected) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -66,7 +51,6 @@ export default function VideoGrid() {
     )
   }
   
-  // Show connecting state
   if (isConnecting || permissionsLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -82,7 +66,6 @@ export default function VideoGrid() {
     )
   }
   
-  // Show not connected state
   if (!isConnected) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -99,13 +82,10 @@ export default function VideoGrid() {
   return (
     <div className="h-full p-4">
       <div className={`grid ${getGridLayout()} gap-4 h-full`}>
-        {/* Local video feed */}
         <VideoFeed
           className={`${getVideoSize()}`}
           showControls={true}
         />
-        
-        {/* Remote participant video feeds */}
         {participantList.map((participant: RTCParticipant) => (
           <VideoFeed
             key={participant.id}
@@ -116,11 +96,10 @@ export default function VideoGrid() {
         ))}
       </div>
       
-      {/* Connection status indicator */}
       <div className="absolute top-4 right-4">
         <div className="flex items-center space-x-2 bg-black/50 rounded-full px-3 py-1">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-white text-sm">Connected</span>
+          <span className="text-white text-sm">{participantList.length + 1} in call {role ? `• ${role}` : ''}</span>
         </div>
       </div>
     </div>
