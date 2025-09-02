@@ -31,6 +31,7 @@ export default function Join() {
 
   const [showPicker, setShowPicker] = useState(false)
   const [nameInput, setNameInput] = useState(childName || 'Alex')
+  const [micLevel, setMicLevel] = useState(0)
 
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const rafRef = useRef<number | null>(null)
@@ -126,6 +127,14 @@ export default function Join() {
 
         const loop = () => {
           analyser.getByteTimeDomainData(dataArray)
+          // Compute RMS level in [0, 1]
+          let sumSquares = 0
+          for (let i = 0; i < dataArray.length; i++) {
+            const v = (dataArray[i] - 128) / 128
+            sumSquares += v * v
+          }
+          const rms = Math.sqrt(sumSquares / dataArray.length)
+          setMicLevel(rms)
           rafRef.current = requestAnimationFrame(loop)
         }
         rafRef.current = requestAnimationFrame(loop)
@@ -225,6 +234,19 @@ export default function Join() {
                   <option key={d.deviceId} value={d.deviceId}>{d.label || 'Microphone'}</option>
                 ))}
               </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+            <div className="bg-black rounded overflow-hidden">
+              <video ref={videoRef} playsInline muted className="w-full aspect-video bg-black" />
+            </div>
+            <div>
+              <div className="mb-2 text-sm">Mic Level</div>
+              <div className="h-4 bg-gray-800 rounded">
+                <div className="h-4 bg-green-500 rounded" style={{ width: `${Math.min(100, Math.floor(micLevel * 200))}%` }} />
+              </div>
+              <div className="text-xs text-gray-400 mt-2">Say hello to test</div>
             </div>
           </div>
 
