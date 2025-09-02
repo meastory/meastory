@@ -36,35 +36,47 @@ export default function StoryPlayer() {
     }
   }, [childName])
 
-  const handleChoice = async (nextSceneId: string) => {
+  const handleChoice = async (nextSceneRef: string | number) => {
     if (isTransitioning || !currentStory) return
 
     setIsTransitioning(true)
-    console.log('🎯 Making choice, next scene id:', nextSceneId)
+    console.log('🎯 Making choice, next scene ref:', nextSceneRef)
 
     try {
-      // Load scene by ID directly
-      const { data: nextScene, error } = await supabase
+      // Decide whether the ref is a UUID or a scene order
+      const isUuid = typeof nextSceneRef === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(nextSceneRef)
+
+      let query = supabase
         .from('story_scenes')
         .select('*')
-        .eq('id', nextSceneId)
-        .single()
+
+      if (isUuid) {
+        query = query.eq('id', nextSceneRef as string)
+      } else {
+        // Treat as scene order number (supports numeric string too)
+        const sceneOrder = typeof nextSceneRef === 'number' ? nextSceneRef : Number(nextSceneRef)
+        query = query
+          .eq('story_id', currentStory.id)
+          .eq('scene_order', sceneOrder)
+      }
+
+      const { data: nextScene, error } = await query.single()
 
       if (error) throw error
 
-      console.log('🎬 Next scene loaded by id:', nextScene.title)
+      console.log('🎬 Next scene resolved:', nextScene.title, 'id:', nextScene.id, 'order:', nextScene.scene_order)
       // Update the store with the new scene
       useRoomStore.setState({ currentScene: nextScene })
 
-      // Sync choice with other participants via WebRTC data channels
+      // Sync choice with other participants via WebRTC data channels (canonical by ID)
       try {
         const { webrtcManager } = await import('../services/webrtcManager')
         webrtcManager.syncStoryChoice(nextScene.id)
       } catch (webrtcError) {
         console.warn('WebRTC sync failed:', webrtcError)
-      }      
+      }
     } catch (error) {
-      console.error('❌ Error loading next scene by id:', error)
+      console.error('❌ Error loading next scene (by id or order):', error)
     } finally {
       setIsTransitioning(false)
     }
