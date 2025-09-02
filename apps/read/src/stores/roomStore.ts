@@ -201,12 +201,15 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
     console.log('🔄 Changing story in room to:', storyId)
     
     try {
-      // Update the room's story in database
       const currentRoom = get().currentRoom
       if (!currentRoom) {
-        throw new Error('No current room available')
+        // Guest/roomless context: update local state only
+        console.log('ℹ️ No current room (guest flow); applying story locally')
+        await get().loadStory(storyId)
+        return
       }
       
+      // Update the room's story in database
       const { error } = await supabase
         .from('rooms')
         .update({ story_id: storyId })
