@@ -77,6 +77,9 @@ export default function StoryPlayer() {
   const handleOpenLibrary = () => {
     console.log('📚 Opening library from room context')
     try {
+      // Dispatch a lightweight event for guest Join page to open in-room picker
+      window.dispatchEvent(new CustomEvent('open-inroom-picker'))
+
       const roomState = useRoomStore.getState()
       const maybeWithLibrary = roomState as unknown as { showLibrary?: () => void }
       maybeWithLibrary.showLibrary?.()

@@ -51,6 +51,14 @@ export default function Join() {
     }
   }, [])
 
+  useEffect(() => {
+    const handler = () => setShowPicker(true)
+    window.addEventListener('open-inroom-picker' as unknown as keyof WindowEventMap, handler as EventListener)
+    return () => {
+      window.removeEventListener('open-inroom-picker' as unknown as keyof WindowEventMap, handler as EventListener)
+    }
+  }, [])
+
   const stopPreview = useCallback(() => {
     const s = previewStreamRef.current
     s?.getTracks()?.forEach(t => t.stop())
@@ -261,9 +269,9 @@ export default function Join() {
       {!currentStory && (
         <button
           onClick={() => setShowPicker(true)}
-          className="fixed top-6 right-6 z-[100] px-3 py-2 rounded bg-green-600 hover:bg-green-700 text-white"
+          className="fixed top-6 left-6 z-[100] px-3 py-2 rounded bg-green-600 hover:bg-green-700 text-white"
         >
-          Pick
+          📚
         </button>
       )}
       {showPicker && (
