@@ -1,4 +1,4 @@
-# Me A Story Tell - Complete User Journey
+# Read Me A Story - Complete User Journey
 
 ## Landing Page Experience (First-Time Visitor)
 
@@ -7,10 +7,10 @@
 **Hero Section:**
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                 Me A Story Tell                         │
+│                Read Me A Story                         │
 │        Connect Your Family Through Stories             │
 │                                                         │
-│   [Large family photo: grandparent, parent, child      │
+│   [Hero image: grandparent, parent, child              │
 │    sharing stories on video call]                      │
 │                                                         │
 │     🎯 Try It Now - No Sign Up Required               │
@@ -21,14 +21,9 @@
 ```
 
 **Value Proposition (Below Hero):**
-- "Bring grandparents and grandchildren together through interactive storytelling"
-- "Works on any device - phones, tablets, computers, even smart TVs"
+- "Bring families together through interactive storytelling"
+- "Works on any device - phones, tablets, computers, TVs"
 - "Start immediately, no downloads or apps required"
-
-**Social Proof:**
-- "Join 10,000+ families already connecting through stories"
-- Simple testimonials with family photos
-- "Featured in [Family Magazine], [Parenting Blog]"
 
 ## Primary User Journey: Guest Mode Experience
 
@@ -162,7 +157,7 @@
 │  │                 │              │                 │   │
 │  │  Grandma's      │              │   Your video    │   │
 │  │  video feed     │              │   (with child)  │   │
-│  │  (full size)    │              │   (smaller)     │   │
+│  │  50% vw fill    │              │   50% vw fill       │
 │  │                 │              │                 │   │
 │  └─────────────────┘              └─────────────────┘   │
 │                                                         │
@@ -179,7 +174,7 @@
 │  │  [🚪 Knock on the Door]                          │ │
 │  └─────────────────────────────────────────────────────┘ │
 │                                                         │
-│  ⏰ 22 minutes left     📖 Page 3 of 12              │
+│  ⏰ 22 minutes left     📖 Story Progression [][][][][]  │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -275,7 +270,7 @@
 │   │             │ │ [Continue]  │ │ [Start New] │     │
 │   └─────────────┘ └─────────────┘ └─────────────┘     │
 │                                                         │
-│   🏆 Available Challenges:                             │
+│   🏆 Reading Challenges:                               │
 │   📖 Story Safari: Read 5 different genres (1/5)      │
 │   👥 Three Generations: Include grandparent in story   │
 │                                                         │
@@ -304,7 +299,7 @@
 │   ⚡ Quick Start:                                      │
 │   [📞 Story with Grandma] [📖 Continue Last Story]     │
 │                                                         │
-│   🎯 Active Challenges (2/3 complete):                │
+│   🎯 Active Challenge (2/3 complete):                │
 │   ✅ Story Safari: 5/5 genres complete! 🏆            │
 │   📊 Word Wizard: 18/20 new words learned              │
 │   ⏳ Weekend Warrior: 2/4 weekend sessions             │
@@ -374,12 +369,13 @@
 │   ✅ Word Wizard: Complete! 🎉                         │
 │   📊 Weekend Warrior: 3/4 sessions                     │
 │                                                         │
-│   💝 Charlie loved this story! Similar premium         │
+│   💝 If Charlie loved this story: Similar premium       │
 │   adventures include "Mars Colony" and "Galaxy Quest"  │
 │                                                         │
 │   [Continue with Free Stories] [Unlock Premium]        │
 │                                                         │
 │   🎁 Premium users also get:                          │
+│   • Access to the complete library                    │
 │   • Unlimited session time • Up to 8 family members   │
 │   • Complete story history • No ads                   │
 │                                                         │

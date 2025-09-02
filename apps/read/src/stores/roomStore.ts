@@ -67,12 +67,27 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
       set({ currentRoom: room })
 
-      // Load story if one is selected
-      if (room.story_id) {
-        console.log('📚 Room has story_id, loading story:', room.story_id)
-        await get().loadStory(room.story_id)
+      // If no story is selected, choose the first published story to keep flow working
+      let storyIdToLoad = room.story_id as string | null
+      if (!storyIdToLoad) {
+        const { data: firstStory } = await supabase
+          .from('stories')
+          .select('id')
+          .eq('status', 'published')
+          .order('title', { ascending: true })
+          .limit(1)
+          .maybeSingle()
+        if (firstStory?.id) {
+          storyIdToLoad = firstStory.id
+          console.log('📚 No story on room; using default published story:', storyIdToLoad)
+        }
+      }
+
+      if (storyIdToLoad) {
+        console.log('📚 Loading story:', storyIdToLoad)
+        await get().loadStory(storyIdToLoad)
       } else {
-        console.log('⚠️ Room has no story_id - no story will be loaded')
+        console.log('⚠️ No published stories available to load')
       }
 
       // Load participants
@@ -81,21 +96,18 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       // Connect to WebRTC
       console.log('🔗 Connecting to WebRTC for room:', room.code)
       try {
-        // Dynamic import to avoid circular dependency
         const webrtcModule = await import('./webrtcStore')
         const webrtcStore = webrtcModule.useWebRTCStore
         await webrtcStore.getState().connect(roomId, room.code)
         console.log('✅ WebRTC connected successfully')
       } catch (webrtcError) {
         console.error('❌ WebRTC connection failed:', webrtcError)
-        // Don't fail room entry if WebRTC fails, just log it
       }
 
       console.log('✅ Successfully entered room')
-    } catch (error: unknown) {
-      console.error('❌ Error entering room:', error)
-      const msg = (error as { message?: string })?.message || 'Unknown error'
-      set({ error: msg })
+    } catch (e: unknown) {
+      console.error('❌ Failed to enter room:', e)
+      set({ error: (e as { message?: string })?.message || 'Failed to enter room' })
     } finally {
       set({ isLoading: false })
     }
@@ -189,12 +201,15 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
     console.log('🔄 Changing story in room to:', storyId)
     
     try {
-      // Update the room's story in database
       const currentRoom = get().currentRoom
       if (!currentRoom) {
-        throw new Error('No current room available')
+        // Guest/roomless context: update local state only
+        console.log('ℹ️ No current room (guest flow); applying story locally')
+        await get().loadStory(storyId)
+        return
       }
       
+      // Update the room's story in database
       const { error } = await supabase
         .from('rooms')
         .update({ story_id: storyId })

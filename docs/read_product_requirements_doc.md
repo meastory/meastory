@@ -1,8 +1,8 @@
-# Me A Story Tell - Product Requirements & User Flow Specification
+# Read Me A Story - Product Requirements & User Flow Specification
 
 ## Executive Summary
 
-Me A Story Tell is a live, interactive storytelling platform designed to connect families through shared video experiences. This document outlines the core user flows, feature specifications, and implementation roadmap for a freemium platform that prioritizes ease of connection between family members (particularly grandparents and grandchildren) while building sustainable engagement through gamified reading progression.
+Read Me A Story is a live, interactive storytelling platform designed to connect families through shared video experiences. This document outlines the core user flows, feature specifications, and implementation roadmap for a freemium platform that prioritizes ease of connection between family members (particularly grandparents and grandchildren) while building sustainable engagement through gamified reading progression.
 
 **Strategic Focus:** Launch timing targets Thanksgiving-Christmas 2025 family connection season, with simplified guest experience featuring 3 exceptional public domain story adaptations. Technical architecture prioritizes connection reliability over feature complexity, with Supabase Realtime managing both WebRTC signaling and story state synchronization.
 
@@ -12,7 +12,7 @@ Me A Story Tell is a live, interactive storytelling platform designed to connect
 
 **Key Differentiators:**
 - Zero-friction guest mode requiring no account creation
-- People-first video design with story overlays (not storybook with video frames)
+- People-first video design with story overlays
 - Cross-generational usability optimized for seniors and children
 - Reading progression system that grows with child development
 
@@ -50,7 +50,7 @@ const channel = supabase
 - "The Tortoise and the Hare" (Learning - growth mindset and persistence)
 
 **Session Limits:**
-- 30-minute sessions (unified session time and room expiry)
+- 30-minute sessions (session time and room expiry)
 - 2 participants maximum
 - 3 sessions per day per IP address
 
@@ -58,8 +58,7 @@ const channel = supabase
 - Magic Link joining (primary method)
 - QR code generation (secondary method)
 - Room code entry (manual fallback only)
-- Family-context personalization (child's name + family references)
-- Full HD video quality (no degradation across tiers)
+- Family-context personalization (child's name)
 
 **Success Criteria:** 85%+ connection success rate, 80%+ story completion rate
 
@@ -71,16 +70,16 @@ const channel = supabase
 - Monthly new story additions
 
 **Session Limits:**
-- 60-minute sessions (unified session time and room expiry)
+- 60-minute sessions (session time and room expiry)
 - 2 participants maximum
 - Unlimited daily sessions
 
 **Features:**
 - Story bookmarking and favorites
 - Story history (last 30 days)
-- Basic family profiles (names and photos)
+- Basic family profiles (names)
 - Family story albums (simplified)
-- 3 active challenges simultaneously
+- 1 active reading challenge
 - Pre-session advertising (family-friendly, skippable)
 
 ### **Premium Account ($4.99/month)**
@@ -99,7 +98,7 @@ const channel = supabase
 **Enhanced Features:**
 - Complete family story albums with progress visualization
 - Advanced reading progression analytics
-- Unlimited active challenges
+- Unlimited active reading challenges
 - Ad-free experience
 - Priority customer support
 - Early access to new features
@@ -109,7 +108,7 @@ const channel = supabase
 ### **Core Connection Flow: Parent-Facilitated**
 
 **Phase 1: Session Initiation (Parent)**
-1. Parent opens Me A Story Tell platform
+1. Parent opens Read Me A Story platform
 2. Selects "Connect with Family" → Choose family member
 3. System generates room with three access methods:
    - Magic Link (primary): `meastory.com/join/ABC123`
