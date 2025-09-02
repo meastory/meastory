@@ -13,7 +13,6 @@ export default function Start() {
     setError(null)
 
     try {
-      // Always create with default name and no initial story
       const { data, error } = await createGuestRoom('Story Time', null)
       if (error) throw error
       const room = Array.isArray(data) ? data[0] : data
@@ -30,20 +29,39 @@ export default function Start() {
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-      <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow">
-        <h1 className="text-3xl font-bold mb-6 text-center">Start</h1>
-        <form onSubmit={handleCreate} className="space-y-4">
-          {error && <div className="text-red-400 text-sm">{error}</div>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-700 text-white font-semibold py-3 rounded text-lg"
-          >
-            {loading ? 'Creating…' : 'Create Room'}
-          </button>
-        </form>
-        <div className="text-center mt-4">
-          <button onClick={() => navigate('/')} className="text-sm text-gray-300 underline">Sign in</button>
+      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Guests card */}
+        <div className="bg-gray-900 p-6 rounded-lg shadow">
+          <h2 className="text-2xl font-bold mb-4">Guests</h2>
+          <form onSubmit={handleCreate} className="space-y-4">
+            {error && <div className="text-red-400 text-sm">{error}</div>}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-700 text-white font-semibold py-3 rounded text-lg"
+            >
+              {loading ? 'Creating…' : 'Create Room'}
+            </button>
+          </form>
+          <div className="text-center mt-4">
+            <button onClick={() => navigate('/join')} className="text-sm text-gray-300 underline">Join existing room</button>
+          </div>
+        </div>
+
+        {/* Members card */}
+        <div className="bg-gray-900 p-6 rounded-lg shadow">
+          <h2 className="text-2xl font-bold mb-4">Members</h2>
+          <div className="space-y-4">
+            <button
+              onClick={() => navigate('/login')}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded text-lg"
+            >
+              Login
+            </button>
+            <div className="text-center">
+              <button onClick={() => navigate('/register')} className="text-sm text-gray-300 underline">Register</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

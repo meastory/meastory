@@ -10,7 +10,7 @@ import ErrorMessage from './components/ErrorMessage'
 import Auth from './components/Auth'
 import StoryPlayer from './components/StoryPlayer'
 import StoryLibrary from './components/StoryLibrary'
-import { Navigate, useLocation } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import InRoomStoryPicker from './components/InRoomStoryPicker'
 
 function App() {
@@ -20,27 +20,18 @@ function App() {
   const [showLibrary, setShowLibrary] = useState(false)
   const [showPicker, setShowPicker] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
 
   const handleAuthSuccess = () => {
-    // No-op: session state change will re-render and route will remain stable
+    navigate('/')
   }
 
-  // Guest-only flow: if no session and flag is enabled, go to /start except on guest routes
-  if (!session && import.meta.env.VITE_FEATURE_GUEST_FLOW === 'true') {
-    const path = location.pathname || ''
-    const isGuestRoute = path === '/start' || path === '/join' || path.startsWith('/join/') || path.startsWith('/invite/')
-    if (!isGuestRoute) {
-      return <Navigate to="/start" replace />
-    }
-  }
-
-  if (!session) {
-    return (
-      <div className="video-first min-h-screen bg-black text-white">
-        <Auth onAuthSuccess={handleAuthSuccess} />
-      </div>
-    )
-  }
+  const path = location.pathname || ''
+  const guestFlag = import.meta.env.VITE_FEATURE_GUEST_FLOW === 'true'
+  const isGuestRoute = path === '/start' || path === '/join' || path.startsWith('/join/') || path.startsWith('/invite/')
+  const isAuthRoute = path === '/login' || path === '/register'
+  const shouldRedirectToStart = !session && guestFlag && !isGuestRoute && !isAuthRoute
+  const shouldShowAuth = !session && !isGuestRoute && !isAuthRoute
 
   useEffect(() => {
     initialize()
@@ -50,7 +41,6 @@ function App() {
     const roomStore = useRoomStore.getState()
     const withLibrary = roomStore as typeof roomStore & { showLibrary?: () => void }
     withLibrary.showLibrary = () => {
-      console.log('📚 Opening library from room context')
       setShowLibrary(true)
     }
   }, [])
@@ -87,8 +77,20 @@ function App() {
     setShowLibrary(false)
   }
 
+  if (shouldRedirectToStart) {
+    return <Navigate to="/start" replace />
+  }
+
   if (!initialized) {
     return <LoadingSpinner />
+  }
+
+  if (shouldShowAuth) {
+    return (
+      <div className="video-first min-h-screen bg-black text-white">
+        <Auth onAuthSuccess={handleAuthSuccess} />
+      </div>
+    )
   }
 
   if (showLibrary) {
