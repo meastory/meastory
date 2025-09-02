@@ -69,17 +69,8 @@ function getSavedDeviceLabel() {
   return [camera, microphone].filter(Boolean).join(' • ')
 }
 
-// Minimal typed wrapper for presence state
-type PresenceMeta = { clientId?: string; name?: string; deviceLabel?: string; role?: string; ts?: number }
-function getPresenceState(channel: RealtimeChannel): Record<string, PresenceMeta[]> {
-  try {
-    const presenceFn = (channel as unknown as { presenceState: () => Record<string, PresenceMeta[]> }).presenceState
-    return typeof presenceFn === 'function' ? presenceFn() : {}
-  } catch (e) {
-    console.warn('Presence state not available:', e)
-    return {}
-  }
-}
+// In-memory presence tracker (avoid channel.presenceState for compatibility)
+const presenceMetaByKey: Map<string, { ts: number; name?: string; deviceLabel?: string }> = new Map()
 
 export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => ({
   ...initialState,
@@ -103,51 +94,48 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
         config: { presence: { key: clientId } }
       })
 
-      const recomputeParticipantsFromPresence = () => {
-        const state = getPresenceState(channel)
-        const entries = Object.entries(state).map(([key, metas]) => ({ key, metas }))
+      const recomputeFromLocalPresence = () => {
         const myId = get().clientId
         const participants = new Map(get().participants)
         const fresh = new Map<string, Participant>()
-        entries.forEach(({ key, metas }) => {
-          const first = metas[0] || {}
-          const pid = String(key)
-          const deviceLabel = typeof first.deviceLabel === 'string' ? first.deviceLabel : undefined
-          const name = typeof first.name === 'string' ? first.name : undefined
-          if (pid !== myId) {
-            fresh.set(pid, {
-              id: pid,
-              stream: participants.get(pid)?.stream || null,
+        Array.from(presenceMetaByKey.entries()).forEach(([key, meta]) => {
+          if (key !== myId) {
+            fresh.set(key, {
+              id: key,
+              stream: participants.get(key)?.stream || null,
               isMuted: false,
               isVideoOff: false,
-              name,
-              deviceLabel,
+              name: meta.name,
+              deviceLabel: meta.deviceLabel,
             })
           }
         })
         set({ participants: fresh })
-        const allPeers = entries.map(({ key, metas }) => ({ key, ts: Number((metas[0]?.ts) || Date.now()) }))
-        const sorted = allPeers.sort((a, b) => a.ts - b.ts || a.key.localeCompare(b.key))
+        const sorted = Array.from(presenceMetaByKey.entries())
+          .map(([key, meta]) => ({ key, ts: meta.ts }))
+          .sort((a, b) => a.ts - b.ts || a.key.localeCompare(b.key))
         const hostId = sorted[0]?.key
         const newRole: 'host' | 'guest' | null = myId && hostId ? (myId === hostId ? 'host' : 'guest') : null
         if (newRole !== get().role) {
           set({ role: newRole })
-          try {
-            channel.track({ role: newRole || 'guest' })
-          } catch (e) {
-            console.warn('Presence track role update failed:', e)
-          }
+          try { channel.track({ role: newRole || 'guest' }) } catch (e) { console.warn('Presence role track failed:', e) }
         }
       }
 
       channel
         .on('presence', { event: 'sync' }, () => {
           console.log('👥 Presence sync')
-          recomputeParticipantsFromPresence()
+          recomputeFromLocalPresence()
         })
-        .on('presence', { event: 'join' }, ({ key }: { key: string }) => {
+        .on('presence', { event: 'join' }, ({ key, newPresences }: { key: string; newPresences: Array<Record<string, unknown>> }) => {
           console.log('👥 Participant joined:', key)
-          recomputeParticipantsFromPresence()
+          const meta = newPresences?.[0] || {}
+          presenceMetaByKey.set(key, {
+            ts: typeof meta.ts === 'number' ? meta.ts : Date.now(),
+            name: typeof meta.name === 'string' ? meta.name : undefined,
+            deviceLabel: typeof meta.deviceLabel === 'string' ? meta.deviceLabel : undefined,
+          })
+          recomputeFromLocalPresence()
           setTimeout(async () => {
             if (get().role === 'host') {
               const { webrtcManager } = await import('../services/webrtcManager')
@@ -157,8 +145,9 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
         })
         .on('presence', { event: 'leave' }, ({ key }: { key: string }) => {
           console.log('👋 Participant left:', key)
+          presenceMetaByKey.delete(key)
           get().removeParticipant(key)
-          recomputeParticipantsFromPresence()
+          recomputeFromLocalPresence()
         })
 
       channel
@@ -224,6 +213,8 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
               deviceLabel,
               ts: Date.now(),
             })
+            presenceMetaByKey.set(clientId, { ts: Date.now(), name: 'Guest', deviceLabel })
+            recomputeFromLocalPresence()
           } catch (e) {
             console.warn('Presence track failed:', e)
           }
@@ -262,6 +253,8 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
       localStream.getTracks().forEach(track => track.stop())
     }
     
+    presenceMetaByKey.clear()
+
     set({
       ...initialState,
       signalingSocket: null
