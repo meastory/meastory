@@ -31,7 +31,7 @@ export default function Start() {
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-      <div className="absolute bottom-4 left-4 flex gap-2">
+      <div className="absolute bottom-4 right-4 z-[1101] flex gap-2">
         <FullscreenButton showOnDesktop className="" variant="minimal" size="sm" />
         <InstallPWAButton />
       </div>

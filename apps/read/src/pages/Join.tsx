@@ -242,7 +242,7 @@ export default function Join() {
   if (phase === 'preflight') {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative">
-        <div className="absolute bottom-4 left-4 z-[110]">
+        <div className="absolute bottom-4 right-4 z-[1101]">
           <button
             onClick={() => toggleFullscreen()}
             className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
@@ -315,7 +315,7 @@ export default function Join() {
   if (phase === 'waiting') {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative">
-        <div className="absolute bottom-4 left-4 z-[110]">
+        <div className="absolute bottom-4 right-4 z-[1101]">
           <button
             onClick={() => toggleFullscreen()}
             className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
@@ -338,7 +338,7 @@ export default function Join() {
         <PresenceBadge className="absolute top-4 left-4 z-[110]" />
         <button
           onClick={() => toggleFullscreen()}
-          className="absolute bottom-4 left-4 z-[110] px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
+          className="absolute bottom-4 right-4 z-[1101] px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
           aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
         >
           {isFullscreen ? '⤢' : '⤢'}
