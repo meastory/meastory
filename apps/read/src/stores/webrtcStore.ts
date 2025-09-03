@@ -251,6 +251,15 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
             if (attempt < 3) {
               const backoff = 500 * Math.pow(2, attempt - 1)
               console.log(`⏳ Retrying subscribe in ${backoff}ms (attempt ${attempt + 1}/3)`) 
+              // Metrics: retry
+              const globals = (window as unknown as { __guest_session_id?: string; __guest_room_code?: string })
+              const sid = globals.__guest_session_id
+              const roomCode = globals.__guest_room_code || ''
+              if (sid && roomCode) {
+                import('../lib/supabase').then(({ logConnectionEvent }) => {
+                  logConnectionEvent({ session_id: sid, room_code: roomCode, event_type: 'retry', detail: { attempt: attempt + 1 } }).catch(() => {})
+                })
+              }
               setTimeout(() => { subscribeWithRetry(attempt + 1) }, backoff)
             } else {
               set({ isConnecting: false })

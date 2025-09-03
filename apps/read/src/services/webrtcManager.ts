@@ -124,12 +124,26 @@ class WebRTCManager {
       const state = peerConnection.connectionState
       console.log(`🔗 Connection state for ${peerId}:`, state)
       
+      const globals = (window as unknown as { __guest_session_id?: string; __guest_room_code?: string })
+      const sid = globals.__guest_session_id
+      const roomCode = globals.__guest_room_code || ''
+
       if (state === 'connected') {
         console.log(`✅ Connected to ${peerId}`)
         this.addMissingLocalTracks(peerId)
         console.log('📡 Data channels:', Array.from(this.dataChannels.keys()))
+        if (sid && roomCode) {
+          import('../lib/supabase').then(({ logConnectionEvent }) => {
+            logConnectionEvent({ session_id: sid, room_code: roomCode, event_type: 'connected', detail: { peer: peerId } }).catch(() => {})
+          })
+        }
       } else if (state === 'failed') {
         console.error(`❌ Connection failed for ${peerId}`)
+        if (sid && roomCode) {
+          import('../lib/supabase').then(({ logConnectionEvent }) => {
+            logConnectionEvent({ session_id: sid, room_code: roomCode, event_type: 'ice_failed', detail: { peer: peerId } }).catch(() => {})
+          })
+        }
         this.handleConnectionFailure(peerId)
       }
     }

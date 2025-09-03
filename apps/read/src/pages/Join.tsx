@@ -6,7 +6,7 @@ import StoryOverlay from '../components/StoryOverlay'
 import StoryPlayer from '../components/StoryPlayer'
 import InRoomStoryPicker from '../components/InRoomStoryPicker'
 import { useRoomStore } from '../stores/roomStore'
-import { getRoomByCode } from '../lib/supabase'
+import { getRoomByCode, identifyDevice, guestCheckAndStartSession, logConnectionEvent, endGuestSession } from '../lib/supabase'
 import PresenceBadge from '../components/PresenceBadge'
 import { useFullscreen } from '../hooks/useFullscreen'
 
@@ -43,6 +43,10 @@ export default function Join() {
 
   const inviteUrl = useMemo(() => `${location.origin}/join/${normalized}`, [normalized])
   const { isFullscreen, toggleFullscreen } = useFullscreen()
+
+  // Session
+  const sessionIdRef = useRef<string | null>(null)
+  const sessionTimerRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (isConnected) setPhase('connected')
@@ -164,6 +168,9 @@ export default function Join() {
       const s = previewStreamRef.current
       s?.getTracks()?.forEach(t => t.stop())
       previewStreamRef.current = null
+      // Clear timer
+      if (sessionTimerRef.current) window.clearTimeout(sessionTimerRef.current)
+      sessionTimerRef.current = null
     }
   }, [])
 
@@ -174,6 +181,30 @@ export default function Join() {
     const videoOk = selectedCamera ? (videoTracks.some(t => t.readyState === 'live') || videoTracks.length > 0) : true
     return audioOk && videoOk
   }, [previewStream, selectedCamera])
+
+  const getOrCreateDeviceUUID = () => {
+    const key = 'device_uuid'
+    let uuid = localStorage.getItem(key)
+    if (!uuid) {
+      uuid = `d-${crypto.randomUUID?.() || Math.random().toString(36).slice(2)}-${Date.now()}`
+      localStorage.setItem(key, uuid)
+    }
+    return uuid
+  }
+
+  const scheduleSessionEnd = useCallback(async (ms: number, sid: string) => {
+    if (sessionTimerRef.current) window.clearTimeout(sessionTimerRef.current)
+    sessionTimerRef.current = window.setTimeout(async () => {
+      try {
+        await logConnectionEvent({ session_id: sid, room_code: normalized, event_type: 'ended', detail: { reason: 'timeout' } })
+        await endGuestSession(sid)
+      } catch (err) {
+        console.warn('end session cleanup failed', err)
+      }
+      alert('Your 30-minute guest session has ended. Thanks for trying Read!')
+      location.href = '/start'
+    }, ms)
+  }, [normalized])
 
   const continueToWaiting = async () => {
     if (!passed) {
@@ -188,7 +219,6 @@ export default function Join() {
     } catch (e) { console.warn('Name sync failed', e) }
     stopMeter()
     stopPreview()
-    setPhase('waiting')
 
     try {
       const { data, error } = await getRoomByCode(normalized)
@@ -196,8 +226,44 @@ export default function Join() {
         setError('Room not found')
         return
       }
-      await enterRoom(data.id)
-      // enterRoom will internally initiate the WebRTC connect using room.code
+
+      // Identify device/ip via Edge Function
+      const deviceUUID = getOrCreateDeviceUUID()
+      const idResp = await identifyDevice(deviceUUID)
+      if ('error' in idResp) {
+        setError('Unable to verify device; please try again')
+        return
+      }
+
+      // Start guest session via RPC (server-enforced limits)
+      const started = await guestCheckAndStartSession(normalized, idResp.ip_hash, idResp.device_hash)
+      if ('error' in started) {
+        if (started.error.includes('room_full')) setError('Room is full. Upgrade to add more participants.')
+        else if (started.error.includes('daily_limit_exceeded')) setError('Daily limit reached for this device. Please try again tomorrow.')
+        else setError('Unable to start session. Please try again.')
+        return
+      }
+
+      sessionIdRef.current = started.session_id
+      ;(window as unknown as { __guest_session_id?: string; __guest_room_code?: string }).__guest_session_id = started.session_id
+      ;(window as unknown as { __guest_session_id?: string; __guest_room_code?: string }).__guest_room_code = normalized
+
+      // Metrics: connect_start (after session established)
+      const navAny = navigator as unknown as { connection?: { effectiveType?: string } }
+      await logConnectionEvent({
+        session_id: started.session_id,
+        room_code: normalized,
+        event_type: 'connect_start',
+        detail: { network_type: navAny.connection?.effectiveType || 'unknown', peer_role: started.role }
+      })
+
+      // 30 minutes from RPC start
+      scheduleSessionEnd(30 * 60 * 1000, started.session_id)
+
+      setPhase('waiting')
+
+      await enterRoom(started.room_id)
+      // enterRoom will initiate the Realtime connect using room.code
     } catch (e) {
       console.error('Failed to enter room', e)
       setError('Failed to enter room')
