@@ -342,11 +342,20 @@ export default function Join() {
         }
       }
     }
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible' && (phase === 'waiting' || phase === 'connecting' || phase === 'connected')) {
+        send()
+      }
+    }
     if (phase === 'waiting' || phase === 'connecting' || phase === 'connected') {
       send()
       intervalId = window.setInterval(send, 15000)
+      document.addEventListener('visibilitychange', onVisibility)
     }
-    return () => { if (intervalId) window.clearInterval(intervalId) }
+    return () => {
+      if (intervalId) window.clearInterval(intervalId)
+      document.removeEventListener('visibilitychange', onVisibility)
+    }
   }, [phase, normalized])
 
   useEffect(() => {
@@ -469,7 +478,7 @@ export default function Join() {
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="w-full max-w-6xl h-[70vh] mx-auto relative">
-        <PresenceBadge className="absolute top-4 left-4 z-[110]" />
+        <PresenceBadge className="absolute top-4 right-4 z-[1105]" />
         <button
           onClick={() => toggleFullscreen()}
           className="absolute bottom-4 right-4 z-[1101] px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
