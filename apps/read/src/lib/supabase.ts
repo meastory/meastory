@@ -89,7 +89,11 @@ export async function guestCheckAndStartSession(roomCode: string, ip_hash: strin
       p_ip_hash: ip_hash,
       p_device_hash: device_hash,
     } as unknown as never)
-    if (error) return { error: error.message }
+    if (error) {
+      console.error('guest_check_and_start_session error:', error)
+      const details = (error as unknown as { details?: string; hint?: string }).details || ''
+      return { error: `${error.message}${details ? `: ${details}` : ''}` }
+    }
     const row = (Array.isArray(data) ? data[0] : data) as {
       session_id: string
       room_id: string
@@ -100,6 +104,7 @@ export async function guestCheckAndStartSession(roomCode: string, ip_hash: strin
     if (!row?.session_id) return { error: 'invalid_response' }
     return row
   } catch (e) {
+    console.error('guest_check_and_start_session threw:', e)
     return { error: (e as { message?: string }).message || 'rpc_failed' }
   }
 }

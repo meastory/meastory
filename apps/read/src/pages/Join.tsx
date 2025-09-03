@@ -47,6 +47,20 @@ export default function Join() {
   // Session
   const sessionIdRef = useRef<string | null>(null)
   const sessionTimerRef = useRef<number | null>(null)
+  const sessionEndsAtRef = useRef<number | null>(null)
+  const [remainingMs, setRemainingMs] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (!sessionEndsAtRef.current) return
+    const tick = () => {
+      const now = Date.now()
+      const rem = sessionEndsAtRef.current! - now
+      setRemainingMs(rem > 0 ? rem : 0)
+    }
+    tick()
+    const id = window.setInterval(tick, 1000)
+    return () => window.clearInterval(id)
+  }, [phase])
 
   useEffect(() => {
     if (isConnected) setPhase('connected')
@@ -192,8 +206,15 @@ export default function Join() {
     return uuid
   }
 
-  const scheduleSessionEnd = useCallback(async (ms: number, sid: string) => {
+  const scheduleSessionEnd = useCallback(async (ms: number, sid: string, startedAtIso?: string) => {
+    const params = new URLSearchParams(location.search)
+    const override = params.get('s2_ms')
+    const duration = override ? Math.max(10000, parseInt(override, 10)) : ms
+    const startedAt = startedAtIso ? new Date(startedAtIso).getTime() : Date.now()
+    const endsAt = startedAt + duration
+    sessionEndsAtRef.current = endsAt
     if (sessionTimerRef.current) window.clearTimeout(sessionTimerRef.current)
+    const delay = Math.max(0, endsAt - Date.now())
     sessionTimerRef.current = window.setTimeout(async () => {
       try {
         await logConnectionEvent({ session_id: sid, room_code: normalized, event_type: 'ended', detail: { reason: 'timeout' } })
@@ -201,9 +222,9 @@ export default function Join() {
       } catch (err) {
         console.warn('end session cleanup failed', err)
       }
-      alert('Your 30-minute guest session has ended. Thanks for trying Read!')
+      alert('Your guest session has ended. Thanks for trying Read!')
       location.href = '/start'
-    }, ms)
+    }, delay)
   }, [normalized])
 
   const continueToWaiting = async () => {
@@ -257,8 +278,8 @@ export default function Join() {
         detail: { network_type: navAny.connection?.effectiveType || 'unknown', peer_role: started.role }
       })
 
-      // 30 minutes from RPC start
-      scheduleSessionEnd(30 * 60 * 1000, started.session_id)
+      // 30 minutes from earliest start (or QA override)
+      scheduleSessionEnd(30 * 60 * 1000, started.session_id, started.started_at)
 
       setPhase('waiting')
 
@@ -379,8 +400,14 @@ export default function Join() {
   }
 
   if (phase === 'waiting') {
+    const mins = remainingMs != null ? Math.floor(remainingMs / 60000) : null
+    const secs = remainingMs != null ? Math.floor((remainingMs % 60000) / 1000) : null
+    const showPrompt = remainingMs != null && remainingMs <= 5 * 60 * 1000
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative">
+        <div className="absolute top-4 right-4 z-[1102] text-sm bg-white/10 border border-white/20 rounded px-2 py-1">
+          {remainingMs != null ? `Time left: ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}` : '—'}
+        </div>
         <div className="absolute bottom-4 right-4 z-[1101]">
           <button
             onClick={() => toggleFullscreen()}
@@ -391,6 +418,9 @@ export default function Join() {
         </div>
         <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow space-y-4 text-center">
           <h1 className="text-3xl font-bold">Waiting…</h1>
+          {showPrompt && (
+            <div className="text-yellow-300 text-sm">About 5 minutes remaining in this guest session</div>
+          )}
           <div className="text-gray-300">Share this link with the other device:</div>
           <div className="bg-gray-800 rounded p-3 break-all select-all text-sm">{inviteUrl}</div>
         </div>
