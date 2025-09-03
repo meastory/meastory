@@ -131,3 +131,10 @@ export async function logConnectionEvent(params: {
 export async function endGuestSession(sessionId: string): Promise<void> {
   await supabase.rpc('rpc_end_guest_session' as unknown as never, { p_session_id: sessionId } as unknown as never)
 }
+
+export async function heartbeatGuestSession(sessionId: string, roomCode: string): Promise<void> {
+  await supabase.rpc('rpc_heartbeat_guest_session' as unknown as never, {
+    p_session_id: sessionId,
+    p_room_code: roomCode,
+  } as unknown as never)
+}

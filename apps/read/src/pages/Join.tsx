@@ -326,6 +326,44 @@ export default function Join() {
     }
   }, [currentStory, showPicker])
 
+  useEffect(() => {
+    // Heartbeat while in waiting/connecting/connected phases
+    const globals = (window as unknown as { __guest_session_id?: string; __guest_room_code?: string })
+    let intervalId: number | null = null
+    const send = async () => {
+      const sid = sessionIdRef.current || globals.__guest_session_id
+      const rc = normalized
+      if (sid) {
+        try {
+          const { heartbeatGuestSession } = await import('../lib/supabase')
+          await heartbeatGuestSession(sid, rc)
+        } catch (e) {
+          console.warn('heartbeat failed', e)
+        }
+      }
+    }
+    if (phase === 'waiting' || phase === 'connecting' || phase === 'connected') {
+      send()
+      intervalId = window.setInterval(send, 15000)
+    }
+    return () => { if (intervalId) window.clearInterval(intervalId) }
+  }, [phase, normalized])
+
+  useEffect(() => {
+    // End session on unload to avoid stale entries
+    const onUnload = async () => {
+      const sid = sessionIdRef.current
+      if (!sid) return
+      try {
+        await endGuestSession(sid)
+      } catch (e) {
+        console.warn('end session on unload failed', e)
+      }
+    }
+    window.addEventListener('beforeunload', onUnload)
+    return () => window.removeEventListener('beforeunload', onUnload)
+  }, [])
+
   if (phase === 'preflight') {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative">
