@@ -4,16 +4,41 @@
 <svg
    version="1.1"
    id="svg1"
-   width="742.10895"
-   height="613.79901"
-   viewBox="0 0 742.10895 613.79901"
+   width="768"
+   height="768"
+   viewBox="0 0 768 768"
+   sodipodi:docname="read-logo.svg"
+   inkscape:export-filename="../../../../../read/public/read-logo-512.svg"
+   inkscape:export-xdpi="64"
+   inkscape:export-ydpi="64"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.38449068"
+     inkscape:cx="370.62017"
+     inkscape:cy="305.59908"
+     inkscape:window-width="1608"
+     inkscape:window-height="922"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
   <defs
      id="defs1" />
   <g
      id="g1"
-     transform="translate(-130.8557,-184.16263)">
+     transform="translate(-117.71017,-107.25186)">
     <g
        id="g17"
        style="display:inline">

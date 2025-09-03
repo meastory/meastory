@@ -6,7 +6,7 @@ import StoryOverlay from '../components/StoryOverlay'
 import StoryPlayer from '../components/StoryPlayer'
 import InRoomStoryPicker from '../components/InRoomStoryPicker'
 import { useRoomStore } from '../stores/roomStore'
-import { getRoomByCode } from '../lib/supabase'
+import { getRoomByCode, identifyDevice, guestCheckAndStartSession, logConnectionEvent, endGuestSession } from '../lib/supabase'
 import PresenceBadge from '../components/PresenceBadge'
 import { useFullscreen } from '../hooks/useFullscreen'
 
@@ -43,6 +43,24 @@ export default function Join() {
 
   const inviteUrl = useMemo(() => `${location.origin}/join/${normalized}`, [normalized])
   const { isFullscreen, toggleFullscreen } = useFullscreen()
+
+  // Session
+  const sessionIdRef = useRef<string | null>(null)
+  const sessionTimerRef = useRef<number | null>(null)
+  const sessionEndsAtRef = useRef<number | null>(null)
+  const [remainingMs, setRemainingMs] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (!sessionEndsAtRef.current) return
+    const tick = () => {
+      const now = Date.now()
+      const rem = sessionEndsAtRef.current! - now
+      setRemainingMs(rem > 0 ? rem : 0)
+    }
+    tick()
+    const id = window.setInterval(tick, 1000)
+    return () => window.clearInterval(id)
+  }, [phase])
 
   useEffect(() => {
     if (isConnected) setPhase('connected')
@@ -164,6 +182,9 @@ export default function Join() {
       const s = previewStreamRef.current
       s?.getTracks()?.forEach(t => t.stop())
       previewStreamRef.current = null
+      // Clear timer
+      if (sessionTimerRef.current) window.clearTimeout(sessionTimerRef.current)
+      sessionTimerRef.current = null
     }
   }, [])
 
@@ -174,6 +195,37 @@ export default function Join() {
     const videoOk = selectedCamera ? (videoTracks.some(t => t.readyState === 'live') || videoTracks.length > 0) : true
     return audioOk && videoOk
   }, [previewStream, selectedCamera])
+
+  const getOrCreateDeviceUUID = () => {
+    const key = 'device_uuid'
+    let uuid = localStorage.getItem(key)
+    if (!uuid) {
+      uuid = `d-${crypto.randomUUID?.() || Math.random().toString(36).slice(2)}-${Date.now()}`
+      localStorage.setItem(key, uuid)
+    }
+    return uuid
+  }
+
+  const scheduleSessionEnd = useCallback(async (ms: number, sid: string, startedAtIso?: string) => {
+    const params = new URLSearchParams(location.search)
+    const override = params.get('s2_ms')
+    const duration = override ? Math.max(10000, parseInt(override, 10)) : ms
+    const startedAt = startedAtIso ? new Date(startedAtIso).getTime() : Date.now()
+    const endsAt = startedAt + duration
+    sessionEndsAtRef.current = endsAt
+    if (sessionTimerRef.current) window.clearTimeout(sessionTimerRef.current)
+    const delay = Math.max(0, endsAt - Date.now())
+    sessionTimerRef.current = window.setTimeout(async () => {
+      try {
+        await logConnectionEvent({ session_id: sid, room_code: normalized, event_type: 'ended', detail: { reason: 'timeout' } })
+        await endGuestSession(sid)
+      } catch (err) {
+        console.warn('end session cleanup failed', err)
+      }
+      alert('Your guest session has ended. Thanks for trying Read!')
+      location.href = '/start'
+    }, delay)
+  }, [normalized])
 
   const continueToWaiting = async () => {
     if (!passed) {
@@ -188,7 +240,6 @@ export default function Join() {
     } catch (e) { console.warn('Name sync failed', e) }
     stopMeter()
     stopPreview()
-    setPhase('waiting')
 
     try {
       const { data, error } = await getRoomByCode(normalized)
@@ -196,8 +247,44 @@ export default function Join() {
         setError('Room not found')
         return
       }
-      await enterRoom(data.id)
-      // enterRoom will internally initiate the WebRTC connect using room.code
+
+      // Identify device/ip via Edge Function
+      const deviceUUID = getOrCreateDeviceUUID()
+      const idResp = await identifyDevice(deviceUUID)
+      if ('error' in idResp) {
+        setError('Unable to verify device; please try again')
+        return
+      }
+
+      // Start guest session via RPC (server-enforced limits)
+      const started = await guestCheckAndStartSession(normalized, idResp.ip_hash, idResp.device_hash)
+      if ('error' in started) {
+        if (started.error.includes('room_full')) setError('Room is full. Upgrade to add more participants.')
+        else if (started.error.includes('daily_limit_exceeded')) setError('Daily limit reached for this device. Please try again tomorrow.')
+        else setError('Unable to start session. Please try again.')
+        return
+      }
+
+      sessionIdRef.current = started.session_id
+      ;(window as unknown as { __guest_session_id?: string; __guest_room_code?: string }).__guest_session_id = started.session_id
+      ;(window as unknown as { __guest_session_id?: string; __guest_room_code?: string }).__guest_room_code = normalized
+
+      // Metrics: connect_start (after session established)
+      const navAny = navigator as unknown as { connection?: { effectiveType?: string } }
+      await logConnectionEvent({
+        session_id: started.session_id,
+        room_code: normalized,
+        event_type: 'connect_start',
+        detail: { network_type: navAny.connection?.effectiveType || 'unknown', peer_role: started.role }
+      })
+
+      // 30 minutes from earliest start (or QA override)
+      scheduleSessionEnd(30 * 60 * 1000, started.session_id, started.started_at)
+
+      setPhase('waiting')
+
+      await enterRoom(started.room_id)
+      // enterRoom will initiate the Realtime connect using room.code
     } catch (e) {
       console.error('Failed to enter room', e)
       setError('Failed to enter room')
@@ -238,6 +325,44 @@ export default function Join() {
       setShowPicker(false)
     }
   }, [currentStory, showPicker])
+
+  useEffect(() => {
+    // Heartbeat while in waiting/connecting/connected phases
+    const globals = (window as unknown as { __guest_session_id?: string; __guest_room_code?: string })
+    let intervalId: number | null = null
+    const send = async () => {
+      const sid = sessionIdRef.current || globals.__guest_session_id
+      const rc = normalized
+      if (sid) {
+        try {
+          const { heartbeatGuestSession } = await import('../lib/supabase')
+          await heartbeatGuestSession(sid, rc)
+        } catch (e) {
+          console.warn('heartbeat failed', e)
+        }
+      }
+    }
+    if (phase === 'waiting' || phase === 'connecting' || phase === 'connected') {
+      send()
+      intervalId = window.setInterval(send, 15000)
+    }
+    return () => { if (intervalId) window.clearInterval(intervalId) }
+  }, [phase, normalized])
+
+  useEffect(() => {
+    // End session on unload to avoid stale entries
+    const onUnload = async () => {
+      const sid = sessionIdRef.current
+      if (!sid) return
+      try {
+        await endGuestSession(sid)
+      } catch (e) {
+        console.warn('end session on unload failed', e)
+      }
+    }
+    window.addEventListener('beforeunload', onUnload)
+    return () => window.removeEventListener('beforeunload', onUnload)
+  }, [])
 
   if (phase === 'preflight') {
     return (
@@ -313,8 +438,14 @@ export default function Join() {
   }
 
   if (phase === 'waiting') {
+    const mins = remainingMs != null ? Math.floor(remainingMs / 60000) : null
+    const secs = remainingMs != null ? Math.floor((remainingMs % 60000) / 1000) : null
+    const showPrompt = remainingMs != null && remainingMs <= 5 * 60 * 1000
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative">
+        <div className="absolute top-4 right-4 z-[1102] text-sm bg-white/10 border border-white/20 rounded px-2 py-1">
+          {remainingMs != null ? `Time left: ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}` : '—'}
+        </div>
         <div className="absolute bottom-4 right-4 z-[1101]">
           <button
             onClick={() => toggleFullscreen()}
@@ -325,6 +456,9 @@ export default function Join() {
         </div>
         <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow space-y-4 text-center">
           <h1 className="text-3xl font-bold">Waiting…</h1>
+          {showPrompt && (
+            <div className="text-yellow-300 text-sm">About 5 minutes remaining in this guest session</div>
+          )}
           <div className="text-gray-300">Share this link with the other device:</div>
           <div className="bg-gray-800 rounded p-3 break-all select-all text-sm">{inviteUrl}</div>
         </div>
@@ -353,6 +487,14 @@ export default function Join() {
       >
         📚
       </button>
+      {/* Countdown timer next to library button */}
+      <div className="fixed top-6 left-40 z-[101] text-sm">
+        {remainingMs != null && (
+          <div className="px-2 py-1 rounded bg-white/10 border border-white/20">
+            {`${String(Math.floor(remainingMs / 60000)).padStart(2,'0')}:${String(Math.floor((remainingMs % 60000) / 1000)).padStart(2,'0')}`}
+          </div>
+        )}
+      </div>
       {showPicker && (
         <InRoomStoryPicker onClose={() => setShowPicker(false)} />
       )}

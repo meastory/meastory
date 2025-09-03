@@ -1,0 +1,296 @@
+{
+  "id": "jack-beanstalk-donaldson",
+  "title": "Jack and the Beanstalk",
+  "ageRange": [3, 8],
+  "themes": ["friendship", "courage", "community", "kindness", "problem-solving"],
+  "scenes": [
+    {
+      "id": "opening-1",
+      "background": "cottage_morning",
+      "text": "Wake up, wake up, the morning sun is calling! Jack stretches wide and gives a great big yawn. Down in the kitchen - sniff, sniff, sniff - something's cooking, but the pan looks rather small, the cupboard rather drawn.\n\n\"Good morning, my dear boy,\" says Mother Rose so sweetly, her smile as warm as butter, twice as bright as day. She stirs the little pot - stir, stir, stir - so gently, but Jack can see there's not much put away.\n\n\"Don't worry,\" Mother Rose says, smoothing down his tousled hair, \"We have each other, and that's treasure, don't you see? We have love in our hearts and a roof above our heads, we have dear Daisy's milk and you and me!\"\n\nBut Jack touches the soft bracelet that Mama made with care, and whispers to himself with hope so true: \"I want to help our family! I can do it, Mama dear! I'll find a way to help, I know I'll see us through!\"",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "opening-2" }
+      ]
+    },
+    {
+      "id": "opening-2",
+      "background": "cottage_garden",
+      "text": "Out in the garden where the dewdrops dance and sparkle, like tiny diamonds kissed by morning light, Jack goes to visit Daisy, dear sweet Daisy, with patches brown and white, oh what a sight!\n\n\"Here's your breakfast, Daisy girl,\" says Jack with loving kindness, but oh my stars! The basket's nearly bare! Just golden strands, so few and far between them, hardly enough for a mouse to share.\n\nDaisy moos softly - \"Moo-ooo, moo-ooo\" - gentle as a whisper, she nuzzles Jack's shoulder with her nose so sweet. Daisy always knows when Jack is feeling worried, she makes his heart feel warm, complete.\n\n\"Oh my goodness, Daisy,\" Jack whispers, arms around her, \"How can we help dear Mama? What can we do? We need food for our bellies, wood for our roof, we need something, anything, to see us through!\"\n\nDaisy tilts her head with eyes so wise and knowing, as if she hears each worry, each hope, each care. She listens to every word that Jack is saying, and shows him love is always there.",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "opening-3" }
+      ]
+    },
+    {
+      "id": "opening-3",
+      "background": "cottage_path",
+      "text": "Out steps Mother Rose with her apron tied so neatly, with little pockets full of treasured things - bits of string and pebbles smooth and pretty, that Jack finds on his wanderings.\n\n\"I've been thinking, my dear boy,\" she says so gently, sitting on the step of weathered wood. \"Perhaps we'll take dear Daisy to the market, someone there might trade her - someone good.\"\n\nJack's heart goes flip and flop inside his chest, trade Daisy? Sweet and gentle Daisy true? But he sees Mama's face, so kind but weary, and knows what he must do.\n\n\"For our family,\" he whispers, standing tall and brave, touching the bracelet soft around his arm. \"We'll find the very best person for you, Daisy, someone who'll keep you safe from harm.\"\n\n\"Someone who'll love you, treat you oh so kindly, someone who needs a cow as sweet as you. And maybe, just maybe, they'll help us too, dear Daisy, help our little family make it through.\"",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "setup-1" }
+      ]
+    },
+    {
+      "id": "setup-1",
+      "background": "country_road",
+      "text": "Down the winding country road they go together, Jack and Daisy walking side by side. Step, step, step goes Jack upon the pathway, clip, clop, clip, clop, with Daisy as his guide.\n\nThe spring morning's painted bright with colors - yellow buttercups that dance and sway, white clouds puffing soft across the blue sky, little birds that sing \"Tweet-a-lee, tweet-a-lay!\"\n\nBut Jack has butterflies that flip and flutter, dancing somersaults inside his tummy tight. \"What if we can't find someone nice enough, dear Daisy? What if nothing turns out right?\"\n\n\"What if they don't know you're extra special? What if they don't scratch your ears just so? What if they don't know you're scared of thunder?\" Oh, the worries come and go!\n\nDaisy moos so soft - \"Moo-ooo, moo-ooo\" - walking closer, brushing Jack's small arm. Sometimes it seems she understands each worry, each hope and fear, and keeps him safe from harm.",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "setup-2" }
+      ]
+    },
+    {
+      "id": "setup-2",
+      "background": "crossroads",
+      "text": "At the crossroads where three paths meet and mingle, like spokes upon a great big wheel of ways, Jack sees someone walking, walking, walking toward them, step, step, step through the morning's golden rays.\n\nA man with clothes that shimmer, shift, and sparkle, now raggedy rough, now silky smooth and fine, the light keeps dancing, changing how they look, like magic woven, line by line.\n\nBut oh! It's his eyes that catch Jack's attention, eyes that twinkle, twinkle, bright and true, like stars reflected in a peaceful pond, kind and wise and full of secrets too.\n\n\"Ah,\" says the stranger with a crinkly smile, \"A boy with a good heart, I can see! It shines right out of both of you, so bright, warm as sunshine, bright as bright can be.\"\n\nHe steps closer with his voice like music, honey-sweet and gentle as can be: \"I am Sage, and I think - yes, I think - I might help your family!\"",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "dp1-choice" }
+      ]
+    },
+    {
+      "id": "dp1-choice",
+      "background": "crossroads_beans",
+      "text": "Sage reaches in his worn leather pouch so gently, a pouch that's traveled here and traveled there, and out he draws five beans - oh what a wonder! - the most beautiful beans beyond compare!\n\nNot ordinary beans, oh no, not these ones! These beans glow soft with light that's all their own, like fireflies dancing, like the first bright star, the most magical beans that Jack has known!\n\nThey pulse and shimmer in Sage's open palm, as if they have little hearts that beat, beat, beat, beat with hope and possibility, making Jack's own heart skip sweet.\n\n\"These are magic beans,\" says Sage with mystery, his voice like promises and dreams come true. \"Plant them with hope and water them with kindness, they'll grow to help your family through and through.\"\n\n\"I'll trade them for your cow, these five beans glowing, five magic beans for one dear Daisy sweet.\" Jack looks at beans, then Daisy, then at Sage, his heart goes pit-a-pat, pit-a-pat, pit-a-pat, this choice will make his story complete!",
+      "choices": [
+        { "label": "Can you tell me more about these beans first?", "nextSceneId": "branch-a-1" },
+        { "label": "My heart says you're someone I can trust!", "nextSceneId": "branch-b-1" }
+      ]
+    },
+    {
+      "id": "branch-a-1",
+      "background": "crossroads_questions",
+      "text": "Jack takes a breath and touches Mama's bracelet, soft and warm around his little wrist. \"What would be the kindest thing?\" he wonders, \"What's the wisest thing? What might I have missed?\"\n\nHe looks at Sage with eyes so bright and thoughtful, \"Can you help me understand?\" says he. \"How do magic beans work their wonder? Will they truly help my family?\"\n\n\"And what about dear Daisy? Will she be happy? Will you give her hay so fresh and sweet? Will you scratch her ears the way she likes it? Will you keep her safe from head to feet?\"\n\nSage's eyes grow brighter, bright as candles, \"Ah, excellent questions! The very best! Magic beans grow strong when planted with hope, and watered with kindness - that's the test!\"\n\nHe kneels down low, close to Jack's level, \"They'll become whatever you need most - food or friendship, shelter or adventure, the magic listens to your heart, almost like a ghost!\"\n\n\"And don't you worry about dear Daisy, she'll have adventures, wonderful and new! She'll be loved and cared for every day, I promise this to you, I do, I do!\"",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "branch-a-2" }
+      ]
+    },
+    {
+      "id": "branch-a-2",
+      "background": "crossroads_thinking",
+      "text": "Jack thinks so carefully, so very thoughtfully, touching Mama's bracelet, soft and true. He closes his eyes just for a moment, \"Let me think with my heart,\" says he, \"like Mama taught me to.\"\n\nHe pictures Mama's face when he comes home, her smile so bright when good things come their way. He imagines what the magic beans might bring them - food and joy and hope for every day.\n\n\"Maybe we could have enough to eat! Maybe fix our roof so snug and tight! Maybe something even more amazing - something wonderful and bright!\"\n\n\"I think...\" says Jack, opening his eyes slowly, looking at the beans that glow and gleam, \"I think these beans want to help our family, like magic from a dream!\"\n\n\"I can feel it, warm and soft like sunshine, tingly on my skin, so good and true. This could help our family in ways amazing - ways I never knew, never knew!\"\n\nDaisy moos so softly - \"Moo-ooo, moo-ooo\" - gentle sounds of love that seem to say, \"Yes, dear Jack, I think you're making wise choices, everything will be okay!\"\n\nSage nods with approval, eyes a-twinkling, \"Wisdom mixed with wonder - what a sight! You're thinking with your head AND with your heart, Jack, and that makes everything just right!\"",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "branch-a-3" }
+      ]
+    },
+    {
+      "id": "branch-a-3",
+      "background": "crossroads_trade",
+      "text": "\"I choose to trust you,\" Jack says clearly, his voice so sure and strong and true. He offers Daisy's rope with steady hands, \"Thank you for helping me think it through.\"\n\n\"Thank you for answering all my questions, thank you for helping me understand. You showed me how to choose so wisely\" - and Sage takes the rope with gentle hand.\n\nGently, softly, Sage places the five beans in Jack's palm - oh, what a feeling! Warmer than toast, warmer than hugs, warm like love that's healing.\n\n\"Wisdom and kindness all together, the most powerful magic in the world!\" says Sage. \"Plant these beans when the sun says goodnight, and trust what grows upon your stage.\"\n\n\"Water them with hope and happy thinking, what grows will surprise and make you smile!\" As Sage and Daisy start walking away, Daisy looks back after a little while.\n\n\"Moo-ooo, moo-ooo,\" she calls so gently, the sweetest, softest goodbye sound. Jack waves and calls, \"Be happy, dear Daisy! I love you, safe and sound!\"\n\nAnd somehow Jack feels peaceful and excited, both feelings dancing in his heart. Sometimes the very best adventures are the ones that thoughtfully start.",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "dp2-a-choice" }
+      ]
+    },
+    {
+      "id": "branch-b-1",
+      "background": "crossroads_wonder",
+      "text": "Jack looks at the magical beans so glowing, like little suns in Sage's open palm, and something wonderful starts growing in his heart - so warm and calm!\n\nA feeling bright like Christmas morning, mixed with sunshine, spring, and cheer! \"Oh my goodness!\" Jack says, eyes wide with wonder, \"I can feel these beans are dear!\"\n\n\"They want to help us! They're warm and friendly! They're magical in the very best way!\" He looks at Sage with trust so perfect, \"My heart knows just what to say!\"\n\n\"My heart is telling me this is right, though I don't know how beans work their magic. It feels like sunshine, hope, and happiness all stirred together - nothing tragic!\"\n\nSage nods with his eyes like twinkling stars, \"Sometimes hearts know what minds can't see. Your heart is wise, dear boy, so very wise - it feels the beans' kind energy!\"\n\n\"It feels their goodness, feels their caring, feels the magic, warm and bright!\" The beans pulse brighter, glow more golden, as if they're filled with Jack's delight!",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "branch-b-2" }
+      ]
+    },
+    {
+      "id": "branch-b-2",
+      "background": "crossroads_touching",
+      "text": "Jack reaches out so carefully, so gently, with the tip of his finger, soft and small. He touches one bean - oh, what a feeling! - the most magical feeling of all!\n\nWarm and smooth like summer sunshine, like it's been kissed by light all day, full of hope and bright tomorrows, full of joy in every way!\n\n\"I don't know what will happen,\" Jack whispers, his voice all full of wonder true, \"but something deep inside me says it's perfect, says these beans know what to do!\"\n\n\"These beans feel... friendly! Kind and caring! Like they want our family to be glad! Like they're excited to help and heal us, to turn our good times from the sad!\"\n\nDaisy steps closer, sniffs the beans gently, with her soft and perfect nose. Then she moos her sweet approval - \"Moo-ooo!\" - like she's saying, \"Yes! Jack knows!\"\n\n\"Yes, dear Jack, these beans are good ones! Yes, these beans will help us through!\" Sage chuckles warm and musical, \"Magic knows magic - that's so true!\"\n\n\"Kind hearts know other kind hearts always, and magic beans know magic boys!\" The beans pulse bright with happy promise, full of wonder, full of joys!",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "branch-b-3" }
+      ]
+    },
+    {
+      "id": "branch-b-3",
+      "background": "crossroads_heart_trade",
+      "text": "\"For our family!\" Jack says with a smile so bright, like sunshine breaking through the morning mist. He offers Daisy's rope without a worry, no hesitation to be missed!\n\n\"Thank you for bringing magic to help us! Thank you for finding us when hope was small! Thank you for these beans so warm and glowing!\" - the happiest thank you of all!\n\nSage places the beans in Jack's palm gently, and oh! They feel like holding bits of sun! Like little pieces of pure sunshine, like joy that's only just begun!\n\n\"Your brave heart, your kind spirit, dear Jack, that's the real magic, don't you see? These beans will help that magic grow bigger, strong as strong can be!\"\n\nHe leans down close and whispers softly, like sharing secrets sweet and true: \"Plant them when the world grows quiet, trust what grows - it's meant for you!\"\n\nAs Daisy walks away with Sage beside her, she turns and moos the happiest sound: \"Moo-ooo! Moo-ooo!\" - like she's saying, \"Joy and love will come around!\"\n\nJack waves back with heart so full of gladness, \"Thank you, Daisy! Adventures wait for you!\" And somehow he knows deep down inside him that everything will work out true.\n\nHis heart holds joy and peace and wonder, all dancing together, light and free. Sometimes the very best magic happens when hearts trust what's meant to be!",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "dp2-b-choice" }
+      ]
+    },
+    {
+      "id": "dp2-a-choice",
+      "background": "cottage_garden_sunset",
+      "text": "Jack planted the beans when the sun said goodnight, patting the earth so soft and brown. \"Grow strong, little beans, help our family,\" he whispered as the stars came down.\n\nAnd oh my goodness, by morning's light - what a sight to see, what a sight! Green shoots poking up through the soil, like little fingers reaching bright!\n\nPoke, poke, poke - up they come! Growing taller by the hour! \"Let me think about this carefully,\" says Jack, \"This shows such magic power!\"\n\nBy afternoon - there's no doubt at all - a beanstalk's growing in their yard! Growing taller every minute - up, up, up! Leaves like plates, stem strong and hard!\n\nJack touches his bracelet, thinks so thoughtfully, \"This is magical, this is grand! But what should I do with this wonder? I need to make the wisest plan!\"",
+      "choices": [
+        { "label": "I should tell Mama and ask what she thinks we should do together", "nextSceneId": "journey-1a2a-1" },
+        { "label": "I should explore a little first, then come back and tell Mama everything", "nextSceneId": "journey-1a2b-1" }
+      ]
+    },
+    {
+      "id": "dp2-b-choice",
+      "background": "cottage_garden_magical",
+      "text": "Jack planted the beans when the world grew quiet, his heart so full of hope and cheer. \"Grow into something wonderful, dear beans!\" he whispered for all the world to hear.\n\nAnd his heart was right - oh yes, it was! - they're magical through and through! By morning, green shoots dance upward, like they can't wait to say \"How do you do!\"\n\nBy afternoon - what joy, what wonder! - a real beanstalk reaching high! Growing taller every minute - up, up, up! - toward the fluffy clouds in the sky!\n\nWith leaves that sparkle in the sunshine, and a stem so strong and true, \"My heart says this is adventure calling, adventure meant for me and you!\"\n\nJack feels that warm, excited feeling, the same feeling from the beans so bright. The beanstalk shimmers with possibility, with promise and with light!\n\n\"My heart says this is meant for our family, this magic growing in our yard!\" But what should he do with this wonder? The choice feels important, but not hard!",
+      "choices": [
+        { "label": "I should share this amazing discovery with Mama right away!", "nextSceneId": "journey-1b2a-1" },
+        { "label": "My heart says I should climb up and see what's there!", "nextSceneId": "journey-1b2b-1" }
+      ]
+    },
+    {
+      "id": "journey-1a2a-1",
+      "background": "cottage_interior",
+      "text": "Jack goes inside to find his dear mama, mending socks with stitches small and neat. \"Mama,\" he says, his voice full of wonder, but calm and thoughtful, gentle and sweet.\n\n\"Something wonderful is happening! Something magical and new! The beans that Sage gave me are growing - a beanstalk, growing tall and true!\"\n\nMother Rose looks up from her mending, her needle stopping mid-way through. \"A magical beanstalk?\" whispers Mama, \"In our garden? Is it really true?\"\n\n\"Yes! Come and see! Let's think together about what this means for you and me. Let's wonder what this magic might bring us, what help this beanstalk's meant to be!\"\n\nJack takes her hand so gently, gently, leading her to the window bright. When Mama sees that great big beanstalk reaching up toward the morning light,\n\nHer eyes grow wide as summer saucers, she puts her arm around his shoulder. \"Oh my dear boy, what a good choice! My wise son's growing older!\"\n\n\"And how thoughtful to include me, in deciding what to do. Two hearts together make brave choices, two minds make dreams come true!\"",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "journey-1a2a-2" }
+      ]
+    },
+    {
+      "id": "journey-1a2a-2",
+      "background": "cottage_garden_planning",
+      "text": "Jack and Mother Rose stand together, in their little garden, hand in hand, looking up, up, up at the beanstalk - taller than their cottage, oh so grand!\n\nTaller than the biggest tree they know, reaching up into the clouds so white! \"What do you think it leads to, Mama?\" Jack asks, holding Mama's hand tight.\n\nMother Rose thinks carefully, so carefully, just like she taught her boy to do. \"Let's be thoughtful about this magical gift, this wonder that's grown for me and you.\"\n\n\"If we climb up together, side by side, we can keep each other safe and sound. We can see what help this beanstalk magic might bring - what good can be found.\"\n\nShe kneels down low and looks in his eyes, her voice so gentle, warm, and true: \"Two hearts are braver than just one heart, two minds are wiser too!\"\n\n\"Two people taking care of each other can handle any adventure that comes. What do you say, my brave, thoughtful boy? Shall we see where this magic leads us?\"\n\nJack squeezes her hand with joy and courage, \"Together, Mama! We can do anything!\" The beanstalk rustles its great big leaves, as if it's ready for the adventure they'll bring!\n\n\"Come on up! Come and see!\" it whispers, \"Come discover what awaits above!\" Two hearts together, brave and ready, climbing up with hope and love!",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "journey-1a2a-3" }
+      ]
+    },
+    {
+      "id": "journey-1a2a-3",
+      "background": "beanstalk_climbing_together",
+      "text": "Up, up, up the magical beanstalk, Jack and his dear mama climb! Each enormous leaf's a perfect step - step, step, step in perfect time!\n\nThe beanstalk feels so strong beneath them, welcoming and safe and sound. \"I can do it, Mama, with you here!\" Jack says, leaving the ground!\n\n\"That's right, my brave and thoughtful boy,\" Mother Rose says with love so true, \"We're doing this together, side by side, step by step, me and you!\"\n\nHigher, higher, up they go, leaf by leaf and heart by heart! Through the soft white tickly clouds that make them giggle from the start!\n\nThe beanstalk sways so gently, gently - rock, rock, rock - like a magical ride, the safest, most wonderful journey ever, with love and courage as their guide!\n\nAnd then - oh my! - what do they see through the clouds so white and bright? A castle! A real castle with towers! What a marvelous, magical sight!\n\nWindows glowing warm and golden, flags that flutter in the breeze! \"We did it together!\" Mother Rose says proudly, hugging Jack among the trees.\n\n\"Look what we discovered, brave boy! Look what teamwork helped us find! Now let's see what friends we'll make here, with our hearts so warm and kind!\"",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "dp3-communication" }
+      ]
+    },
+    {
+      "id": "journey-1a2b-1",
+      "background": "beanstalk_base",
+      "text": "Jack walks around the great big beanstalk, looking carefully from every side, from here to there and there to here, with thoughtful steps so slow and wide.\n\nHe touches the thick green stem so gently - solid as a tree trunk, strong and true! He tests one leaf with his careful foot - strong as wood, and sturdy too!\n\n\"Let me think with my heart about this,\" he says to himself, just like Mama taught, \"What would be the wisest thing to do? What's the kindest, most thoughtful thought?\"\n\nThe beanstalk feels so safe and welcoming, like it wants him to discover more, like it's saying, \"Come up, careful Jack! See what I've been growing for!\"\n\n\"I'll climb up just a little way,\" he decides, \"just to see what might be there. Then I'll come back and tell dear Mama everything with love and care!\"\n\nStep by step and leaf by leaf, careful, curious, up he goes, the beanstalk feels so good beneath him - up, up, up his courage grows!\n\nEach step feels safe and right and proper, like the beanstalk's taking care, \"I'm exploring just a little, just to see what's up there!\"\n\nThoughtful Jack with careful planning, wise beyond his years and size, taking time to learn and wonder, growing brave and growing wise!",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "journey-1a2b-2" }
+      ]
+    },
+    {
+      "id": "journey-1a2b-2",
+      "background": "beanstalk_castle_view",
+      "text": "Higher and higher Jack climbs up, through clouds so soft and white, that tickle and swirl like wispy dreams, making everything feel just right!\n\nAnd then - what's that through the misty clouds? What's that he can see? \"Oh my goodness!\" Jack whispers softly, \"What can that possibly be?\"\n\nA castle! A real, true castle there, with towers tall and proud! With colorful flags that flutter, flutter, dancing above the cloud!\n\nBut it's not scary, dark, or frightening, like castles in some tales - oh no! This castle looks so friendly, with light that never fails!\n\nWarm golden light from every window, glowing soft and bright, \"This castle looks grand but welcoming, a truly lovely sight!\"\n\nJack holds tight to the strong beanstalk, and thinks so carefully, so well, \"This must be where someone special lives, someone with stories to tell!\"\n\n\"I should learn more about this place, before I bring Mama here. What would be the kindest thing to do? The most thoughtful and most dear?\"\n\nThe castle shimmers warm and golden, and he can hear such gentle sounds - someone humming, soft and wistful, as lonely music rounds.\n\n\"A little lonely, but hopeful too, like someone who'd like a friend. I think there's magic waiting here, a story without end!\"",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "journey-1a2b-3" }
+      ]
+    },
+    {
+      "id": "journey-1a2b-3",
+      "background": "castle_entrance_thoughtful",
+      "text": "Jack reaches the very top at last, standing on a cloud so white, like cotton balls and marshmallows, soft and fluffy, pure delight!\n\nBefore him stands the giant castle, doors wide open, welcoming and free, as if they're waiting for a visitor, as if they're waiting just for he!\n\nFrom inside comes a gentle sound, a tune both sad and sweet, someone humming all alone, to their own lonely beat.\n\n\"What would be the kindest thing?\" he asks, touching Mama's bracelet soft, \"The most thoughtful, caring thing to do?\" His voice both low and oft.\n\nHe listens close and hears the footsteps, enormous steps that pace around - pace, pace, pace through the castle, such a lonesome, wistful sound.\n\nThe humming sounds so very lonely, like someone wishing for a friend, someone hoping, someone dreaming of a loneliness to end.\n\n\"Maybe someone here needs kindness, maybe someone needs a friend. I should say hello politely, see if broken hearts can mend.\"\n\n\"That's what Mama would do surely, she'd be thoughtful, kind, and true. She'd offer help with gentle caring, see what good that she could do.\"\n\nTaking breath both deep and steady, Jack straightens up his shoulders square, ready to meet whoever's lonely, ready to show he truly cares.\n\n\"I'll introduce myself so nicely, with respect and friendship true. Sometimes the best adventures start when caring hearts meet someone new!\"",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "journey-1a2b-4" }
+      ]
+    },
+    {
+      "id": "journey-1a2b-4",
+      "background": "beanstalk_descent",
+      "text": "Jack calls out toward the castle gently, in his kindest, friendliest voice so true: \"Hello there! I'll be right back, I promise! I want to bring someone special to meet you!\"\n\n\"Someone who's wise and kind and caring, someone with a heart so warm! We'll come back up together shortly, safe from any harm!\"\n\nThen down the beanstalk Jack goes climbing, step by careful, thoughtful step, his heart is beating fast with excitement, full of joy he can't forget!\n\nAll the wonderful things he has to tell Mama, all the amazing sights he's seen! A castle in the clouds above them, like something from a dream!\n\nWhen he reaches the soft, sweet ground, he runs toward their cottage door, \"Mama! Mama! I found something wonderful! Something amazing and so much more!\"\n\n\"I went exploring, safe and careful, just like you taught me to do! There's a castle with someone lonely, someone kind, I'm sure it's true!\"\n\n\"Someone who sounds like they need friendship, someone who hums sad, gentle songs. We have to go up there together, that's where our family belongs!\"\n\nMother Rose's eyes light bright with wonder, shining with love and pride so true: \"My thoughtful boy, you went exploring, then came back to share with me and you!\"\n\n\"You learned things safely, all by yourself, then thought to bring me in your plan. That shows such wisdom, such good thinking, my wise and caring young man!\"\n\nHand in hand they start their climbing, up the beanstalk, side by side, Jack sharing all his observations, Mama asking questions with pride.\n\n\"Tell me what you saw up there, dear boy, what sounds did you hear?\" Together they climb toward adventure, full of love, not fear!",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "dp3-community-1a2b" }
+      ]
+    },
+    {
+      "id": "journey-1b2a-1",
+      "background": "cottage_excitement",   
+      "text": "Jack can barely hold the joy inside him, it bubbles up like a happy spring! His heart's so full of pure excitement, he feels like he could dance and sing!\n\n\"Mama, Mama!\" he calls out brightly, running to where she sweeps the floor. \"Come see what the magic beans have grown into! Something wonderful and more!\"\n\n\"You have to see this! You just have to! My heart says we should share this sight! This is something we should discover together - something magical and bright!\"\n\nHe takes her hand and pulls so gently, toward the door and morning air. \"It's the most amazing, wonderful, magical thing that's ever happened anywhere!\"\n\nMother Rose drops her old straw broom, her eyes grow bright with curious cheer. She follows Jack outside with wonder, \"Show me, dear boy! Bring me near!\"\n\nWhen she sees that great big beanstalk reaching up, up, up to the sky, she gasps and puts her hand on her heart, \"Oh my! Oh my! Oh my!\"\n\nThen breaks into the biggest smile, bright as sunshine, warm as day: \"Your heart was right, my precious boy! This calls for us to play!\"\n\n\"This is adventure for us to share, adventure meant for you and me!\" Jack's heart sings with pure delight - happy as happy can be!",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "journey-1b2a-2" }
+      ]
+    },
+    {
+      "id": "journey-1b2a-2",
+      "background": "beanstalk_joyful_climb",
+      "text": "Up the magical beanstalk they climb together - Jack and his mama, laugh by laugh! Step by step and leaf by leaf, joy bubbling up like a bubbly bath!\n\n\"I can feel the magic, Mama! Warm and friendly, bright and true! It's excited to help our family! Can you feel the magic too?\"\n\n\"Your heart guides you so perfectly,\" Mother Rose replies with glee, helping him reach the next big leaf, \"I can feel it, same as thee!\"\n\n\"This beanstalk wants to help our family! It feels like climbing hope made real! Like a ladder built from kindness, with magic we can touch and feel!\"\n\nThe leaves are strong and oh-so-perfect, perfect steps for climbing high! They welcome them upward, ever upward - \"Come and see! Come touch the sky!\"\n\nHigher, higher, through the clouds, soft as pillows, white as cream! Both of them giggle, gasp with wonder, living in a magic dream!\n\n\"What an adventure, what a journey, what a day for you and me!\" Mother Rose says, heart a-dancing, \"Climbing up so wild and free!\"\n\nAnd Jack's heart feels full to bursting, sparkling bright as morning dew, \"Mama, this is the best adventure! Me and magic, me and you!\"\n\nUp, up, up they climb together, hearts so happy, spirits light, ready for whatever wonder waits for them up there so bright!",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "journey-1b2a-3" }
+      ]
+    },
+    {
+      "id": "journey-1b2a-3",
+      "background": "castle_heart_discovery",
+      "text": "Jack and Mother Rose reach the very top, and step onto the most amazing cloud! Soft as feathers, white as snow, but solid - oh, they're both so proud!\n\nBefore them stands a castle grand, with towers reaching to the sky! Flags dancing in the gentle breeze, oh my, oh my, oh my!\n\n\"My heart says there are good people here,\" Jack whispers soft and low, \"people who might need some friends, people we should get to know.\"\n\nHe feels it - that same tingly feeling, the same warm glow from the beans so bright, his heart knows things, his heart feels truth, his heart can tell what's right!\n\nMother Rose nods with eyes so bright, shining with love and pride so true: \"Your heart's been right 'bout everything, it guided me and you!\"\n\n\"It led us to the magic beans, up the beanstalk, safe and sound, and now to this enchanted place where friends are to be found!\"\n\nShe takes his hand so gently, gently, \"Let's go meet our neighbors new, with hearts wide open, full of love, there's so much good that we can do!\"\n\n\"The very best adventures happen when everyone becomes a friend!\" Together, hand in hand they walk, toward a story without end!\n\nTheir hearts are full of hope and wonder, full of love and joy and light, ready to make the world more beautiful, ready to make everything bright!",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "dp3-community-1b2a" }
+      ]
+    },
+    {
+      "id": "journey-1b2b-1",
+      "background": "beanstalk_solo_courage",
+      "text": "Jack stands before the magical beanstalk, feeling that warm and wonderful glow - the same bright feeling from the magic beans, the same feeling that helped him know.\n\nThe same feeling that whispered \"Sage is good,\" the same feeling, warm and true, \"My heart says this adventure's meant for me, this is what I'm meant to do!\"\n\nHe touches Mama's soft bracelet gently, for courage, love, and family pride. \"For our family!\" he says so bravely, with love as his faithful guide.\n\nHe reaches up to the first great leaf, and begins to climb up high. The beanstalk feels so strong beneath him - up, up, up toward the sky!\n\nEach big green leaf's a perfect step, like the magic knows his need! The beanstalk sways so gently, gently - rock, rock, rock at climbing speed!\n\nLike the safest, most wonderful journey, up to where the white clouds play, \"I can do this!\" Jack says proudly, \"I can do this today!\"\n\n\"For Mama, for our family, for everyone I love so dear!\" Each step makes him braver, braver, each step takes away his fear!\n\nUp, up, up goes brave young Jack, steady, sure, and strong and free, following his heart's wise calling, brave as brave can be!",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "journey-1b2b-2" }
+      ]
+    },
+    {
+      "id": "journey-1b2b-2",
+      "background": "beanstalk_high_courage",
+      "text": "Higher and higher Jack climbs up, through clouds so soft and white, they tickle his nose and make him smile - what a wonderful, magical sight!\n\nThe ground below looks small now, very small and far away, but Jack's not scared - oh no, not Jack! - his heart is brave today!\n\n\"I can do this!\" he calls out loud, his voice so strong and sure, \"I can do this for our family!\" His courage growing more and more!\n\nHe touches Mama's bracelet softly, thinks of her loving face, that fills him up with bravery, that gives his heart such grace!\n\nWarm, brave, strong, and happy courage, like he could climb up to the stars! \"I can do anything for family, nothing's too big, nothing's too far!\"\n\nThe beanstalk grows stronger as he climbs, its leaves bigger, green, and wide, like it's cheering him upward, ever upward, like it's happy by his side!\n\nAnd then through wispy, dancing clouds, he sees something - oh my! A castle! A real castle waiting! Reaching up toward the sky!\n\n\"Oh my goodness! Someone lives there! Someone lives up in the clouds!\" Jack whispers with excitement, wonder singing clear and loud!\n\nHis heart beats strong with happy courage, ready for whatever's new, \"I can do this! I can meet them! I can see this adventure through!\"",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "journey-1b2b-3" }
+      ]
+    },
+    {
+      "id": "journey-1b2b-3",
+      "background": "castle_brave_arrival",
+      "text": "Jack reaches the castle, magnificent and grand, standing before doors open wide, like welcoming arms stretched out to greet him, with wonder waiting just inside!\n\nThe castle's big, so very big, and Jack feels small, it's true, but his heart is big and brave and kind, ready for something new!\n\nFrom inside the castle, Jack can hear someone making lonesome sounds - footsteps pacing back and forth, pace, pace, pace on castle grounds.\n\nA voice that hums a wistful tune, so sad and all alone, like someone wishing, hoping, dreaming for friends they've never known.\n\n\"My heart tells me,\" Jack whispers softly, \"whoever lives here needs a friend. Someone to talk to, laugh with, play with, someone on whom they can depend.\"\n\nHis heart beats pit-a-pat with courage, with hope and love mixed up inside, excitement, wonder, bravery dancing - he won't run away and hide!\n\nHe takes a breath so deep and steady, stands as tall as tall can be, and calls out in his friendliest voice, brave as brave and proud as free:\n\n\"Hello! My name is Jack!\" he calls, \"I've climbed the magical beanstalk high! I've come to visit, come to meet you! May I come in? Please don't be shy!\"\n\nHis voice goes echoing through the castle, \"Hello... hello... hello...\" Then everything grows quiet, quiet, waiting to see what they will know.\n\nThe whole castle holds its breath, wondering what will happen next, will friendship bloom? Will hearts connect? Jack waits, hopeful, not perplexed!",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "dp3-communication" }
+      ]
+    },
+    {
+      "id": "dp3-communication",
+      "background": "castle_interior_meeting",
+      "text": "Jack steps into the castle, so enormous and grand, his footsteps go tip-tap, tip-tap on the stone, everything's so big - chairs like little houses, tables like hills he's never known!\n\nAnd coming down the staircase wide, as wide as their whole cottage small, the biggest person Jack has ever seen - the most enormous person of all!\n\nGiant Gerald, truly giant, tall as houses, three stacked high! But when Jack looks up, up, up at his face, he sees the kindest eyes!\n\nGentle as dear Daisy's eyes, but so much bigger, warm and true, \"Oh!\" says Giant Gerald, voice like thunder, but soft thunder, surprised and new!\n\n\"A little friend! A real little friend! Has come to visit me up here!\" Gerald bends down slow and careful, so his size won't cause fear.\n\n\"I don't mean to frighten anyone,\" he says, his big voice gentle-small, \"I know I'm very, very big, very big and very tall.\"\n\n\"Do I scare you, little friend? I hope I don't, I hope I don't! Please don't run away from me, please say that you won't!\"\n\nJack looks up at Gerald's face, so enormous but so kind, and feels his heart fill up with warmth, with understanding in his mind.\n\nThis giant isn't scary, no! He's just very big and lonely too! He needs a friend to talk with, someone kind and good and true!\n\nJack's heart grows big with friendship, big with love and understanding sweet, \"I'm not frightened, gentle giant! What a wonderful friend to meet!\"",
+      "choices": [
+        { "label": "I'm not frightened! I came here hoping to make a friend!", "nextSceneId": "ending-friendship-bridge-1" },
+        { "label": "You seem lonely - would you like to be friends and help each other?", "nextSceneId": "ending-friendship-bridge-1" }
+      ]
+    },
+    {
+      "id": "dp3-community-1a2b",
+      "background": "castle_community_1a2b",
+      "text": "Jack and Mother Rose step in together, into the castle, grand and bright, and what a wonderful sight greets them - what a marvelous, magical sight!\n\nNot just one giant, but two there! Two gentle giants, kind and true! Giant Gerald, tall as towers, but gentle as the morning dew!\n\nAnd there beside him stands another, Mrs. Geraldine so sweet, with the warmest, kindest smile, making their joy complete!\n\n\"The little friend came back!\" says Gerald, his voice like happy, rolling thunder, \"And brought someone special with him! Oh, what a lovely wonder!\"\n\n\"Any friend who climbs our beanstalk, any friend so brave and true, is welcome in our castle always!\" says Mrs. Geraldine, gentle too.\n\n\"We don't get many visitors, up here among the clouds so white, we don't get any visitors - from morning until night!\"\n\nGerald nods with shy agreement, his big hands fidget, nervous-sweet, \"We don't get any visitors, no one our hearts to greet!\"\n\n\"It gets so very lonely sometimes, just the two of us up here, in this big castle, all alone, with no one to hold dear.\"\n\n\"No one to talk to, laugh with, play with, no one to share our stories true, no one to have adventures with - until we found you two!\"\n\nJack looks at these gentle giants, then thinks of his village down below, all the people who'd love to meet them, all the friends they'd love to know!\n\nHis heart fills with a wonderful idea, an idea bright and grand: \"What if we became one big family? What if we joined hand in hand?\"",
+      "choices": [
+        { "label": "What if we all became neighbors and helped each other?", "nextSceneId": "ending-sharing-circle-1" },
+        { "label": "Let's create something wonderful together!", "nextSceneId": "ending-sharing-circle-1" }
+      ]
+    },
+    {
+      "id": "dp3-community-1b2a",
+      "background": "castle_community_1b2a",
+      "text": "Jack and Mother Rose step into the castle, hearts so full of joy and wonder bright, what a marvelous sight awaits them - what a truly magical sight!\n\nTwo gentle giants with the kindest faces, smiling wide with welcome true! Giant Gerald, tall as towers, but gentle as the morning dew!\n\nAnd there's Mrs. Geraldine beside him, with eyes that crinkle warm and sweet, her smile like sunshine after rain, making their happiness complete!\n\n\"Oh, how wonderful!\" cries Mrs. Geraldine, her voice like distant, friendly cheer, \"Friends who climbed our beanstalk together! We're so glad that you are here!\"\n\n\"We don't get many visitors, up here among the clouds so white, we don't get any visitors, from morning until night!\"\n\nGerald nods with eager shyness, his voice both big and gentle-small, \"We don't get any visitors, no visitors at all!\"\n\n\"It gets very lonely sometimes, just the two of us up here, in this great big castle, with no friends to hold us dear!\"\n\n\"No one to talk with, sing with, dance with, no one to share our happy days, no one to laugh with, play with, dream with, in so many lovely ways!\"\n\nJack's heart fills up with understanding, Mother Rose squeezes his hand tight, they're both thinking the same wonderful thing - their hearts are burning bright!\n\nThese gentle giants need friends badly, and maybe their whole village could become one big, happy family, where everyone shares what's good!\n\n\"What if,\" says Jack, heart singing sweetly, \"we all became neighbors true? What if we built a bridge of friendship between our world and you?\"",
+      "choices": [
+        { "label": "What if we all became neighbors and helped each other?", "nextSceneId": "ending-sharing-circle-1" },
+        { "label": "Let's create something wonderful together!", "nextSceneId": "ending-sharing-circle-1" }
+      ]
+    },
+    {
+      "id": "ending-friendship-bridge-1",
+      "background": "castle_friendship_discovery",
+      "text": "What a wonderful discovery, what a magical thing to find! Jack and Giant Gerald talking, heart to heart and mind to mind!\n\nTwo friends - one small, one giant, but both with hearts so kind and true, finding out they're just the same, in all the things they love to do!\n\n\"I love my family most of all,\" says Jack with eyes so bright, \"I love my dear wife Geraldine,\" says Gerald with delight!\n\n\"I want to help when people's sad,\" says Jack with caring true, \"I want to help people too,\" says Gerald, \"but they always run right through!\"\n\n\"I get lonely sometimes,\" whispers Jack, \"when there's no one here to play,\" \"I get lonely every day,\" sighs Gerald, \"every single, empty day!\"\n\nThey sit together in Gerald's chair, so enormous, wide, and tall, Jack fits perfect on the armrest, like sitting on a wall!\n\nGerald tells him 'bout his treasures, treasures he's never shared before, \"I have a hen that lays gold eggs, and so much, so much more!\"\n\n\"A harp that plays the sweetest music, songs to make your heart feel light! And coins that never, ever end, shining golden, warm, and bright!\"\n\n\"But what good are all these treasures, all this gold and magic too, if you have no friends to share them, no friends to give them to?\"\n\nJack's eyes light up like little stars, like fireflies in the night, \"Gerald,\" he says with joy bubbling, \"I have an idea so bright!\"\n\n\"I know how we can help each other, help your heart and help mine too! And help my family down below, there's so much good that we can do!\"\n\nGerald claps his hands together, making sounds like happy thunder, \"Oh, what is your idea, little friend? Tell me this amazing wonder!\"",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "ending-friendship-bridge-2" }
+      ]
+    },
+    {
+      "id": "ending-friendship-bridge-2",
+      "background": "beanstalk_bridge",
+      "text": "Jack returns home with news so wonderful, news so magical and bright! Gerald's used his gentle giant magic to make everything just right!\n\nThe beanstalk's grown into something amazing, something beautiful and new - a bridge between their two worlds, for me and him and you!\n\nThe beanstalk now has leafy pathways, winding 'round and 'round the stem, with cozy spots for resting, like magical little gems!\n\nAnd tiny houses for the birdies, who live there, safe and sound, the sweetest, most magical bridge that ever could be found!\n\nGerald can visit the village now, (very careful where he steps!) watching out for little flowers, taking tiny, gentle steps!\n\nAnd Jack can visit the castle whenever his heart feels free, climbing up to see his giant friend, happy as happy can be!\n\n\"Look what friendship can build!\" says Mama, watching Gerald wave from high, his wave so big it looks like he's moving trees up in the sky!\n\nGerald shares his treasures freely, golden eggs for families dear, music from his magic harp for all the world to hear!\n\nBut most wonderful of all his gifts, more precious than gold so bright, is his gentle, giant friendship that fills hearts with warm light!\n\n\"The real treasure,\" Mother Rose says, hugging Jack so warm and tight, \"is the friendship that you created, by seeing Gerald's heart so bright!\"\n\n\"You solved our family's problems by thinking with your heart so true, about what everyone needed - both Gerald and us too!\"\n\nJack touches his soft bracelet, and smiles like morning sun, \"Sometimes the best magic happens when two hearts become just one!\"\n\nAnd every day, if you look up high, at the beanstalk bridge so grand, you can see Jack and Gerald together, best friends, hand in hand!\n\nSharing stories, sharing laughter, sharing friendship pure and true, the greatest treasure in the world - a friend to see you through!",
+      "choices": []
+    },
+    {
+      "id": "ending-sharing-circle-1",
+      "background": "village_square_gathering",
+      "text": "Jack has the most wonderful idea, an idea that makes his heart sing bright! He brings Gerald and Mrs. Geraldine down to the village - what a sight!\n\nAt first the people peek and peep, from behind their doors so neat, \"Giants! Real giants in our village!\" they whisper, soft and sweet.\n\nBut Jack stands proud beside his friends, his giant friends so kind and true, \"Everyone, come meet my neighbors! I have something to show you!\"\n\n\"Meet Gerald and Geraldine! They're the kindest friends you'll find! They live right up above us, with hearts so good and mind!\"\n\nGerald sits down very, very careful, in the village square so wide, so he's not quite so enormously tall, with Mrs. Geraldine by his side.\n\nMrs. Geraldine offers cookies, giant-sized but made with love, the most delicious, wonderful cookies from their castle high above!\n\n\"We all have different things to share!\" Jack calls out with joy so bright, \"Gerald has his magic treasures, that can fill our world with light!\"\n\n\"Mama makes the very best bread, Baker Brown makes pies so sweet, Farmer Green grows corn and carrots, everyone has something neat!\"\n\nOne by one the people venture, closer, closer, step by step, to meet these gentle, giant neighbors, who make their glad hearts leap!\n\nSoon the village square is buzzing, buzzing, humming, full of cheer, chatter, chatter, laugh and giggle, as everyone draws near!\n\n\"Look at these amazing neighbors! Big and small, but all so kind!\" The most wonderful discovery - the best neighbors you could find!\n\nChildren show Gerald their games, Mrs. Green shares apple pie, everyone has gifts for sharing, under the big blue sky!",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "ending-sharing-circle-2" }
+      ]
+    },
+    {
+      "id": "ending-sharing-circle-2",
+      "background": "village_beanstalk_community",
+      "text": "Now every week there's something wonderful, something magical and new! The most amazing sharing circle, for me and him and you!\n\nIt happens right around the beanstalk, the beanstalk, green and tall, that's grown into a meeting place with room to welcome all!\n\nLeafy seats for everyone, and cozy nooks so neat, where giants, children, grown-ups too can sit and share and meet!\n\nGerald brings his magic treasures, golden eggs for families dear, music from his magic harp that all the world can hear!\n\nCoins for anyone who's struggling, coins that shine like morning light, but the villagers have treasures too, that make everything just right!\n\nMrs. Baker teaches Mrs. Geraldine to make tiny, perfect treats, (well, giant-tiny, truth to tell, but oh, so good to eat!)\n\nThe children show Gerald their games, like tag and hide-and-go-seek, the musicians play songs for dancing, every single, joyful week!\n\nEven giants love to boogie, even giants love to sway, to the music of the village on each sharing, caring day!\n\nJack has become known far and wide as \"the boy who brought friends together,\" the one who saw that neighbors come in any size or weather!\n\n\"Sometimes the best treasure of all,\" Mother Rose says with pride so bright, \"isn't gold or silver coins, but neighbors sharing light!\"\n\n\"Sometimes it's discovering together that we're all friends who care, that we all can help each other, that love is everywhere!\"\n\nJack looks 'round at Gerald dancing, at Mrs. Geraldine knitting small, at neighbors laughing, sharing, caring, at the wonder of it all!\n\n\"The greatest treasure,\" Jack says wisely, \"the richest treasure, bright and true, comes from everyone sharing gifts and hearts so warm, through and through!\"\n\nAnd if you visit their village today, you'll see the sharing circle still, with the magical beanstalk in the center, on top of their happy hill!\n\nReminding everyone who sees it that the very best magic grows when communities come together, that's the greatest gift there is to know!",
+      "choices": []
+    },
+    {
+      "id": "ending-wise-heart-1",
+      "background": "cottage_family_gathering",
+      "text": "Jack sits in their little cottage, with the most amazing gathering ever seen! Family old and family new, like something from a dream!\n\nThere's Mother Rose making tea, in her favorite pot so dear, there's Gerald crouching very careful, so his head won't bump up here!\n\nThere's Mrs. Geraldine peeking, through the window, sweet and bright, and look - there's dear old Daisy too! What a wonderful, magical sight!\n\nSage brought Daisy back to visit, she's as gentle as can be, mooing soft hellos to everyone - \"Moo-ooo!\" - so happily!\n\n\"You know what I learned,\" says Jack, looking 'round at faces dear, \"on this whole amazing adventure, something wonderful and clear!\"\n\n\"Tell us, wise boy,\" Mother Rose says, smoothing down his tousled hair, \"share your wisdom, little one, tell us what you learned up there!\"\n\nJack looks at all these loving faces, big and small, both old and new, and speaks with heart so full of wisdom, words so warm and true:\n\n\"We had the most important treasure here with us all along! We had people who love each other - that's what makes us strong!\"\n\n\"The magic beans didn't give us treasure, not gold or silver bright, they helped us find more people to love, who love us back with all their might!\"\n\nGerald nods his great big head, \"That's the wisest thing I've heard! In my castle or anywhere else, the truest, wisest word!\"\n\nDaisy moos in sweet agreement - \"Moo-ooo!\" - so loud and clear, and everyone starts laughing, because they know what Daisy's cheer!\n\nThey understand her gentle language, they know just what she means to say: \"Love is the greatest magic of all, every single, blessed day!\"",
+      "choices": [
+        { "label": "Continue", "nextSceneId": "ending-wise-heart-2" }
+      ]
+    },
+    {
+      "id": "ending-wise-heart-2",
+      "background": "cottage_garden_peaceful",
+      "text": "The magical beanstalk still grows tall, in Jack's garden, green and bright, but now it's not a mystery path to adventures out of sight.\n\nNow it's like a bridge of friendship, between old friends and new, a living, growing symbol of love that's strong and true!\n\nGerald visits when he's able, stepping oh-so-carefully, 'round the flowers in the garden, gentle as can be!\n\nThe village has new celebrations with their giant neighbors dear, children love to climb the beanstalk, just to see how far they'd hear!\n\nBut the most magical thing of all, the most wonderful thing to know, is what Jack learned in his heart - how love helps everything grow!\n\n\"My wise, wise, precious boy,\" Mother Rose says with pride, watching Jack help little neighbors reach the first leaf, side by side.\n\n\"You've learned the greatest secret, the most important thing to see: growing up means helping love grow bigger, wild, and free!\"\n\nJack touches Mama's bracelet softly, looks up at the beanstalk high, where his giant friends are living in their castle in the sky.\n\nThen down at his little cottage, where dear Mama makes things bright, where everything feels safe and warm from morning until night.\n\n\"The real magic,\" Jack says wisely, with a smile like morning sun, \"is that love grows like magic beans - it's never, ever done!\"\n\n\"The more you plant it 'round you, the bigger and stronger it grows, the more room it makes for everyone, that's the secret that Jack knows!\"\n\nAnd that's the most magical ending, the most wonderful of all - when love grows big enough to catch us when we fall!\n\nWhen love grows wide enough to welcome every friend, when love grows strong enough to last until the end!\n\nSo remember Jack's great secret, when you're feeling small or blue: love grows like magic beans, and there's always room for you!",
+      "choices": []
+    }
+  ]
+}

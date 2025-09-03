@@ -286,3 +286,38 @@ Verification Checklist
 ---
 
 Link: See `PRELAUNCH_SPRINT_PLAN_NOV2025.md` for goals, estimates, and gates. 
+
+### Saved SQL (Sprint 2 metrics)
+
+```sql
+-- Weekly connection success rate
+WITH attempts AS (
+  SELECT session_id, MIN(ts) AS first_ts
+  FROM connection_events
+  WHERE event_type = 'connect_start'
+  GROUP BY session_id
+),
+success AS (
+  SELECT session_id, MIN(ts) AS connected_ts
+  FROM connection_events
+  WHERE event_type = 'connected'
+  GROUP BY session_id
+)
+SELECT date_trunc('week', a.first_ts) AS week,
+       COUNT(*) AS attempts,
+       COUNT(s.session_id) AS successes,
+       ROUND(100.0 * COUNT(s.session_id) / NULLIF(COUNT(*),0), 1) AS success_rate_pct
+FROM attempts a
+LEFT JOIN success s USING (session_id)
+GROUP BY 1
+ORDER BY 1 DESC;
+```
+
+```sql
+-- Daily invite completion (sessions started per day)
+SELECT date_trunc('day', started_at) AS day,
+       COUNT(*) AS sessions_started
+FROM guest_sessions
+GROUP BY 1
+ORDER BY 1 DESC;
+``` 
