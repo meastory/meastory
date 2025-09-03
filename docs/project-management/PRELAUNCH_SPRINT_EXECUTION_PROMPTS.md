@@ -144,47 +144,72 @@ Verification Checklist
 
 ---
 
-## Sprint 3: Audio Fallback, Reconnect + State Resume, Curated Guest Stories
+## Sprint 3: TURN minimization, fast audio-only on relay, and instrumentation
 
-Prompt: Implement audio-only fallback and reconnection with exponential backoff, persist current scene to DB, resume on rejoin, and gate guest to 3 curated stories.
+Prompt: Minimize unintended TURN usage via phased ICE and candidate filtering; enforce immediate audio-only when relay is selected; auto-restore video when a direct path returns; add precise metrics and SQL views to validate improvements. Restore reconnect/renegotiation loop and minimal scene resume to further improve stability.
 
 Key Tasks
-- Media policy manager: on failure thresholds, renegotiate with video disabled; restore video after stable window.
-- Reconnect loop with backoff; channel resubscription; peer renegotiation.
-- Persist `current_scene_id` to `room_sessions`; apply on join/rejoin.
-- Tag 3 curated stories and filter guest library.
-- Seed curated stories per `docs/scripts/SEED_STORIES.md` if not present.
+- ICE phased gathering and candidate filtering (Phase 1 STUN-only ~4s; Phase 2 add TURN + ICE restart)
+- Early selected-pair detection and metrics (burst getStats; log `selected_candidate_pair`)
+- Immediate audio-only on relay (disable video payload via RTCRtpSender.setParameters encodings.active=false or replaceTrack(null); restore on direct path)
+- Bitrate policy (lower initial video bitrate; cap Opus on relay; contentHint tuning)
+- Reconnect & renegotiation loop (exponential backoff resubscribe; debounce ICE restarts; handle visibility/network changes)
+- Minimal state resume: persist `current_scene_id` (and `current_story_id`) to `rooms` with an RPC; apply on join/rejoin
+- SQL migrations (extend enum with `selected_candidate_pair`, `audio_only_enabled`, `audio_only_restored`; add views `v_weekly_relay_rate`, `v_time_to_audio_only_ms`; add `rooms.current_scene_id`, optional `rooms.current_story_id`; grants)
+- QA updates (TURN-minimization scenarios in device matrix; verification checklist)
 
 Acceptance Criteria
-- On induced failure, app switches to audio within N seconds and later restores video.
-- After network flap, session resumes to the same scene for both peers.
-- Guest story library shows only curated and all links function.
+- AC1: Same-network sessions use host/srflx ≥95% across macOS/iOS/Android major browsers.
+- AC2: On relay selection, video payload fully stops within ≤1s (outbound-rtp video bytesSent plateaus; only RTCP grows slowly).
+- AC3: When path switches to direct (host/srflx), video restores automatically within ≤2s.
+- AC4: Events logged for `selected_candidate_pair`, `audio_only_enabled`, `audio_only_restored`; views expose weekly relay rate and median time-to-audio-only.
+- AC5: No regression in initial connection success vs. Sprint 2 baseline.
+- AC6: QA report with before/after relay rate and timing improvements attached to PR.
+- AC7: ≥95% of brief drops (<10s) auto-recover without user action; no duplicate tracks/datachannels after recovery.
+- AC8: After reload/reconnect, both peers show same scene within ≤2s; choices remain consistent.
 
 CLI Workflow
 ```bash
 # Branch
-git checkout -b feature/s3-fallback-reconnect-curated
+git checkout -b feature/s3-turn-minimization
 
-# DB
-supabase db generate migration s3_room_sessions --local | cat
-# Implement table and RLS, then
+# DB (enum + views + scene state)
+supabase db generate migration s3_turn_metrics --local | cat
+# Implement:
+# - ALTER TYPE connection_event_type ADD VALUE IF NOT EXISTS 'selected_candidate_pair';
+# - ... 'audio_only_enabled', 'audio_only_restored'
+# - CREATE VIEW v_weekly_relay_rate AS ...
+# - CREATE VIEW v_time_to_audio_only_ms AS ...
+supabase db generate migration s3_scene_resume --local | cat
+# Implement:
+# - ALTER TABLE rooms ADD COLUMN IF NOT EXISTS current_story_id TEXT;
+# - ALTER TABLE rooms ADD COLUMN IF NOT EXISTS current_scene_id TEXT;
+# - CREATE OR REPLACE FUNCTION rpc_update_room_scene(p_room_id UUID, p_story_id TEXT, p_scene_id TEXT) SECURITY DEFINER ...
 supabase db push | cat
 
-# Run
+# Env flags
+netlify env:set VITE_ICE_PHASED_GATHERING true
+netlify env:set VITE_ICE_TURN_DELAY_MS 4000
+netlify env:set VITE_ICE_STATS_POLL_INITIAL_MS 1000
+netlify env:set VITE_TURN_AUDIO_ONLY_ON_RELAY true
+
+# Build/test
 cd apps/read
-npm run lint && npm run typecheck && npm run build && npm run dev | cat
+npm run lint && npm run typecheck && npm run build | cat
 
 # Commit/PR
 git add .
-git commit -m "feat(reliability): audio-only fallback; reconnect; story state resume; curated gating"
-git push -u origin feature/s3-fallback-reconnect-curated
-gh pr create --fill --title "S3: Fallback + Reconnect + State Resume + Curated" --body "Includes seeds if needed; attach preview and QA template."
+git commit -m "feat(rtc): phased ICE; fast audio-only; reconnect; scene resume; metrics/views"
+git push -u origin feature/s3-turn-minimization
+gh pr create --fill --title "S3: TURN minimization + reconnect + scene resume + instrumentation" --body "Phased ICE, relay gating, reconnect, scene resume, metrics views; QA attached."
 ```
 
 Verification Checklist
-- Toggle network off/on in DevTools → resume to same scene.
-- Logs show downgrade to audio and later video restore.
-- Curated stories visible; others hidden for guest.
+- Same LAN Chrome↔Chrome: relay rate ≤5%; Safari↔iOS ≤10%.
+- On relay: audio-only engages ≤1s; on direct path restore: video returns ≤2s.
+- Reconnect test (toggle offline ≤10s): session auto-recovers, no duplicate tracks or DCs.
+- Reload test: both peers rehydrate to the same scene within 2s.
+- Views show reduced weekly relay rate and median time-to-audio-only vs. baseline.
 - Attach Netlify preview URL and completed `QA_ACCEPTANCE_TEMPLATE.md`; update `QA_DEVICE_MATRIX.md` entries.
 
 ---

@@ -271,11 +271,20 @@ export default function Join() {
 
       // Metrics: connect_start (after session established)
       const navAny = navigator as unknown as { connection?: { effectiveType?: string } }
+      const ua = navigator.userAgent
+      const detail = {
+        network_type: navAny.connection?.effectiveType || 'unknown',
+        peer_role: started.role,
+        browser: /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) && !/Chrome\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'Other',
+        browser_version: (ua.match(/(Chrome|Firefox)\/(\d+\.\d+)/)?.[2]) || (ua.match(/Version\/(\d+\.\d+)/)?.[1]) || 'unknown',
+        os: /Android/.test(ua) ? 'Android' : /iPhone|iPad|iPod/.test(ua) ? 'iOS' : /Mac OS X/.test(ua) ? 'macOS' : /Windows NT/.test(ua) ? 'Windows' : 'Other',
+        device_class: /Mobi|Android|iPhone|iPad|iPod/.test(ua) ? 'mobile' : 'desktop'
+      }
       await logConnectionEvent({
         session_id: started.session_id,
         room_code: normalized,
         event_type: 'connect_start',
-        detail: { network_type: navAny.connection?.effectiveType || 'unknown', peer_role: started.role }
+        detail
       })
 
       // 30 minutes from earliest start (or QA override)

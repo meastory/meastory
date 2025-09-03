@@ -107,6 +107,8 @@ export type Database = {
           status: Database["public"]["Enums"]["room_status"] | null
           story_id: string | null
           updated_at: string
+          current_story_id?: string | null
+          current_scene_id?: string | null
         }
         Insert: {
           code?: string
@@ -120,6 +122,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["room_status"] | null
           story_id?: string | null
           updated_at?: string
+          current_story_id?: string | null
+          current_scene_id?: string | null
         }
         Update: {
           code?: string
@@ -133,6 +137,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["room_status"] | null
           story_id?: string | null
           updated_at?: string
+          current_story_id?: string | null
+          current_scene_id?: string | null
         }
         Relationships: [
           {

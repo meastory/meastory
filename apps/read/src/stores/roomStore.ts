@@ -67,27 +67,36 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
       set({ currentRoom: room })
 
-      // If no story is selected, choose the first published story to keep flow working
-      let storyIdToLoad = room.story_id as string | null
-      if (!storyIdToLoad) {
-        const { data: firstStory } = await supabase
-          .from('stories')
-          .select('id')
-          .eq('status', 'published')
-          .order('title', { ascending: true })
-          .limit(1)
-          .maybeSingle()
-        if (firstStory?.id) {
-          storyIdToLoad = firstStory.id
-          console.log('📚 No story on room; using default published story:', storyIdToLoad)
+      // Prefer resuming from current_* if present
+      if (room.current_story_id) {
+        console.log('📚 Resuming story from room state:', room.current_story_id, 'scene:', room.current_scene_id || 'first')
+        await get().loadStory(room.current_story_id)
+        if (room.current_scene_id) {
+          await get().loadScene(room.current_scene_id)
         }
-      }
-
-      if (storyIdToLoad) {
-        console.log('📚 Loading story:', storyIdToLoad)
-        await get().loadStory(storyIdToLoad)
       } else {
-        console.log('⚠️ No published stories available to load')
+        // If no story is selected, choose the first published story to keep flow working
+        let storyIdToLoad = room.story_id as string | null
+        if (!storyIdToLoad) {
+          const { data: firstStory } = await supabase
+            .from('stories')
+            .select('id')
+            .eq('status', 'published')
+            .order('title', { ascending: true })
+            .limit(1)
+            .maybeSingle()
+          if (firstStory?.id) {
+            storyIdToLoad = firstStory.id
+            console.log('📚 No story on room; using default published story:', storyIdToLoad)
+          }
+        }
+
+        if (storyIdToLoad) {
+          console.log('📚 Loading story:', storyIdToLoad)
+          await get().loadStory(storyIdToLoad)
+        } else {
+          console.log('⚠️ No published stories available to load')
+        }
       }
 
       // Load participants
@@ -176,6 +185,23 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
       console.log('🎭 Scene loaded:', scene.title, 'Order:', scene.scene_order)
       set({ currentScene: scene })
+
+      // If host, persist current scene via RPC
+      try {
+        const currentRoom = get().currentRoom
+        if (currentRoom) {
+          const { useWebRTCStore } = await import('./webrtcStore')
+          if (useWebRTCStore.getState().role === 'host' && get().currentStory) {
+            await supabase.rpc('rpc_update_room_scene' as unknown as never, {
+              p_room_id: currentRoom.id,
+              p_story_id: get().currentStory!.id,
+              p_scene_id: scene.id,
+            } as unknown as never)
+          }
+        }
+      } catch (e) {
+        console.warn('rpc_update_room_scene failed (non-host or RLS):', e)
+      }
     } catch (error: unknown) {
       console.error('❌ Error loading scene:', error)
       const msg = (error as { message?: string })?.message || 'Unknown error'
@@ -219,6 +245,27 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       
       // Load the new story (this won't disconnect WebRTC)
       await get().loadStory(storyId)
+
+      // If host, also reset current_scene_id via RPC to first scene
+      try {
+        const { data: firstScene } = await supabase
+          .from('story_scenes')
+          .select('id')
+          .eq('story_id', storyId)
+          .eq('scene_order', 1)
+          .single()
+        const sceneId = firstScene?.id || null
+        const { useWebRTCStore } = await import('./webrtcStore')
+        if (useWebRTCStore.getState().role === 'host') {
+          await supabase.rpc('rpc_update_room_scene' as unknown as never, {
+            p_room_id: currentRoom.id,
+            p_story_id: storyId,
+            p_scene_id: sceneId,
+          } as unknown as never)
+        }
+      } catch (e) {
+        console.warn('rpc_update_room_scene (story change) failed or skipped:', e)
+      }
       
       console.log('✅ Story changed successfully without disconnecting WebRTC')
     } catch (error: unknown) {
