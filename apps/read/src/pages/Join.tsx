@@ -6,6 +6,9 @@ import StoryOverlay from '../components/StoryOverlay'
 import StoryPlayer from '../components/StoryPlayer'
 import InRoomStoryPicker from '../components/InRoomStoryPicker'
 import { useRoomStore } from '../stores/roomStore'
+import { getRoomByCode } from '../lib/supabase'
+import PresenceBadge from '../components/PresenceBadge'
+import { useFullscreen } from '../hooks/useFullscreen'
 
 interface DeviceOption {
   deviceId: string
@@ -17,8 +20,8 @@ export default function Join() {
   const navigate = useNavigate()
   const normalized = String(code).toUpperCase()
 
-  const { connect, isConnected, participants } = useWebRTCStore()
-  const { currentStory, setChildName, childName } = useRoomStore()
+  const { isConnected, participants } = useWebRTCStore()
+  const { currentStory, setChildName, childName, enterRoom } = useRoomStore()
 
   const [cameraDevices, setCameraDevices] = useState<DeviceOption[]>([])
   const [micDevices, setMicDevices] = useState<DeviceOption[]>([])
@@ -39,6 +42,7 @@ export default function Join() {
   const autoPickerRef = useRef(false)
 
   const inviteUrl = useMemo(() => `${location.origin}/join/${normalized}`, [normalized])
+  const { isFullscreen, toggleFullscreen } = useFullscreen()
 
   useEffect(() => {
     if (isConnected) setPhase('connected')
@@ -185,7 +189,19 @@ export default function Join() {
     stopMeter()
     stopPreview()
     setPhase('waiting')
-    await connect(normalized, normalized)
+
+    try {
+      const { data, error } = await getRoomByCode(normalized)
+      if (error || !data?.id) {
+        setError('Room not found')
+        return
+      }
+      await enterRoom(data.id)
+      // enterRoom will internally initiate the WebRTC connect using room.code
+    } catch (e) {
+      console.error('Failed to enter room', e)
+      setError('Failed to enter room')
+    }
   }
 
   useEffect(() => {
@@ -291,14 +307,22 @@ export default function Join() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="w-full max-w-6xl h-[70vh] mx-auto">
+      <div className="w-full max-w-6xl h-[70vh] mx-auto relative">
+        <PresenceBadge className="absolute top-4 left-4 z-[110]" />
+        <button
+          onClick={() => toggleFullscreen()}
+          className="absolute top-4 right-4 z-[110] px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
+          aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+        >
+          {isFullscreen ? '⤢' : '⤢'}
+        </button>
         <VideoGrid />
       </div>
       <StoryOverlay />
       <StoryPlayer />
       <button
         onClick={() => { autoPickerRef.current = false; setShowPicker(true) }}
-        className="fixed top-6 left-6 z-[100] px-3 py-2 rounded bg-green-600 hover:bg-green-700 text-white"
+        className="fixed top-6 left-20 z-[100] px-3 py-2 rounded bg-green-600 hover:bg-green-700 text-white"
       >
         📚
       </button>

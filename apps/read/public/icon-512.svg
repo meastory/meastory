@@ -1,0 +1,31 @@
+<!-- Larger version of the story icon -->
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="64" fill="#1a1a1a"/>
+  
+  <!-- Book shape -->
+  <rect x="128" y="106" width="256" height="300" rx="20" fill="#4f46e5" stroke="#6366f1" stroke-width="4"/>
+  
+  <!-- Book pages -->
+  <rect x="136" y="114" width="240" height="284" rx="12" fill="#f8fafc"/>
+  
+  <!-- Text lines -->
+  <rect x="160" y="160" width="192" height="10" rx="5" fill="#64748b"/>
+  <rect x="160" y="190" width="160" height="10" rx="5" fill="#64748b"/>
+  <rect x="160" y="220" width="180" height="10" rx="5" fill="#64748b"/>
+  <rect x="160" y="250" width="140" height="10" rx="5" fill="#64748b"/>
+  <rect x="160" y="280" width="170" height="10" rx="5" fill="#64748b"/>
+  <rect x="160" y="310" width="150" height="10" rx="5" fill="#64748b"/>
+  <rect x="160" y="340" width="160" height="10" rx="5" fill="#64748b"/>
+  
+  <!-- Book spine -->
+  <rect x="128" y="106" width="20" height="300" rx="10" fill="#3730a3"/>
+  
+  <!-- MeAStory text -->
+  <text x="256" y="460" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#f8fafc" text-anchor="middle">MeAStory</text>
+  
+  <!-- Small decorative stars -->
+  <circle cx="200" cy="380" r="4" fill="#fbbf24"/>
+  <circle cx="280" cy="370" r="4" fill="#fbbf24"/>
+  <circle cx="320" cy="385" r="4" fill="#fbbf24"/>
+</svg>

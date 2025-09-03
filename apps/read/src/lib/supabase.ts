@@ -18,7 +18,7 @@ export const getRoomByCode = async (code: string) => {
     .from('rooms')
     .select('*')
     .eq('code', code.toUpperCase())
-    .single()
+    .maybeSingle()
   
   return { data, error }
 }

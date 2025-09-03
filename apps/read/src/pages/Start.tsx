@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createGuestRoom } from '../lib/supabase'
+import FullscreenButton from '../components/FullscreenButton'
+import InstallPWAButton from '../components/InstallPWAButton'
 
 export default function Start() {
   const navigate = useNavigate()
@@ -29,6 +31,10 @@ export default function Start() {
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
+      <div className="absolute top-4 right-4 flex gap-2">
+        <InstallPWAButton />
+        <FullscreenButton showOnDesktop className="" variant="minimal" size="sm" />
+      </div>
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Guests card */}
         <div className="bg-gray-900 p-6 rounded-lg shadow">

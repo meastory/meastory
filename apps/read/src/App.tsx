@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useUIStore } from './stores/uiStore'
 import { useAuthStore } from './stores/authStore'
 import { useRoomStore } from './stores/roomStore'
+import { useFullscreenContext } from './contexts/useFullscreenContext'
 import VideoContainer from './components/VideoContainer'
 import StoryOverlay from './components/StoryOverlay'
 import MenuPanel from './components/MenuPanel'
@@ -10,6 +11,7 @@ import ErrorMessage from './components/ErrorMessage'
 import Auth from './components/Auth'
 import StoryPlayer from './components/StoryPlayer'
 import StoryLibrary from './components/StoryLibrary'
+import FullscreenButton from './components/FullscreenButton'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import InRoomStoryPicker from './components/InRoomStoryPicker'
 
@@ -17,8 +19,10 @@ function App() {
   const { isLoading, error, storyTextScale, setStoryTextScale } = useUIStore()
   const { session, initialized, initialize } = useAuthStore()
   const { currentRoom, currentStory } = useRoomStore()
+  const { isFullscreen } = useFullscreenContext()
   const [showLibrary, setShowLibrary] = useState(false)
   const [showPicker, setShowPicker] = useState(false)
+  const appRef = useRef<HTMLDivElement>(null)
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -87,23 +91,39 @@ function App() {
 
   if (shouldShowAuth) {
     return (
-      <div className="video-first min-h-screen bg-black text-white">
+      <div ref={appRef} className="video-first min-h-screen bg-black text-white relative">
         <Auth onAuthSuccess={handleAuthSuccess} />
+        <FullscreenButton 
+          className="fixed top-4 right-4 z-50" 
+          targetElement={appRef.current}
+          variant="floating"
+        />
       </div>
     )
   }
 
   if (showLibrary) {
     return (
-      <div className="video-first min-h-screen bg-black text-white">
+      <div ref={appRef} className="video-first min-h-screen bg-black text-white">
         <div className="relative">
           <button
             onClick={handleCloseLibrary}
-            className="absolute top-4 right-4 z-20 p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors"
+            className={`
+              absolute top-4 z-20 p-2 rounded-full bg-gray-800 text-white 
+              hover:bg-gray-700 transition-colors
+              ${isFullscreen ? 'right-4' : 'right-16'}
+            `}
             aria-label="Close library"
           >
             ✕
           </button>
+          
+          <FullscreenButton 
+            className="fixed top-4 right-4 z-50" 
+            targetElement={appRef.current}
+            variant="floating"
+          />
+          
           <StoryLibrary onClose={handleCloseLibrary} />
         </div>
       </div>
@@ -112,7 +132,7 @@ function App() {
 
   if (currentRoom) {
     return (
-      <div className="video-first min-h-screen bg-black text-white">
+      <div ref={appRef} className="video-first min-h-screen bg-black text-white">
         {error && <ErrorMessage message={error} />}
         {isLoading ? (
           <LoadingSpinner />
@@ -122,12 +142,24 @@ function App() {
             <StoryOverlay />
             <StoryPlayer />
             <MenuPanel />
+            
             <button
               onClick={() => setShowPicker(true)}
-              className="fixed top-6 left-6 z-[100] px-3 py-2 rounded bg-green-600 hover:bg-green-700 text-white pointer-events-auto"
+              className={`
+                fixed top-6 left-6 z-[100] px-3 py-2 rounded bg-green-600 
+                hover:bg-green-700 text-white pointer-events-auto
+                transition-all duration-200
+              `}
             >
               📚
             </button>
+            
+            <FullscreenButton 
+              className="fixed top-6 right-6 z-[100]" 
+              targetElement={appRef.current}
+              variant="floating"
+            />
+            
             {showPicker && (
               <InRoomStoryPicker onClose={() => setShowPicker(false)} />
             )}
@@ -138,8 +170,13 @@ function App() {
   }
 
   return (
-    <div className="video-first min-h-screen bg-black text-white">
+    <div ref={appRef} className="video-first min-h-screen bg-black text-white">
       <MenuPanel />
+      <FullscreenButton 
+        className="fixed top-4 right-4 z-50" 
+        targetElement={appRef.current}
+        variant="floating"
+      />
     </div>
   )
 }

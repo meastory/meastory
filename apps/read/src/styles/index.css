@@ -12,6 +12,12 @@
     --color-mist: #E5E7EB;
     --color-cloud: #F7F7FA;
     --color-white: #FFFFFF;
+
+    /* Safe area insets for devices with notches */
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-right: env(safe-area-inset-right);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    --safe-area-inset-left: env(safe-area-inset-left);
   }
   
   html, body {
@@ -289,5 +295,89 @@
       padding: 10px 16px;
       font-size: calc(0.9em * var(--story-text-scale));
     }
+  }
+}
+
+/* Fullscreen and PWA specific styles */
+@layer utilities {
+  /* Handle safe area insets for devices with notches/dynamic island */
+  .safe-top {
+    padding-top: max(1rem, var(--safe-area-inset-top));
+  }
+  
+  .safe-bottom {
+    padding-bottom: max(1rem, var(--safe-area-inset-bottom));
+  }
+  
+  .safe-left {
+    padding-left: max(1rem, var(--safe-area-inset-left));
+  }
+  
+  .safe-right {
+    padding-right: max(1rem, var(--safe-area-inset-right));
+  }
+  
+  .safe-all {
+    padding: max(1rem, var(--safe-area-inset-top)) max(1rem, var(--safe-area-inset-right)) max(1rem, var(--safe-area-inset-bottom)) max(1rem, var(--safe-area-inset-left));
+  }
+
+  /* Fullscreen mode optimizations */
+  .fullscreen-optimized {
+    /* Use the full viewport height including areas behind system UI */
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for modern browsers */
+  }
+
+  /* PWA-specific styles */
+  @media (display-mode: standalone) {
+    .pwa-only {
+      display: block;
+    }
+    .browser-only {
+      display: none;
+    }
+    
+    /* Remove any browser-specific styling when running as PWA */
+    body {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    
+    /* Better tap targets for PWA */
+    button, .button {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  @media not (display-mode: standalone) {
+    .pwa-only {
+      display: none;
+    }
+    .browser-only {
+      display: block;
+    }
+  }
+
+  /* Fullscreen mode styles */
+  :fullscreen {
+    /* Remove any margins/padding when in fullscreen */
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide elements when in fullscreen mode */
+  :fullscreen .hide-in-fullscreen {
+    display: none !important;
+  }
+
+  /* Show elements only in fullscreen mode */
+  .show-in-fullscreen {
+    display: none;
+  }
+
+  :fullscreen .show-in-fullscreen {
+    display: block;
   }
 }
