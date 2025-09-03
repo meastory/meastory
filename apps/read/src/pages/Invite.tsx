@@ -1,13 +1,14 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { QRCodeCanvas } from 'qrcode.react'
+import FullscreenButton from '../components/FullscreenButton'
+import InstallPWAButton from '../components/InstallPWAButton'
 
 export default function Invite() {
   const { code = '' } = useParams()
   const navigate = useNavigate()
   const normalized = String(code).toUpperCase()
   const inviteUrl = useMemo(() => `${location.origin}/join/${normalized}`, [normalized])
-  const [codeInput, setCodeInput] = useState('')
 
   const shareOrCopy = async () => {
     try {
@@ -41,22 +42,20 @@ export default function Invite() {
     }
   }
 
-  const onManualJoin = (e: React.FormEvent) => {
-    e.preventDefault()
-    const val = codeInput.toUpperCase().trim()
-    if (/^[A-Z0-9]{6}$/.test(val)) {
-      navigate(`/join/${val}`)
-    }
-  }
-
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
+      <div className="absolute top-4 right-4 flex gap-2">
+        <InstallPWAButton />
+        <FullscreenButton showOnDesktop className="" variant="minimal" size="sm" />
+      </div>
       <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow space-y-6 text-center">
         <h1 className="text-3xl font-bold">Invite</h1>
+
         <div className="text-sm text-gray-300">Room code</div>
         <div className="text-4xl tracking-widest font-mono bg-gray-800 rounded px-4 py-3 inline-block">
           {normalized}
         </div>
+
         <div className="flex gap-3">
           <button onClick={shareOrCopy} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded font-semibold">
             Share Link
@@ -65,30 +64,16 @@ export default function Invite() {
             Copy
           </button>
         </div>
+
         <div className="flex items-center justify-center pt-2">
           <div className="bg-white p-3 rounded">
             <QRCodeCanvas value={inviteUrl} size={200} includeMargin={false} />
           </div>
         </div>
+
         <button onClick={() => navigate(`/join/${normalized}`)} className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded font-semibold">
           Join on this device
         </button>
-        <form onSubmit={onManualJoin} className="space-y-2 pt-2">
-          <div className="text-xs text-gray-400">Have a code?</div>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={codeInput}
-              onChange={(e) => setCodeInput(e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 6))}
-              placeholder="ABC123"
-              className="flex-1 bg-gray-800 border border-gray-700 rounded px-3 py-2 text-center tracking-widest font-mono"
-              aria-label="Enter room code"
-            />
-            <button type="submit" className="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded">
-              Go
-            </button>
-          </div>
-        </form>
       </div>
     </div>
   )
