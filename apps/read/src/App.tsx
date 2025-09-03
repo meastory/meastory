@@ -14,9 +14,10 @@ import StoryLibrary from './components/StoryLibrary'
 import FullscreenButton from './components/FullscreenButton'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import InRoomStoryPicker from './components/InRoomStoryPicker'
+import InfoBanner from './components/InfoBanner'
 
 function App() {
-  const { isLoading, error, storyTextScale, setStoryTextScale } = useUIStore()
+  const { isLoading, error, storyTextScale, setStoryTextScale, notice, setNotice } = useUIStore()
   const { session, initialized, initialize } = useAuthStore()
   const { currentRoom, currentStory } = useRoomStore()
   const { isFullscreen } = useFullscreenContext()
@@ -92,6 +93,11 @@ function App() {
   if (shouldShowAuth) {
     return (
       <div ref={appRef} className="video-first min-h-screen bg-black text-white relative">
+        {notice && (
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[1102]">
+            <InfoBanner message={notice} onDismiss={() => setNotice?.(null)} />
+          </div>
+        )}
         <Auth onAuthSuccess={handleAuthSuccess} />
         <FullscreenButton 
           className="fixed top-4 right-4 z-50" 
@@ -105,6 +111,11 @@ function App() {
   if (showLibrary) {
     return (
       <div ref={appRef} className="video-first min-h-screen bg-black text-white">
+        {notice && (
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[1102]">
+            <InfoBanner message={notice} onDismiss={() => setNotice?.(null)} />
+          </div>
+        )}
         <div className="relative">
           <button
             onClick={handleCloseLibrary}
@@ -133,6 +144,11 @@ function App() {
   if (currentRoom) {
     return (
       <div ref={appRef} className="video-first min-h-screen bg-black text-white">
+        {notice && (
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[1102]">
+            <InfoBanner message={notice} onDismiss={() => setNotice?.(null)} />
+          </div>
+        )}
         {error && <ErrorMessage message={error} />}
         {isLoading ? (
           <LoadingSpinner />
@@ -171,6 +187,11 @@ function App() {
 
   return (
     <div ref={appRef} className="video-first min-h-screen bg-black text-white">
+      {notice && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[1102]">
+          <InfoBanner message={notice} onDismiss={() => setNotice?.(null)} />
+        </div>
+      )}
       <MenuPanel />
       <FullscreenButton 
         className="fixed top-4 right-4 z-50" 

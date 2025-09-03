@@ -1,4 +1,5 @@
 import { useWebRTCStore } from '../stores/webrtcStore'
+import { useUIStore } from '../stores/uiStore'
 
 type DataMessage =
   | { type: 'choice'; nextSceneId: string }
@@ -18,6 +19,10 @@ class WebRTCManager {
   private politePeer: Map<string, boolean> = new Map()
   // Debounce ICE restarts per peer
   private lastIceRestartAt: Map<string, number> = new Map()
+  // Relay policy tracking
+  private relayActiveByPeer: Map<string, boolean> = new Map()
+  private statsPollIntervalByPeer: Map<string, number> = new Map()
+  private readonly audioOnlyOnRelay: boolean = (import.meta.env.VITE_TURN_AUDIO_ONLY_ON_RELAY ?? 'true') !== 'false'
   private iceServers: RTCConfiguration = {
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
@@ -132,6 +137,8 @@ class WebRTCManager {
         console.log(`✅ Connected to ${peerId}`)
         this.addMissingLocalTracks(peerId)
         console.log('📡 Data channels:', Array.from(this.dataChannels.keys()))
+        // Start relay policy checks when connected
+        this.startRelayPolicyPolling(peerId)
         if (sid && roomCode) {
           import('../lib/supabase').then(({ logConnectionEvent }) => {
             logConnectionEvent({ session_id: sid, room_code: roomCode, event_type: 'connected', detail: { peer: peerId } }).catch(() => {})
@@ -145,9 +152,12 @@ class WebRTCManager {
           })
         }
         this.handleConnectionFailure(peerId)
+        this.stopRelayPolicyPolling(peerId)
+      } else if (state === 'disconnected' || state === 'closed') {
+        this.stopRelayPolicyPolling(peerId)
       }
     }
-
+    
     // Debounced ICE restart on ICE connection failure
     peerConnection.oniceconnectionstatechange = async () => {
       const iceState = peerConnection.iceConnectionState
@@ -452,6 +462,7 @@ class WebRTCManager {
       peerConnection.close()
       this.peerConnections.delete(peerId)
     }
+    this.stopRelayPolicyPolling(peerId)
     
     useWebRTCStore.getState().removeParticipant(peerId)
     
@@ -560,6 +571,87 @@ class WebRTCManager {
       })
     } catch (error) {
       console.error('❌ Error syncing child name:', error)
+    }
+  }
+
+  private startRelayPolicyPolling(peerId: string): void {
+    const pc = this.peerConnections.get(peerId)
+    if (!pc) return
+    // Immediate check once connected
+    this.checkRelayAndApplyPolicy(peerId).catch(() => {})
+    // Poll every 7s to detect path changes
+    this.stopRelayPolicyPolling(peerId)
+    const id = window.setInterval(() => {
+      this.checkRelayAndApplyPolicy(peerId).catch(() => {})
+    }, 7000)
+    this.statsPollIntervalByPeer.set(peerId, id)
+  }
+
+  private stopRelayPolicyPolling(peerId: string): void {
+    const id = this.statsPollIntervalByPeer.get(peerId)
+    if (id) {
+      window.clearInterval(id)
+      this.statsPollIntervalByPeer.delete(peerId)
+    }
+    this.relayActiveByPeer.delete(peerId)
+  }
+
+  private async checkRelayAndApplyPolicy(peerId: string): Promise<void> {
+    if (!this.audioOnlyOnRelay) return
+    const pc = this.peerConnections.get(peerId)
+    if (!pc) return
+    try {
+      const stats = await pc.getStats()
+      let selectedPairId: string | undefined
+      const reports = new Map<string, RTCStats>()
+
+      stats.forEach((report) => {
+        reports.set(report.id, report)
+        if (report.type === 'transport') {
+          const t = report as RTCStats & { selectedCandidatePairId?: string }
+          if (t.selectedCandidatePairId) {
+            selectedPairId = t.selectedCandidatePairId
+          }
+        } else if (report.type === 'candidate-pair') {
+          const cp = report as RTCStats & { nominated?: boolean; selected?: boolean }
+          if (cp.nominated) {
+            selectedPairId = report.id
+          }
+        }
+      })
+
+      if (!selectedPairId) return
+      const pair = reports.get(selectedPairId) as (RTCStats & { localCandidateId?: string; remoteCandidateId?: string }) | undefined
+      if (!pair) return
+      const local = pair.localCandidateId ? (reports.get(pair.localCandidateId) as (RTCStats & { candidateType?: string }) | undefined) : undefined
+      const remote = pair.remoteCandidateId ? (reports.get(pair.remoteCandidateId) as (RTCStats & { candidateType?: string }) | undefined) : undefined
+      const isRelay = (local?.candidateType === 'relay') || (remote?.candidateType === 'relay')
+
+      const wasRelay = this.relayActiveByPeer.get(peerId) || false
+      if (isRelay && !wasRelay) {
+        this.relayActiveByPeer.set(peerId, true)
+        // Downgrade to audio-only
+        try {
+          useWebRTCStore.getState().setVideoEnabled(false)
+          useUIStore.getState().setNotice?.('Network is constrained; switched to audio-only. Video will return when the connection improves.')
+        } catch (e) {
+          console.warn('Failed to apply audio-only on relay:', e)
+        }
+      } else if (!isRelay && wasRelay) {
+        this.relayActiveByPeer.set(peerId, false)
+        // Restore video if user had not manually disabled it
+        try {
+          const isVideoOff = useWebRTCStore.getState().isVideoOff
+          if (isVideoOff) {
+            useWebRTCStore.getState().setVideoEnabled(true)
+            useUIStore.getState().setNotice?.('Connection improved; video restored.')
+          }
+        } catch (e) {
+          console.warn('Failed to restore video after relay ended:', e)
+        }
+      }
+    } catch (e) {
+      console.warn('getStats failed for relay detection:', e)
     }
   }
 }
