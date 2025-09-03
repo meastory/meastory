@@ -209,8 +209,19 @@ export default function Join() {
     const others = participants.size
     if (others >= 1) {
       setPhase('connecting')
+      return
     }
-  }, [participants.size, phase])
+    // If connected to signaling but no peers after a short delay, allow self-preview mode
+    let t: number | null = null
+    if (isConnected) {
+      t = window.setTimeout(() => {
+        if (participants.size === 0 && phase === 'waiting') {
+          setPhase('connected')
+        }
+      }, 1200)
+    }
+    return () => { if (t) window.clearTimeout(t) }
+  }, [participants.size, phase, isConnected])
 
   // Auto-open picker when we first enter the room without a story
   useEffect(() => {
@@ -311,7 +322,7 @@ export default function Join() {
         <PresenceBadge className="absolute top-4 left-4 z-[110]" />
         <button
           onClick={() => toggleFullscreen()}
-          className="absolute top-4 right-4 z-[110] px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
+          className="absolute bottom-4 right-4 z-[110] px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
           aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
         >
           {isFullscreen ? '⤢' : '⤢'}
