@@ -22,8 +22,17 @@ class WebRTCManager {
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
       { urls: 'stun:stun1.l.google.com:19302' },
-      // Optional TURN from environment
+      // Optional TURN from environment (supports JSON array or single URL)
       ...(() => {
+        const json = import.meta.env.VITE_TURN_SERVERS as string | undefined
+        if (json) {
+          try {
+            const parsed = JSON.parse(json) as Array<{ urls: string | string[]; username?: string; credential?: string }>
+            return parsed
+          } catch (e) {
+            console.warn('VITE_TURN_SERVERS parse failed:', e)
+          }
+        }
         const url = import.meta.env.VITE_TURN_URL as string | undefined
         const username = import.meta.env.VITE_TURN_USERNAME as string | undefined
         const credential = import.meta.env.VITE_TURN_CREDENTIAL as string | undefined
