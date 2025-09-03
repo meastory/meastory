@@ -44,9 +44,9 @@ export default function Invite() {
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-      <div className="absolute top-4 right-4 flex gap-2">
-        <InstallPWAButton />
+      <div className="absolute bottom-4 right-4 z-[1101] flex gap-2">
         <FullscreenButton showOnDesktop className="" variant="minimal" size="sm" />
+        <InstallPWAButton />
       </div>
       <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow space-y-6 text-center">
         <h1 className="text-3xl font-bold">Invite</h1>

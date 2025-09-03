@@ -41,7 +41,6 @@ export default function VideoFeed({ participantId, className = '', showControls 
             } catch (err2) {
               console.error('❌ Video play failed even after muting:', err2)
             } finally {
-              // Keep muted state if local, otherwise restore original to allow audio when user interacts elsewhere
               if (!isLocal) {
                 videoElement.muted = originallyMuted
               }
@@ -50,7 +49,6 @@ export default function VideoFeed({ participantId, className = '', showControls 
         }
 
         if (videoElement.readyState >= 2) {
-          // HAVE_CURRENT_DATA
           tryPlay()
         } else {
           const onLoaded = () => {
@@ -105,17 +103,17 @@ export default function VideoFeed({ participantId, className = '', showControls 
       <video
         ref={videoRef}
         className={`w-full h-full object-cover ${isLocal ? 'scale-x-[-1]' : ''}`}
-        muted={isLocal} // Always mute local video to prevent feedback
+        muted={isLocal}
         playsInline
         autoPlay
       />
       
       {/* Video Off Overlay */}
       {(isVideoOff && isLocal) || (participantVideoOff && !isLocal) ? (
-        <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
+        <div className="absolute inset-0 bg-gray-800 flex items-center justify-center z-[900]">
           <div className="text-center">
             <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-2">
-              <span className="text-2xl"></span>
+              <span className="text-2xl">📷</span>
             </div>
             <p className="text-gray-300 text-sm">Camera off</p>
           </div>
@@ -123,7 +121,7 @@ export default function VideoFeed({ participantId, className = '', showControls 
       ) : null}
       
       {/* Participant Info Overlay */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 z-[950]">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="text-white text-sm font-medium">
@@ -137,11 +135,11 @@ export default function VideoFeed({ participantId, className = '', showControls 
                   <span className="text-xs text-white">🔇</span>
                 </div>
               )}
-              {(isVideoOff && isLocal) || (participantVideoOff && !isLocal) && (
+              {(isVideoOff && isLocal) || (participantVideoOff && !isLocal) ? (
                 <div className="w-4 h-4 bg-yellow-500 rounded-full flex items-center justify-center">
                   <span className="text-xs text-white">📷</span>
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
           
@@ -158,7 +156,7 @@ export default function VideoFeed({ participantId, className = '', showControls 
                 title={isMicMuted ? 'Unmute microphone' : 'Mute microphone'}
               >
                 <span className="text-sm">
-                  {isMicMuted ? '🔇' : ''}
+                  {isMicMuted ? '🔇' : '🎙️'}
                 </span>
               </button>
               
