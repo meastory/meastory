@@ -241,7 +241,15 @@ export default function Join() {
 
   if (phase === 'preflight') {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative">
+        <div className="absolute bottom-4 left-4 z-[110]">
+          <button
+            onClick={() => toggleFullscreen()}
+            className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
+          >
+            ⤢
+          </button>
+        </div>
         <div className="w-full max-w-2xl bg-gray-900 p-6 rounded-lg shadow space-y-6">
           <h1 className="text-3xl font-bold text-center">Get Ready</h1>
 
@@ -306,7 +314,15 @@ export default function Join() {
 
   if (phase === 'waiting') {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative">
+        <div className="absolute bottom-4 left-4 z-[110]">
+          <button
+            onClick={() => toggleFullscreen()}
+            className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
+          >
+            ⤢
+          </button>
+        </div>
         <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow space-y-4 text-center">
           <h1 className="text-3xl font-bold">Waiting…</h1>
           <div className="text-gray-300">Share this link with the other device:</div>
@@ -322,7 +338,7 @@ export default function Join() {
         <PresenceBadge className="absolute top-4 left-4 z-[110]" />
         <button
           onClick={() => toggleFullscreen()}
-          className="absolute bottom-4 right-4 z-[110] px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
+          className="absolute bottom-4 left-4 z-[110] px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
           aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
         >
           {isFullscreen ? '⤢' : '⤢'}

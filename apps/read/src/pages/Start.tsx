@@ -31,9 +31,9 @@ export default function Start() {
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-      <div className="absolute top-4 right-4 flex gap-2">
-        <InstallPWAButton />
+      <div className="absolute bottom-4 left-4 flex gap-2">
         <FullscreenButton showOnDesktop className="" variant="minimal" size="sm" />
+        <InstallPWAButton />
       </div>
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Guests card */}
