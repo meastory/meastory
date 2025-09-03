@@ -224,58 +224,63 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
           }
         })
 
-      // Subscribe with retry
-      const subscribeWithRetry = async (attempt = 1) => {
-        await channel.subscribe(async (status: string) => {
-          if (status === 'SUBSCRIBED') {
-            console.log('📡 Supabase Realtime connected')
-            set({ signalingSocket: channel, roomId, isConnected: true, isConnecting: false })
+      // Return a promise that resolves when SUBSCRIBED, rejects after retries
+      await new Promise<void>((resolve, reject) => {
+        const subscribeWithRetry = async (attempt = 1) => {
+          channel.subscribe(async (status: string) => {
+            if (status === 'SUBSCRIBED') {
+              console.log('📡 Supabase Realtime connected')
+              set({ signalingSocket: channel, roomId, isConnected: true, isConnecting: false })
 
-            const deviceLabel = getSavedDeviceLabel()
-            const auth = useAuthStore.getState()
-            const displayName = auth.user?.display_name || 'Guest'
-            try {
-              await channel.track({
-                clientId,
-                name: displayName,
-                deviceLabel,
-                ts: Date.now(),
-              })
-              presenceMetaByKey.set(clientId!, { ts: Date.now(), name: displayName, deviceLabel })
-              recomputeFromLocalPresence()
-            } catch (e) {
-              console.warn('Presence track failed:', e)
-            }
-          } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-            console.error(status === 'CHANNEL_ERROR' ? '❌ Supabase Realtime channel error' : '❌ Supabase Realtime connection timed out')
-            if (attempt < 3) {
-              const backoff = 500 * Math.pow(2, attempt - 1)
-              console.log(`⏳ Retrying subscribe in ${backoff}ms (attempt ${attempt + 1}/3)`) 
-              // Metrics: retry
-              const globals = (window as unknown as { __guest_session_id?: string; __guest_room_code?: string })
-              const sid = globals.__guest_session_id
-              const roomCode = globals.__guest_room_code || ''
-              if (sid && roomCode) {
-                import('../lib/supabase').then(({ logConnectionEvent }) => {
-                  logConnectionEvent({ session_id: sid, room_code: roomCode, event_type: 'retry', detail: { attempt: attempt + 1 } }).catch(() => {})
+              const deviceLabel = getSavedDeviceLabel()
+              const auth = useAuthStore.getState()
+              const displayName = auth.user?.display_name || 'Guest'
+              try {
+                await channel.track({
+                  clientId,
+                  name: displayName,
+                  deviceLabel,
+                  ts: Date.now(),
                 })
+                presenceMetaByKey.set(clientId!, { ts: Date.now(), name: displayName, deviceLabel })
+                recomputeFromLocalPresence()
+              } catch (e) {
+                console.warn('Presence track failed:', e)
               }
-              setTimeout(() => { subscribeWithRetry(attempt + 1) }, backoff)
-            } else {
-              set({ isConnecting: false })
-              get().setError('Failed to connect to signaling channel')
-            }
-          }
-        })
-      }
 
-      await subscribeWithRetry(1)
+              resolve()
+            } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+              console.error(status === 'CHANNEL_ERROR' ? '❌ Supabase Realtime channel error' : '❌ Supabase Realtime connection timed out')
+              if (attempt < 3) {
+                const backoff = 500 * Math.pow(2, attempt - 1)
+                console.log(`⏳ Retrying subscribe in ${backoff}ms (attempt ${attempt + 1}/3)`) 
+                // Metrics: retry
+                const globals = (window as unknown as { __guest_session_id?: string; __guest_room_code?: string })
+                const sid = globals.__guest_session_id
+                const roomCodeUpper = globals.__guest_room_code || ''
+                if (sid && roomCodeUpper) {
+                  import('../lib/supabase').then(({ logConnectionEvent }) => {
+                    logConnectionEvent({ session_id: sid, room_code: roomCodeUpper, event_type: 'retry', detail: { attempt: attempt + 1 } }).catch(() => {})
+                  })
+                }
+                setTimeout(() => { subscribeWithRetry(attempt + 1) }, backoff)
+              } else {
+                set({ isConnecting: false })
+                get().setError('Failed to connect to signaling channel')
+                reject(new Error('Failed to connect to signaling channel'))
+              }
+            }
+          })
+        }
+        subscribeWithRetry(1)
+      })
 
     } catch (error: unknown) {
       console.error('❌ Connection error:', error)
       set({ isConnecting: false })
       const msg = (error as { message?: string })?.message || 'Connection error'
       get().setError(msg)
+      throw error
     }
   },
 
