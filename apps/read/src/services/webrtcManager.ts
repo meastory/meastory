@@ -12,10 +12,26 @@ class WebRTCManager {
   private pendingMessages: Map<string, DataMessage[]> = new Map()
   private audioSender: RTCRtpSender | null = null
   private videoSender: RTCRtpSender | null = null
+  // Perfect negotiation state per peer
+  private makingOffer: Map<string, boolean> = new Map()
+  private ignoreOffer: Map<string, boolean> = new Map()
+  private politePeer: Map<string, boolean> = new Map()
+  // Debounce ICE restarts per peer
+  private lastIceRestartAt: Map<string, number> = new Map()
   private iceServers: RTCConfiguration = {
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' }
+      { urls: 'stun:stun1.l.google.com:19302' },
+      // Optional TURN from environment
+      ...(() => {
+        const url = import.meta.env.VITE_TURN_URL as string | undefined
+        const username = import.meta.env.VITE_TURN_USERNAME as string | undefined
+        const credential = import.meta.env.VITE_TURN_CREDENTIAL as string | undefined
+        if (url && username && credential) {
+          return [{ urls: url, username, credential }]
+        }
+        return [] as Array<{ urls: string; username?: string; credential?: string }>
+      })()
     ]
   }
 
@@ -24,6 +40,15 @@ class WebRTCManager {
     
     const peerConnection = new RTCPeerConnection(this.iceServers)
     
+    // Determine polite/impolite role from store (guest = polite)
+    try {
+      const role = useWebRTCStore.getState().role
+      const polite = role !== 'host'
+      this.politePeer.set(peerId, polite)
+    } catch {
+      this.politePeer.set(peerId, true)
+    }
+
     // Add local stream to peer connection
     const localStream = useWebRTCStore.getState().localStream
     if (localStream) {
@@ -42,6 +67,26 @@ class WebRTCManager {
     
     // Update sender references
     this.updateSenderReferences(peerConnection)
+    
+    // Perfect negotiation: onnegotiationneeded (guard against glare)
+    peerConnection.onnegotiationneeded = async () => {
+      try {
+        if (this.makingOffer.get(peerId)) return
+        this.makingOffer.set(peerId, true)
+        const offer = await peerConnection.createOffer()
+        await peerConnection.setLocalDescription(offer)
+        const clientId = useWebRTCStore.getState().clientId
+        useWebRTCStore.getState().sendSignalingMessage('offer', {
+          from: clientId,
+          to: peerId,
+          offer
+        })
+      } catch (e) {
+        console.warn('onnegotiationneeded failed:', e)
+      } finally {
+        this.makingOffer.set(peerId, false)
+      }
+    }
     
     // Handle remote stream
     peerConnection.ontrack = (event) => {
@@ -72,26 +117,26 @@ class WebRTCManager {
       
       if (state === 'connected') {
         console.log(`✅ Connected to ${peerId}`)
-        // Ensure all local tracks are properly attached
         this.addMissingLocalTracks(peerId)
-        // Data channel should be ready now
         console.log('📡 Data channels:', Array.from(this.dataChannels.keys()))
-      } else if (state === 'connecting') {
-        console.log(`🔄 Connecting to ${peerId}...`)
-      } else if (state === 'disconnected') {
-        console.log(`🔌 Disconnected from ${peerId}`)
       } else if (state === 'failed') {
         console.error(`❌ Connection failed for ${peerId}`)
         this.handleConnectionFailure(peerId)
       }
     }
 
-    // Handle ICE connection state for resilience
+    // Debounced ICE restart on ICE connection failure
     peerConnection.oniceconnectionstatechange = async () => {
       const iceState = peerConnection.iceConnectionState
       console.log(`🧊 ICE state for ${peerId}:`, iceState)
       if (iceState === 'failed' || iceState === 'disconnected') {
-        // Only initiator should attempt restart
+        const now = Date.now()
+        const last = this.lastIceRestartAt.get(peerId) || 0
+        if (now - last < 4000) {
+          console.log('🧊 ICE restart skipped (debounced) for', peerId)
+          return
+        }
+        this.lastIceRestartAt.set(peerId, now)
         const clientId = useWebRTCStore.getState().clientId
         if (!clientId) return
         try {
@@ -140,10 +185,8 @@ class WebRTCManager {
     const localStream = useWebRTCStore.getState().localStream
     if (!localStream) return
     
-    // Update sender references
     this.updateSenderReferences(peerConnection)
     
-    // Audio: always attach if missing
     const audioTrack = localStream.getAudioTracks()[0]
     if (audioTrack) {
       if (this.audioSender && this.audioSender.track !== audioTrack) {
@@ -153,7 +196,6 @@ class WebRTCManager {
       }
     }
     
-    // Video: attach if we have video enabled
     const videoTrack = localStream.getVideoTracks()[0]
     if (videoTrack) {
       if (this.videoSender && this.videoSender.track !== videoTrack) {
@@ -170,6 +212,7 @@ class WebRTCManager {
     const peerConnection = await this.createPeerConnection(peerId)
     
     try {
+      this.makingOffer.set(peerId, true)
       const offer = await peerConnection.createOffer()
       await peerConnection.setLocalDescription(offer)
       
@@ -181,12 +224,13 @@ class WebRTCManager {
         offer
       })
       
-      // Create data channel for additional communication
       const dataChannel = peerConnection.createDataChannel('story-sync')
       this.setupDataChannel(peerId, dataChannel)
       
     } catch (error) {
       console.error('❌ Error creating offer:', error)
+    } finally {
+      this.makingOffer.set(peerId, false)
     }
   }
 
@@ -194,13 +238,26 @@ class WebRTCManager {
     console.log('📨 Handling offer from:', from)
     
     const peerConnection = await this.createPeerConnection(from)
+    const polite = this.politePeer.get(from) ?? true
     
     try {
+      const isMakingOffer = this.makingOffer.get(from) || false
+      const offerCollision = isMakingOffer || peerConnection.signalingState !== 'stable'
+      const shouldIgnore = !polite && offerCollision
+      if (shouldIgnore) {
+        console.warn('⚠️ Ignoring offer due to glare (impolite peer)')
+        this.ignoreOffer.set(from, true)
+        return
+      }
+      this.ignoreOffer.set(from, false)
+      if (offerCollision) {
+        console.log('🔄 Rolling back due to offer collision')
+        await peerConnection.setLocalDescription({ type: 'rollback' } as RTCSessionDescriptionInit)
+      }
+
       await peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
-      
       const answer = await peerConnection.createAnswer()
       await peerConnection.setLocalDescription(answer)
-      
       const clientId = useWebRTCStore.getState().clientId
       console.log('📤 Sending answer from:', clientId, 'to:', from)
       useWebRTCStore.getState().sendSignalingMessage('answer', {
@@ -208,11 +265,7 @@ class WebRTCManager {
         to: from,
         answer
       })
-      
-      // Do NOT create a data channel on the answering side.
-      // Data channel will be established from the offerer.
-      
-      // Process any queued ICE candidates
+
       this.processQueuedIceCandidates(from)
       
     } catch (error) {
@@ -230,18 +283,13 @@ class WebRTCManager {
     }
     
     try {
-      // Only set remote answer if we are in the correct state
       if (peerConnection.signalingState !== 'have-local-offer') {
         console.warn('⚠️ Ignoring unexpected answer in state:', peerConnection.signalingState)
         return
       }
       await peerConnection.setRemoteDescription(new RTCSessionDescription(answer))
       console.log('✅ Answer processed from:', from)
-      
-      // Ensure local tracks are properly attached
       this.addMissingLocalTracks(from)
-      
-      // Process any queued ICE candidates now that remote description is set
       this.processQueuedIceCandidates(from)
       
     } catch (error) {
@@ -258,7 +306,6 @@ class WebRTCManager {
       return
     }
     
-    // Check if remote description is set before adding ICE candidates
     if (peerConnection.remoteDescription) {
       try {
         await peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
@@ -267,7 +314,6 @@ class WebRTCManager {
       }
     } else {
       console.log('🧊 Queuing ICE candidate until remote description is set')
-      // Queue the candidate to be added later
       this.queueIceCandidate(from, candidate)
     }
   }
@@ -298,7 +344,6 @@ class WebRTCManager {
       }
     })
     
-    // Clear the queue
     this.iceCandidatesQueue.delete(peerId)
   }
 
@@ -307,7 +352,6 @@ class WebRTCManager {
     
     dataChannel.onopen = () => {
       console.log('📡 Data channel opened for:', peerId)
-      // Flush any queued messages
       const queued = this.pendingMessages.get(peerId) || []
       if (queued.length) {
         console.log(`📤 Flushing ${queued.length} queued messages to`, peerId)
@@ -321,18 +365,14 @@ class WebRTCManager {
         const message = JSON.parse(event.data) as DataMessage
         console.log('📡 Data channel message from', peerId, ':', message)
         
-        // Handle different message types
         switch (message.type) {
           case 'choice':
-            // Handle story choice synchronization
             this.handleStoryChoiceSync(message.nextSceneId)
             break
           case 'child-name-change':
-            // Handle child name synchronization
             this.handleChildNameSync(message.name)
             break
           case 'story-change':
-            // Handle story change synchronization
             this.handleStoryChangeSync(message.storyId)
             break
           default:
@@ -384,17 +424,14 @@ class WebRTCManager {
   handleConnectionFailure(peerId: string): void {
     console.error(`❌ Connection failed for ${peerId}`)
     
-    // Clean up peer connection
     const peerConnection = this.peerConnections.get(peerId)
     if (peerConnection) {
       peerConnection.close()
       this.peerConnections.delete(peerId)
     }
     
-    // Remove participant
     useWebRTCStore.getState().removeParticipant(peerId)
     
-    // Attempt reconnection after a delay
     setTimeout(() => {
       console.log(`🔄 Attempting reconnection to ${peerId}`)
       this.createOffer(peerId)
@@ -404,21 +441,18 @@ class WebRTCManager {
   closeAllConnections(): void {
     console.log('🔌 Closing all WebRTC connections')
     
-    // Close peer connections
     this.peerConnections.forEach((peerConnection, peerId) => {
       console.log('🔌 Closing connection to:', peerId)
       peerConnection.close()
     })
     this.peerConnections.clear()
     
-    // Close data channels
     this.dataChannels.forEach((dataChannel, peerId) => {
       console.log('🔌 Closing data channel to:', peerId)
       dataChannel.close()
     })
     this.dataChannels.clear()
 
-    // Clear ICE candidate queues
     this.iceCandidatesQueue.clear()
   }
 
@@ -429,7 +463,6 @@ class WebRTCManager {
       nextSceneId: sceneId
     }
     this.broadcastDataMessage(payload)
-    // Fallback via signaling in case data channel isn't open yet
     try {
       const clientId = useWebRTCStore.getState().clientId
       useWebRTCStore.getState().sendSignalingMessage('story-choice', {
@@ -442,28 +475,16 @@ class WebRTCManager {
   }
 
   syncChildName(name: string): void {
-    const payload: DataMessage = {
+    this.broadcastDataMessage({
       type: 'child-name-change',
       name,
       timestamp: Date.now()
-    }
-    this.broadcastDataMessage(payload)
-    // Fallback via signaling as well
-    try {
-      const clientId = useWebRTCStore.getState().clientId
-      useWebRTCStore.getState().sendSignalingMessage('child-name-change', {
-        from: clientId,
-        payload
-      })
-    } catch (e) {
-      console.warn('Signaling fallback failed (child-name-change):', e)
-    }
+    })
   }
 
   syncStoryChange(storyId: string): void {
     const payload: DataMessage = { type: 'story-change', storyId }
     this.broadcastDataMessage(payload)
-    // Fallback via signaling
     try {
       const clientId = useWebRTCStore.getState().clientId
       useWebRTCStore.getState().sendSignalingMessage('story-change', {
@@ -477,9 +498,7 @@ class WebRTCManager {
 
   handleStoryChoiceSync(nextSceneId: string): void {
     console.log('📖 Syncing story choice to scene:', nextSceneId)
-    // Navigate to the scene by ID
     try {
-      // Use a simple approach - update the room store directly
       import('../stores/roomStore').then(({ useRoomStore }) => {
         const roomStore = useRoomStore.getState()
         if (nextSceneId) {
@@ -508,7 +527,6 @@ class WebRTCManager {
 
   handleChildNameSync(name: string): void {
     console.log('👤 Syncing child name from remote participant:', name)
-    // Update child name in local storage and state
     try {
       localStorage.setItem('childName', name)
       import('../stores/roomStore').then(({ useRoomStore }) => {
@@ -523,5 +541,4 @@ class WebRTCManager {
   }
 }
 
-// Export singleton instance
 export const webrtcManager = new WebRTCManager()
