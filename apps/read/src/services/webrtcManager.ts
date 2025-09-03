@@ -68,6 +68,12 @@ class WebRTCManager {
   async createPeerConnection(peerId: string): Promise<RTCPeerConnection> {
     console.log('🔗 Creating peer connection for:', peerId)
     
+    // Reuse existing connection if present
+    const existing = this.peerConnections.get(peerId)
+    if (existing) {
+      return existing
+    }
+    
     // Phase 1: exclude TURN initially if phasedGathering
     const initialConfig = this.phasedGathering ? this.buildIceConfig(false) : this.buildIceConfig(true)
     const peerConnection = new RTCPeerConnection(initialConfig)
@@ -282,7 +288,7 @@ class WebRTCManager {
   async handleOffer(from: string, offer: RTCSessionDescriptionInit): Promise<void> {
     console.log('📨 Handling offer from:', from)
     
-    const peerConnection = await this.createPeerConnection(from)
+    const peerConnection = this.peerConnections.get(from) || await this.createPeerConnection(from)
     const polite = this.politePeer.get(from) ?? true
     
     try {
@@ -469,19 +475,9 @@ class WebRTCManager {
   handleConnectionFailure(peerId: string): void {
     console.error(`❌ Connection failed for ${peerId}`)
     
-    const peerConnection = this.peerConnections.get(peerId)
-    if (peerConnection) {
-      peerConnection.close()
-      this.peerConnections.delete(peerId)
-    }
+    // Do not close/delete the peer connection here. Let the reconnect loop recover.
     this.stopRelayPolicyPolling(peerId)
-    
-    useWebRTCStore.getState().removeParticipant(peerId)
-    
-    setTimeout(() => {
-      console.log(`🔄 Attempting reconnection to ${peerId}`)
-      this.createOffer(peerId)
-    }, 3000)
+    this.scheduleReconnect(peerId, 'handle_connection_failure')
   }
 
   closeAllConnections(): void {
