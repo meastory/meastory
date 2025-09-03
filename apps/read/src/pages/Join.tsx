@@ -449,6 +449,14 @@ export default function Join() {
       >
         📚
       </button>
+      {/* Countdown timer next to library button */}
+      <div className="fixed top-6 left-40 z-[101] text-sm">
+        {remainingMs != null && (
+          <div className="px-2 py-1 rounded bg-white/10 border border-white/20">
+            {`${String(Math.floor(remainingMs / 60000)).padStart(2,'0')}:${String(Math.floor((remainingMs % 60000) / 1000)).padStart(2,'0')}`}
+          </div>
+        )}
+      </div>
       {showPicker && (
         <InRoomStoryPicker onClose={() => setShowPicker(false)} />
       )}
