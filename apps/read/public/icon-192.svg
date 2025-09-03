@@ -1,0 +1,25 @@
+<!-- Simple book/story icon placeholder -->
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="192" height="192" rx="24" fill="#1a1a1a"/>
+  
+  <!-- Book shape -->
+  <rect x="48" y="40" width="96" height="112" rx="8" fill="#4f46e5" stroke="#6366f1" stroke-width="2"/>
+  
+  <!-- Book pages -->
+  <rect x="52" y="44" width="88" height="104" rx="4" fill="#f8fafc"/>
+  
+  <!-- Text lines -->
+  <rect x="60" y="60" width="72" height="4" rx="2" fill="#64748b"/>
+  <rect x="60" y="72" width="60" height="4" rx="2" fill="#64748b"/>
+  <rect x="60" y="84" width="68" height="4" rx="2" fill="#64748b"/>
+  <rect x="60" y="96" width="50" height="4" rx="2" fill="#64748b"/>
+  <rect x="60" y="108" width="64" height="4" rx="2" fill="#64748b"/>
+  <rect x="60" y="120" width="56" height="4" rx="2" fill="#64748b"/>
+  
+  <!-- Book spine -->
+  <rect x="48" y="40" width="8" height="112" rx="4" fill="#3730a3"/>
+  
+  <!-- MeAStory text -->
+  <text x="96" y="175" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#f8fafc" text-anchor="middle">MeAStory</text>
+</svg>

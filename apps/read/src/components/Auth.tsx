@@ -87,9 +87,6 @@ export default function Auth({ onAuthSuccess, mode, showToggle = true }: { onAut
             </button>
           </div>
         )}
-        <div className="mt-4 text-center text-gray-400 text-xs">
-          For testing: Use any email/password combination
-        </div>
       </div>
     </div>
   )
