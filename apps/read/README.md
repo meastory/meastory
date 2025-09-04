@@ -7,116 +7,68 @@ The production version of Read Me A Story, built with React, TypeScript, and Sup
 - **Frontend**: React 18 + TypeScript + Vite
 - **Styling**: Tailwind CSS + Radix UI
 - **State Management**: Zustand
-- **Backend**: Supabase (Database + Auth + Realtime)
+- **Backend**: Supabase (Database + Auth + Realtime + Edge Functions)
 - **Hosting**: Netlify
 - **CI/CD**: GitHub Actions
 
-## Project Structure
+## Implemented Features
+- Guest flow: `/start` (create room) → `/invite/:code` (share) → `/join/:code`
+- Supabase Realtime signaling with presence-driven host/guest roles
+- WebRTC with perfect negotiation, reconnect/backoff, phased TURN add
+- DataChannel story sync (choices, story change, child name) with Realtime fallback
+- Story Library to select/change stories without disconnecting
+- Minimal scene resume (`rooms.current_*`) with host-only RPC update
+- PWA install prompt, fullscreen controls, persisted text scaling
 
-```
-src/
-├── components/     # Reusable UI components
-├── hooks/         # Custom React hooks
-├── lib/           # Utilities, Supabase client
-├── pages/         # Route-based pages
-├── stores/        # Zustand state management
-├── types/         # TypeScript definitions
-├── styles/        # Global styles, design tokens
-└── stories/       # Story engine (Phase 2+)
-```
+## Environment Variables (.env)
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `VITE_FEATURE_GUEST_FLOW` = `true` to enable `/start`, `/invite`, `/join`
+- Optional TURN and ICE policy:
+  - `VITE_TURN_SERVERS` (JSON array) or `VITE_TURN_URL`/`VITE_TURN_USERNAME`/`VITE_TURN_CREDENTIAL`
+  - `VITE_ICE_TURN_DELAY_MS`
+  - `VITE_TURN_AUDIO_ONLY_ON_RELAY` (default true)
+  - `VITE_ICE_PHASED_GATHERING` (default true)
 
 ## Setup
 
-1. **Install dependencies:**
+1. Install dependencies:
    ```bash
    npm install
    ```
-
-2. **Environment variables:**
+2. Environment variables:
    ```bash
    cp .env.example .env
-   # Edit .env with your Supabase credentials
+   # edit values
    ```
-
-3. **Supabase setup:**
-   - Create a new Supabase project
-   - Copy the URL and anon key to `.env`
-   - Run the database schema (see Phase 1A documentation)
-
-4. **Development:**
+3. Supabase:
+   - Create project; set URL and anon key in `.env`
+   - Apply SQL from `/supabase/migrations/`
+   - Deploy Edge Function `identify_device`
+4. Development:
    ```bash
    npm run dev
    ```
-
-5. **Build:**
+5. Build:
    ```bash
    npm run build
    ```
 
-## Development Workflow
-
-### Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run test` - Run tests (when implemented)
-
-### Code Quality
-
-- ESLint for code linting
-- TypeScript for type checking
-- Prettier for code formatting (when configured)
-
 ## Architecture Overview
+- Stores: `authStore`, `roomStore`, `uiStore`, `webrtcStore`
+- Services: `webrtcManager` (peer connections, data channel, ICE policy)
+- Pages: Start/Invite/Join + auth
+- Components: Video grid/feeds, story overlay/player, pickers, controls
 
-### State Management
-- **Room Store**: Manages room state, participants, current story
-- **UI Store**: Manages interface state, modes, loading states
-- **Auth Store**: User authentication (Phase 4)
-
-### Component Architecture
-- Feature-based organization
-- Shared components in `/components`
-- Page components in `/pages`
-- Custom hooks in `/hooks`
-
-### Data Flow
-1. User actions trigger store updates
-2. Stores update via Zustand
-3. Components react to store changes
-4. Supabase handles data persistence and realtime updates
-
-## Development Phases
-
-See `/docs/project-management/` for detailed phase documentation:
-
-- **Phase 1A**: Foundation & Migration (Current)
-- **Phase 2**: Enhanced Storytelling
-- **Phase 3**: Visual Enhancement
-- **Phase 4**: Business Features
-
-## Contributing
-
-1. Follow the established project structure
-2. Use TypeScript for all new code
-3. Write tests for new functionality
-4. Update documentation as needed
-5. Follow the existing coding patterns
+## Development Workflow
+- `npm run dev` — local dev
+- `npm run build` — production build
+- `npm run preview` — preview build
 
 ## Deployment
-
-### Netlify Configuration
-- Build command: `npm run build`
+- Netlify build: `npm run build`
 - Publish directory: `dist`
-- Environment variables set in Netlify dashboard
-
-### CI/CD
-GitHub Actions will handle:
-- Automated testing
-- Build verification
-- Deployment to staging/production
+- Set env vars in Netlify UI
 
 ---
-
-For more details, see the project documentation in `/docs/`.
+See `/docs/` for broader product docs.

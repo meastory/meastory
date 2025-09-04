@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Story Tester</title>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f8ff;
+            color: #2c3e50;
+        }
+        
+        .story-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .story-title {
+            text-align: center;
+            color: #e74c3c;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .story-info {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .scene-text {
+            font-size: 18px;
+            line-height: 1.6;
+            white-space: pre-line;
+            margin-bottom: 30px;
+            color: #34495e;
+            text-align: center;
+        }
+        
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .choice-button {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .choice-button:hover {
+            background: linear-gradient(45deg, #2980b9, #3498db);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .control-button {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .control-button:hover {
+            background: #7f8c8d;
+        }
+        
+        .load-json {
+            background: white;
+            border: 2px dashed #bdc3c7;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .file-input {
+            margin: 10px 0;
+        }
+        
+        .pathway-info {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .scene-id {
+            color: #7f8c8d;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .characters-list {
+            color: #8e44ad;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        #childNameInput {
+            padding: 8px 15px;
+            border: 2px solid #3498db;
+            border-radius: 20px;
+            font-size: 16px;
+            margin: 0 10px;
+            text-align: center;
+        }
+        
+        .name-input-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="story-container">
+        <div class="load-json">
+            <h3>Load Story JSON File</h3>
+            <input type="file" id="jsonFile" accept=".json" class="file-input">
+            <br>
+            <small>Select the json file to test the interactive story</small>
+        </div>
+        
+        <div id="storyContent" style="display: none;">
+            <div class="story-title" id="storyTitle"></div>
+            <div class="story-info" id="storyInfo"></div>
+            
+            <div class="name-input-container">
+                <label for="childNameInput">Child's Name:</label>
+                <input type="text" id="childNameInput" placeholder="Enter name" value="Alex">
+                <button class="control-button" onclick="updateChildName()">Update Name</button>
+            </div>
+            
+            <div class="controls">
+                <button class="control-button" onclick="resetStory()">Reset to Beginning</button>
+                <button class="control-button" onclick="goBack()">Back One Scene</button>
+                <button class="control-button" onclick="showAllPathways()">Show All Pathways</button>
+            </div>
+            
+            <div class="pathway-info" id="pathwayInfo"></div>
+            
+            <div class="scene-id" id="sceneId"></div>
+            <div class="characters-list" id="charactersList"></div>
+            <div class="scene-text" id="sceneText"></div>
+            <div class="choices-container" id="choicesContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        let storyData = null;
+        let currentSceneId = null;
+        let sceneHistory = [];
+        let childName = 'Alex';
+        
+        document.getElementById('jsonFile').addEventListener('change', loadStoryFile);
+        
+        function loadStoryFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    storyData = JSON.parse(e.target.result);
+                    initializeStory();
+                } catch (error) {
+                    alert('Error loading JSON file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        function initializeStory() {
+            if (!storyData) return;
+            
+            document.getElementById('storyContent').style.display = 'block';
+            document.getElementById('storyTitle').textContent = storyData.title.replace('{{childName}}', childName);
+            document.getElementById('storyInfo').textContent = `Ages ${storyData.ageRange[0]}-${storyData.ageRange[1]} | Style: ${storyData.author_style} | Source: ${storyData.source_story}`;
+            
+            // Start with first scene
+            currentSceneId = storyData.scenes[0].id;
+            sceneHistory = [];
+            displayCurrentScene();
+        }
+        
+        function displayCurrentScene() {
+            if (!storyData || !currentSceneId) return;
+            
+            const scene = storyData.scenes.find(s => s.id === currentSceneId);
+            if (!scene) {
+                alert('Scene not found: ' + currentSceneId);
+                return;
+            }
+            
+            // Update display
+            document.getElementById('sceneId').textContent = `Scene ID: ${scene.id}`;
+            document.getElementById('charactersList').textContent = `Characters: ${scene.characters.join(', ')}`;
+            document.getElementById('sceneText').textContent = scene.text.replace(/\{\{childName\}\}/g, childName);
+            
+            // Show pathway information
+            const pathways = scene.pathway || [];
+            document.getElementById('pathwayInfo').textContent = `Used in pathways: ${pathways.join(', ')}`;
+            
+            // Display choices
+            const choicesContainer = document.getElementById('choicesContainer');
+            choicesContainer.innerHTML = '';
+            
+            if (scene.choices && scene.choices.length > 0) {
+                scene.choices.forEach(choice => {
+                    const button = document.createElement('button');
+                    button.className = 'choice-button';
+                    button.textContent = choice.label;
+                    button.onclick = () => makeChoice(choice.nextSceneId);
+                    choicesContainer.appendChild(button);
+                });
+            } else {
+                const endMessage = document.createElement('div');
+                endMessage.style.textAlign = 'center';
+                endMessage.style.fontWeight = 'bold';
+                endMessage.style.color = '#e74c3c';
+                endMessage.style.fontSize = '18px';
+                endMessage.textContent = '🎉 Story Complete! 🎉';
+                choicesContainer.appendChild(endMessage);
+            }
+        }
+        
+        function makeChoice(nextSceneId) {
+            if (!nextSceneId) return;
+            
+            sceneHistory.push(currentSceneId);
+            currentSceneId = nextSceneId;
+            displayCurrentScene();
+        }
+        
+        function updateChildName() {
+            const newName = document.getElementById('childNameInput').value.trim();
+            if (newName) {
+                childName = newName;
+                document.getElementById('storyTitle').textContent = storyData.title.replace('{{childName}}', childName);
+                displayCurrentScene();
+            }
+        }
+        
+        function resetStory() {
+            if (!storyData) return;
+            currentSceneId = storyData.scenes[0].id;
+            sceneHistory = [];
+            displayCurrentScene();
+        }
+        
+        function goBack() {
+            if (sceneHistory.length > 0) {
+                currentSceneId = sceneHistory.pop();
+                displayCurrentScene();
+            } else {
+                alert('Already at the beginning of the story!');
+            }
+        }
+        
+        function showAllPathways() {
+            if (!storyData) return;
+            
+            let pathwayInfo = 'Story Pathways:\n\n';
+            Object.entries(storyData.pathways).forEach(([key, pathway]) => {
+                pathwayInfo += `${key}: ${pathway.theme}\n`;
+                pathwayInfo += `Description: ${pathway.description}\n`;
+                pathwayInfo += `Scenes: ${pathway.scenes.join(' → ')}\n\n`;
+            });
+            
+            alert(pathwayInfo);
+        }
+        
+        // Auto-update child name as user types
+        document.getElementById('childNameInput').addEventListener('input', function() {
+            if (this.value.trim()) {
+                updateChildName();
+            }
+        });
+    </script>
+</body>
+</html>

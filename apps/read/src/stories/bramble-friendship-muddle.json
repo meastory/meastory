@@ -1,34 +1,29 @@
 {
   "id": "helping-bramble-friendship-muddle",
   "title": "Bramble Bear and the Friendship Muddle",
-  "ageRange": [3, 8],
-  "estimatedReadTime": "10-15 minutes",
-  "themes": ["conflict resolution and forgiveness", "understanding different traditions", "communication", "friendship building"],
-  "learningObjectives": [
-    "Understanding that different families can have different good ways of doing things",
-    "Learning to work through hurt feelings with patience and communication", 
-    "Practicing how to find fair solutions when friends have different traditions",
-    "Developing skills for building bridges between different backgrounds"
+  "ageRange": [
+    3,
+    8
   ],
-  "discussionPrompts": [
-    "Before: Have you ever had a disagreement with a friend about how to play a game? How did it feel?",
-    "During: Why do you think Pip and Flint both thought they were right about the game rules?",
-    "After: How did Bramble help them understand that both families' ways could be good? What did they create together?"
+  "themes": [
+    "conflict resolution and forgiveness",
+    "understanding different traditions",
+    "communication",
+    "friendship building"
   ],
-  
   "scenes": [
     {
       "id": "opening-1",
       "background": "woodland-clearing-friendship-conflict",
       "text": "Bramble Bear was collecting smooth river stones—the roundest, most perfect ones that felt like silk under his paws—for Nana's garden path, when he heard voices floating and drifting through the woodland clearing like clouds across the sky. Not angry voices, oh no no no, but frustrated voices that made his helpful heart go flip-flop, flip-flop, flip-flop. \"But that's not how you play!\" came Pip's voice, higher than usual with confusion and muddle. \"It IS how you play in my family!\" came another voice—younger and smaller, but just as troubled. \"Oh my paws and whiskers!\" said Bramble, following the sound past the dancing ferns and nodding mushrooms. In the sunny clearing where woodland friends usually gathered for games and giggles and laughter, he found quite a different scene. There sat Pip on one side of a fallen log, his ears drooping down-down-down like wilted lettuce, and on the other side sat the smallest badger kit Bramble had ever seen. Between them lay a tic-tac-toe grid scratched in the dirt—three neat lines this way, three neat lines that way—but the game sat abandoned like a puzzle missing its pieces. \"Hello there, little ones,\" said Bramble gently, settling down small-small-small to their size and fidgeting with his blue scarf the way he always did. \"I'm Bramble Bear. What seems to be the muddle here?\" The little badger looked up with eyes bright but worried-worried-worried. \"I'm Flint,\" he said politely, but his voice trembled like leaves on a breezy day. \"I'm staying with my Aunt Hazel for the summer-long, and Pip was teaching me woodland games, but...\" His small shoulders sagged like a balloon losing air. \"But he doesn't know the rules!\" Pip burst out, then immediately looked sorry for his loudness—his nose twitching with distress and worry. \"I won the last three games, fair and square and proper, so I get to go first this time—that's how it works in the woodland! But Flint just grabbed the stick and started making X's without asking or waiting!\" \"In my family, the youngest always goes first,\" Flint said quietly, like someone explaining something precious and important. \"Always and always and always. That's just... that's just how we play. I thought... I thought maybe Pip didn't want me to feel left out and forgotten.\" Both friends looked at Bramble with eyes full of confusion and hurt feelings, like two lost ships hoping for a lighthouse to guide them safely home. Bramble twisted his scarf around his paw, round and round and round, thinking hard. \"What would be the kindest thing to do?\" he murmured to himself, soft as a whisper.",
       "choices": [
-        { 
-          "label": "Listen to both sides separately", 
+        {
+          "label": "Listen to both sides separately",
           "nextSceneId": "branch-a-1",
           "choiceType": "investigative-approach"
         },
-        { 
-          "label": "Help them talk together right now", 
+        {
+          "label": "Help them talk together right now",
           "nextSceneId": "branch-b-1",
           "choiceType": "direct-mediation"
         }
@@ -36,14 +31,13 @@
       "emotionalBeat": "confused-conflict",
       "readAloudNotes": "Start with confused, frustrated voices in the distance. Make Pip sound higher and more confused, Flint smaller and more worried. Show Bramble's gentle approach when he settles down to their size. End with the weight of both children looking to him for help."
     },
-    
     {
       "id": "branch-a-1",
       "background": "woodland-clearing-investigation-approach",
       "text": "\"Let me talk with each of you separately,\" said Bramble thoughtfully, fidgeting-fidgeting-fidgeting with his blue scarf the way he always did when his heart was working through something important and tricky. \"Sometimes when friends are upset and muddled, it helps to understand everyone's feelings first—first before we try to fix and mend things.\" Pip's nose twitched hopefully, his one ear perking up like a question mark. \"You'll listen to my side? The whole story, beginning to end?\" \"Of course I will,\" said Bramble warmly. \"And then I'll listen to Flint's side too, every word and feeling. Every story has more than one way of looking at it—like a pretty stone that sparkles different colors when you turn it round and round in the bright sunlight.\" So Bramble sat with Pip first, under the friendly shade of the old willow tree. \"Tell me about your family's rules, Pip dear. Help me understand how and why and when.\" \"Well,\" said Pip, bouncing just a little as he always-always-always did when explaining something important, his nose twitching with memory and excitement, \"in my family, games are exciting! The winner of the last game gets to go first in the next one—it keeps the fun going, bouncing and rolling like a ball down a hill! And I won three games, Bramble. Three whole games, one-two-three! So I was excited to go first again, ready and waiting and hoping, and then...\" His ears drooped down-down-down again. \"Flint just started playing like I wasn't even there, like I was invisible as air.\" \"Hmm,\" said Bramble, thinking with his heart. Then he walked slow-slow-slowly over to where Flint sat by himself, small as a pebble by the big oak tree. \"Now tell me about your family's rules, Flint. Help me see and understand.\" Flint looked up with eyes that held worry like rain clouds holding water. \"In my family,\" he said carefully, his small paws fidgeting-fidgeting with a smooth pebble, \"the youngest always, always, always goes first. My papa says it's because little ones need extra chances to feel special and important and loved. And I'm the youngest here, so...\" His voice got smaller and smaller. \"I thought Pip was being mean, not letting me go first. I thought maybe he didn't want to play with someone new, someone different, someone who doesn't know woodland ways yet.\" Bramble felt something click-click-click into place in his chest, like a puzzle piece finding its perfect spot. \"Oh my paws and whiskers!\" he said softly. \"You were both following your families' rules perfectly-perfectly-perfectly. You both thought you were doing exactly the right thing!\"",
       "choices": [
-        { 
-          "label": "Continue to understand the situation", 
+        {
+          "label": "Continue to understand the situation",
           "nextSceneId": "dp2-a-1",
           "choiceType": "continue-investigation"
         }
@@ -51,14 +45,13 @@
       "emotionalBeat": "understanding-dawning",
       "readAloudNotes": "Use patient, investigative tones throughout. Make each child's explanation sound earnest and reasonable. Build to Bramble's realization with growing excitement - 'Oh my paws and whiskers!' should sound like a genuine breakthrough moment."
     },
-    
     {
       "id": "branch-b-1",
       "background": "woodland-clearing-direct-approach",
       "text": "\"Come on then, little friends,\" said Bramble, settling down between his two upset friends like a fuzzy bridge connecting two shores, his scarf settling around him like a gentle hug. \"Let's sit together and talk this through right now, right here. Sometimes the fastest way to untangle a knot is to look at it closely, carefully, together.\" \"But Bramble—\" Pip started, his voice still wobbly-wobbly with hurt feelings, nose twitching like raindrops. \"And Flint was just being—\" Flint began at exactly the same time, fidgeting with his small paws. \"I wasn't being anything!\" Pip's voice got a little louder, like a kettle starting to whistle and sing, his ears shooting up straight as exclamation marks. \"I won fair and square and proper!\" \"But you didn't let me explain about my family!\" Flint's voice rose too—not angry, no no no, but desperately trying to be heard above the muddle, his shoulders hunching forward like a small shell. \"In my family we always—\" \"Your family doesn't live here!\" Pip interrupted, then immediately looked shocked-shocked-shocked at his own words, like someone who'd accidentally stepped on a beautiful flower. Flint's eyes filled with tears that sparkled like dewdrops on morning grass, his small shoulders sagging-sagging-sagging completely. \"I can't help that I'm staying here! I didn't ask to be different and new and strange!\" \"Oh, oh no no no,\" said Pip, his face crumpling with instant regret, ears drooping low as low. \"I didn't mean... Flint, I didn't mean it like that, not mean and hurtful...\" But Flint had curled up small as a hedgehog, arms wrapped tight-tight-tight around his knees, trying to make himself invisible as morning mist. Bramble looked at his two friends—both good-hearted, both hurting, both saying things they didn't really-truly mean because their feelings were too big and tangled to sort out all at once. He twisted his scarf nervously, round and round. \"What would be the kindest thing to do?\" he murmured to himself, watching as Pip reached toward Flint, then pulled his paw back, unsure and sorry. \"Sometimes,\" Bramble said gently-gently, like someone handling delicate butterfly wings, \"when our hearts are full of big feelings, we need a little time to let them settle and calm, like mud in a puddle after the rain stops pattering. Then we can see clearly again, like looking in still water.\"",
       "choices": [
-        { 
-          "label": "Continue to help with hurt feelings", 
+        {
+          "label": "Continue to help with hurt feelings",
           "nextSceneId": "dp2-b-1",
           "choiceType": "emotional-healing"
         }
@@ -66,19 +59,18 @@
       "emotionalBeat": "escalating-hurt",
       "readAloudNotes": "Start with overlapping voices and building tension. Make Pip's hurtful comment sound shocked and immediate, then show his instant regret. Show Flint curling up in pain. End with Bramble's gentle wisdom about letting feelings settle."
     },
-    
     {
       "id": "dp2-a-1",
       "background": "woodland-clearing-understanding-moment",
       "text": "Now Bramble understood the whole muddle-puddle—like seeing both sides of a coin spinning in bright sunlight. Both friends had been playing correctly, just by different family rules, different but both good. His heart felt warm-warm-warm knowing that neither Pip nor Flint had been mean or unkind, just confused and muddled. \"Well then, my dear friends,\" said Bramble, gathering both friends together under the dappled sunlight that danced through the leaves, his scarf neat and tidy now that his thinking was clear as morning water. \"I've learned something wonderful-wonderful-wonderful! Pip, your family's rule about winners going first sounds exciting and bouncy and fun. And Flint, your family's rule about youngest going first sounds kind and caring and warm. Both rules make perfect sense!\" Pip's ears perked up like question marks dancing, nose twitching with hope-hope-hope. \"They... they both make sense? Really and truly?\" \"Really and truly?\" asked Flint carefully, uncurling just a little like a fern unfurling, his small paws still fidgeting with that smooth-smooth pebble. \"Really and truly and certainly,\" said Bramble with his warmest smile, bright as sunshine on water. \"You were both doing exactly what your families taught you, following the rules you learned at home. No wonder you were confused—it's like speaking two different languages that both say 'hello' in their own special way!\" Flint looked at Pip with eyes wide as morning stars twinkling. \"So you weren't trying to be mean to the new kit?\" \"And you weren't trying to ignore my wins?\" Pip asked, his nose twitching hopefully-hopefully, ears starting to lift like flowers reaching for sun. \"Not at all, not one bit!\" they said together, then giggled like silver bells ringing in the breeze. But now Bramble faced a new puzzle-muddle: how to help them play together when they had different family traditions, different but both precious? He adjusted his scarf thoughtfully, wrapping it around his paw like he always-always did when thinking hard. \"What would be the kindest thing to do?\" he wondered aloud.",
       "choices": [
-        { 
-          "label": "Teach each other your family ways", 
+        {
+          "label": "Teach each other your family ways",
           "nextSceneId": "journey-1a2a-1",
           "choiceType": "tradition-sharing"
         },
-        { 
-          "label": "Think about what feels most fair", 
+        {
+          "label": "Think about what feels most fair",
           "nextSceneId": "journey-1a2b-1",
           "choiceType": "fairness-focus"
         }
@@ -86,19 +78,18 @@
       "emotionalBeat": "collaborative-discovery",
       "readAloudNotes": "Show Bramble's breakthrough moment with genuine excitement. Make both children sound hopeful and relieved. Build anticipation for the choice between sharing traditions or focusing on fairness."
     },
-    
     {
       "id": "dp2-b-1",
       "background": "woodland-clearing-willow-wisdom",
       "text": "Bramble watched as Pip kept glancing at Flint with worry-eyes, wanting-wanting-wanting to fix his accidentally hurtful words but not knowing how or where to start. And Flint stayed curled up small-small-small, not angry but definitely bruised in his heart like a flower after a sudden storm, shoulders hunched protectively around himself. \"I think,\" said Bramble gently-gently, like someone handling delicate butterfly wings or morning dewdrops, \"both of your hearts are too full of worried feelings to hear each other clearly right now, this moment.\" \"I really didn't mean what I said,\" Pip whispered, his voice small as a mouse's squeak, ears drooping with shame and sadness. \"I was just confused and my feelings got all jumbled-tumbled up like laundry in a basket.\" Flint peeked over his arms, still fidgeting nervously like leaves rustling. \"You weren't trying to be mean to the new kid? The strange one who doesn't belong?\" \"Never, never, never!\" said Pip earnestly, bouncing just a tiny-tiny bit despite his sadness, like hope trying to bubble up. \"I like having new friends! I was just... I don't know why my mouth said that mean thing about your family.\" \"Sometimes when we're upset and muddled,\" said Bramble kindly, his scarf twisted with concern and caring, \"our mouths say things our hearts don't mean—like when you're really hungry and everything tastes wrong, even your most favorite foods.\" A thoughtful \"Hmm... hmm... hmm...\" drifted down from above like music floating on air. Looking up-up-up, they spotted Willow the owl settling gracefully on her favorite branch, her head tilted thoughtfully as her wise amber eyes took in the scene below, gentle and understanding. \"Hello, little friends,\" she said in her gentle, measured voice that flowed like honey from the comb. \"Hmm, tell me more about what happened here in this clearing. Sometimes when feelings are big and tangled like yarn in a basket, hearts need a moment to unknot themselves, slowly and carefully.\" Bramble nodded, fidgeting-fidgeting with his scarf. He could see both approaches that might help—but which would be kindest right now, this very moment?",
       "choices": [
-        { 
-          "label": "Find what you both like about games", 
+        {
+          "label": "Find what you both like about games",
           "nextSceneId": "journey-1b2a-1",
           "choiceType": "common-ground"
         },
-        { 
-          "label": "Take time to think about feelings", 
+        {
+          "label": "Take time to think about feelings",
           "nextSceneId": "journey-1b2b-1",
           "choiceType": "reflection-time"
         }
@@ -106,14 +97,13 @@
       "emotionalBeat": "gentle-healing",
       "readAloudNotes": "Show Pip's worry and desire to fix his mistake. Make Flint sound still hurt but beginning to peek out. Use Willow's wise, gentle voice when she appears. End with hope that healing is possible with patience."
     },
-    
     {
       "id": "journey-1a2a-1",
       "background": "woodland-clearing-teaching-traditions",
       "text": "\"What a wonderful-wonderful idea!\" said Bramble, clapping his paws together soft as butterfly wings meeting in a dance, his scarf settling comfortably around his shoulders like a gentle hug. \"You can teach each other, learn from each other! Pip, show Flint your family's way, and Flint, show Pip your family's way. Then you'll both know twice as many ways to have fun, double the joy!\" Pip bounced up like a spring flower reaching-reaching for sunshine, his nose twitching with pure excitement and delight. \"Ooh, ooh! I can teach you the winner-goes-first way! It's like... like a victory dance that keeps going and going and bouncing!\" He did a little hop-spin that made his ears flap-flap-flap like happy flags. \"And I can show you the youngest-goes-first way,\" said Flint, his voice growing stronger and surer like a creek after spring rain, his small paws finally releasing that smooth pebble he'd been clutching tight-tight-tight. \"My papa says it makes everyone feel special and included and loved.\" So they scratched a fresh tic-tac-toe grid in the soft dirt, clean and new and ready. First, they played Pip's family's way—fast and exciting and bouncy, with the winner hopping with joy before starting the next game. Flint giggled like tinkling bells as Pip did a little victory wiggle, his ears doing their happy bounce-bounce-bounce. \"That IS exciting! Like the game never really ends, it just keeps rolling and tumbling on!\" Then they played Flint's family's way—careful and kind and gentle, making sure the smallest friend felt important and welcome and treasured. Pip's eyes grew wide as saucers with understanding, his nose twitching thoughtfully-thoughtfully. \"Oh! So everyone gets to feel special, not just the ones who are good at winning! That's really kind and caring, Flint.\" \"Look at that, look at that!\" said Bramble warmly, watching his friends discover something beautiful together, his heart doing happy flip-flops like pancakes on Sunday morning. \"Now you both know two different ways to be kind through games—two paths to the same wonderful place!\" But just then, just as they were glowing with discovery, Hazel appeared at the edge of the clearing, moving with her characteristic steady-steady pace, carrying her useful basket and looking around with eyes like someone searching for treasure most precious.",
       "choices": [
-        { 
-          "label": "Continue to see Hazel", 
+        {
+          "label": "Continue to see Hazel",
           "nextSceneId": "dp3-a-1",
           "choiceType": "continue-discovery"
         }
@@ -121,14 +111,13 @@
       "emotionalBeat": "celebratory-learning",
       "readAloudNotes": "Show growing excitement as they teach each other. Make their discoveries sound genuine and delightful. Build the joy of understanding different ways can both be good. End with anticipation as Hazel approaches."
     },
-    
     {
       "id": "journey-1a2b-1",
       "background": "woodland-clearing-thoughtful-reflection",
       "text": "\"That's a very thoughtful idea, very wise indeed,\" said Bramble, settling down like he was sitting by Nana's fireplace on a winter evening, his scarf wrapping around him comfortably like a warm embrace. \"Both rules are wonderful in their own families, precious as jewels in their own treasure boxes. But what rule feels most fair when friends from different families play together, side by side?\" Pip tilted his head like a curious puppy hearing a new sound, one ear flopping sideways in that dear way. \"You mean... we need to make a new rule? Just for us, just for our friendship?\" \"Not exactly new, not brand-new,\" said Bramble gently, fidgeting with his scarf as he thought and pondered. \"More like... what feels right and true in your hearts when you think about playing with all different kinds of friends, from here and there and everywhere?\" Flint's small paws fidgeted with a smooth pebble, rolling it between his paws thoughtfully, round and round like a worry stone. \"Well... I like feeling special because I'm youngest, that's warm and nice. But...\" He looked at Pip with careful consideration, thinking-thinking-thinking. \"Pip worked really hard to win those games. That should feel special too, shouldn't it?\" \"And I like the excitement of winning,\" said Pip, his nose twitching as he thought hard-hard-hard, sitting still for once in his bouncy life. \"But Flint's right—being youngest is important too, precious too. Everyone should get chances to feel good and happy and special.\" They sat quietly for a moment, both thinking with their hearts—Pip's nose still twitching with concentration like a little engine working, Flint rolling his pebble back and forth in a soothing rhythm, back and forth and back. \"What if...\" said Flint slowly-slowly, like someone working out a puzzle piece by piece, \"what if we took turns choosing who goes first? Sometimes youngest, sometimes winner, sometimes just... whoever wants to and feels ready?\" \"Ooh!\" said Pip, bouncing just a little, his excitement carefully contained like bubbles in a jar. \"Or we could ask each other! 'How should we decide this time? What feels fair and right today?'\" Bramble felt that warm glow spreading in his chest like honey melting in tea, sweet and golden. \"Listen to you two, figuring out a fair way all by yourselves! You're learning to make rules that work for everyone, that wrap everyone up in kindness.\"",
       "choices": [
-        { 
-          "label": "Continue with Willow's wisdom", 
+        {
+          "label": "Continue with Willow's wisdom",
           "nextSceneId": "dp3-c-1",
           "choiceType": "wisdom-guidance"
         }
@@ -136,14 +125,13 @@
       "emotionalBeat": "thoughtful-consideration",
       "readAloudNotes": "Use contemplative, thoughtful pacing throughout. Show both children thinking carefully and considerately about each other's feelings. Build pride in Bramble's voice as they work out fair solutions together."
     },
-    
     {
       "id": "journey-1b2a-1",
       "background": "woodland-clearing-bridge-building",
       "text": "\"You know what, my dear friends?\" said Bramble, his voice warm as honey tea steaming on a winter morning, wrapping his scarf around himself like a gentle hug from Nana. \"Even though feelings got a bit tangled and knotted up, I can see that you both love playing games. Let's find something you both enjoy about playing together, something that sparkles for both of you.\" Pip looked at Flint hopefully, his ears perking up slightly like flowers turning toward sun. \"I... I really do like having someone new to play with, someone fresh and different. I've been playing the same games with the same friends for so-so-so long, I forgot how fun it is to meet someone who knows different things, special things.\" Flint peeked up from behind his arms, still curled small but listening-listening-listening. \"Really and truly? You don't mind that I do things differently, that I'm strange and new?\" \"No, no, no!\" said Pip earnestly, bouncing just a tiny-tiny bit despite his sadness, nose twitching with sincerity bright as morning dew. \"Actually, your way sounds nice too, gentle and kind. Making the youngest feel special... that's really caring and thoughtful. I never thought about that before, not ever.\" Bramble watched as his friends began to uncurl their hurt feelings, like flowers opening to morning sun, like butterflies emerging from cocoons. His own heart felt lighter-lighter-lighter seeing them reach toward each other again, bridge by bridge. \"What if we try something completely different, something brand-new?\" said Bramble with growing excitement. \"Not either of your family rules, but something fresh and wonderful that's just yours?\" \"Like what, like what?\" asked Flint, curiosity winning over his lingering sadness, his shoulders starting to relax like ice melting in spring warmth. \"Like... rock-paper-scissors to decide who goes first?\" suggested Pip, his voice getting stronger and brighter. \"That's fair for everyone, no matter what family you're from, no matter where you come from!\" \"Or we could take turns, back and forth!\" said Flint, getting excited, his paws finally unclenching like tight buds opening. \"You go first this game, I'll go first next game, fair and square and even!\" They were so busy discovering new ways to be fair and kind that they didn't notice Willow settling on her branch above with a soft, approving \"Hmm,\" or the sound of approaching paw-steps through the woodland, gentle and familiar.",
       "choices": [
-        { 
-          "label": "Continue with Hazel arriving", 
+        {
+          "label": "Continue with Hazel arriving",
           "nextSceneId": "dp3-c-1",
           "choiceType": "hazel-wisdom"
         }
@@ -151,14 +139,13 @@
       "emotionalBeat": "bridge-building",
       "readAloudNotes": "Show the friends discovering they can find common ground. Build excitement as they create new solutions together. Make their collaborative problem-solving sound natural and joyful."
     },
-    
     {
       "id": "journey-1b2b-1",
       "background": "woodland-clearing-peaceful-reflection",
       "text": "\"Willow's right, wise and true,\" said Bramble thoughtfully, adjusting his scarf like he was wrapping himself in wisdom and patience. \"When hearts are bruised and tender, sometimes the kindest thing is to let them heal a little before asking them to do big work, important work.\" \"I don't want to stop being friends, not ever,\" Pip said quietly, looking at Flint with eyes full of worry and hope, his nose barely twitching now, still as morning air. \"I just... my mouth said something my heart didn't mean, something hurtful and wrong.\" \"Sometimes our mouths do that when we're upset and confused,\" said Flint softly, uncurling just enough to show his face like a flower opening its petals. \"In my family, when someone says something hurtful by accident, we take three deep breaths—one, two, three—and think about what we really wanted to say, what our hearts truly mean.\" \"That sounds very wise, very gentle,\" said Willow from above, her head tilting with interest like a question mark made of feathers. \"What do you think might happen if... you both tried that now? What did you really want to say, Pip dear?\" Pip took a deep breath—one, two, three, just like Flint had suggested, his ears settling into a calmer position like leaves finding rest. \"I think... I wanted to say that I was confused and hurt, mixed up and muddled. Not that Flint was wrong for being different, not that at all.\" \"And what did you want to say, Flint?\" Bramble asked gently, his voice as soft as his scarf wrapped around his shoulders. Flint took his own three deep breaths, slow and steady, his small paws finally still as sleeping mice. \"I wanted to say that I was scared Pip didn't want to be friends with someone who doesn't know woodland ways yet, someone new and strange.\" \"Hmm, there now, there now,\" said Willow approvingly, her feathers ruffling with satisfaction like wind in wheat. \"Now your words match your hearts, true and clear as spring water.\" They sat quietly for a moment, letting the real feelings settle like leaves floating gently to earth, soft and natural. The hurt was still there, yes, but smaller now, smaller and gentler, like a storm cloud passing to show blue sky behind.",
       "choices": [
-        { 
-          "label": "Continue as Hazel approaches", 
+        {
+          "label": "Continue as Hazel approaches",
           "nextSceneId": "dp3-b-1",
           "choiceType": "hazel-reflection"
         }
@@ -166,19 +153,18 @@
       "emotionalBeat": "patient-reflection",
       "readAloudNotes": "Use calm, healing tones throughout. Show the three deep breaths actually being taken. Make the real feelings they express sound honest and vulnerable. End with peaceful resolution settling like leaves."
     },
-    
     {
       "id": "dp3-a-1",
       "background": "woodland-clearing-hazel-understanding",
       "text": "\"Aunt Hazel!\" called Flint, waving both paws above his head like tiny flags dancing in the breeze, his whole posture brightening like sunrise. \"There you are, little nephew,\" said Hazel with relief warm as fresh-baked bread cooling on the windowsill, her voice slow and reassuring like honey dripping from the comb. \"I was wondering how your first woodland playdate was going—hoping and wondering.\" She looked at the tic-tac-toe grids in the dirt, at Pip and Flint sitting close together like old friends sharing secrets, and smiled the kind of smile that reaches all the way to your ears and wraps around your heart. \"We learned about each other's families!\" Flint said proudly, fidgeting with the stick they'd been using to draw with—but happy fidgeting now, not nervous, like a kitten playing with yarn. \"Pip's family makes games exciting and bouncy, and my family makes games kind and gentle!\" \"And both ways are good and wonderful!\" Pip added, bouncing in place like a spring that couldn't help itself, his ears perked up with enthusiasm bright as morning stars. \"We're like... like game experts now, knowing secrets from two different families!\" Hazel's eyes twinkled like stars reflecting in still water as she settled her basket down with gentle care. \"How wonderful, how perfectly wonderful. It sounds like you both discovered something important about friendship—that different families can have different good ways of doing things, all precious and special.\" Bramble felt that familiar warm glow spreading in his chest like honey in warm milk, watching his friends understand something so important, so precious. But he noticed they kept glancing at each other, eyes bright with questions, as if they had something more they wanted to figure out, something important still waiting. \"What are you thinking about, my dear friends?\" he asked gently. \"Well...\" said Pip, looking at Flint hopefully, one ear tilted in question like a flag asking which way the wind blows. \"We know both ways now, yours and mine and ours together. But when we play together, which way should we use? How do we choose?\"",
       "choices": [
-        { 
-          "label": "Celebrate both ways - take turns using each!", 
+        {
+          "label": "Celebrate both ways - take turns using each!",
           "nextSceneId": "ending-understanding-differences",
           "choiceType": "celebrate-traditions"
         },
-        { 
-          "label": "Create your own special friendship rule!", 
+        {
+          "label": "Create your own special friendship rule!",
           "nextSceneId": "ending-understanding-differences",
           "choiceType": "create-friendship-rule"
         }
@@ -186,19 +172,18 @@
       "emotionalBeat": "proud-understanding",
       "readAloudNotes": "Show Hazel's warm approval and pride in the children's learning. Make both Pip and Flint sound confident and excited about their discoveries. Build anticipation for how they'll choose to move forward."
     },
-    
     {
       "id": "dp3-b-1",
       "background": "woodland-clearing-hazel-reflection",
       "text": "As Pip and Flint sat quietly-quietly, letting their careful words settle between them like autumn leaves floating down to rest on still water, Hazel appeared at the clearing's edge like a gentle ship sailing into harbor. She took in the scene with her wise badger eyes—eyes that saw deep and true—two small friends sitting closer together now than before, the abandoned game grid between them, Bramble's gentle presence like a warm light, and Willow's watchful wisdom from above like a guardian angel made of feathers. \"I heard voices earlier, worried voices,\" Hazel said gently, approaching with her usual calm, methodical steps that seemed to measure out peace with every footfall. \"Worried voices that carried through the woodland like birds crying in distress. But now I see peaceful faces, calm and settled. Did you work through whatever was troubling your hearts?\" \"We had hurt feelings, all tangled up,\" Flint said honestly, his voice steady now rather than small and scared, clear as a bell ringing true. \"But we talked about what we really meant in our hearts, what we truly-truly wanted to say.\" \"I said something mean by accident, something hurtful,\" Pip added quietly, his usual bouncing energy replaced by thoughtful stillness like a pond on a windless day. \"But Flint taught me about taking deep breaths—one, two, three—and thinking about what you really want to say, what your heart means to speak.\" Hazel nodded approvingly, her voice carrying that slow, reassuring tone like a river flowing peacefully to the sea. \"That sounds like very wise problem-solving, wise as old owls and gentle as spring rain. In my experience, you both took time to think and to listen—and that usually leads to the best solutions, the ones that last and grow.\" But Bramble could see that while the hurt feelings were mended—patched and healed like a quilt made whole again—Pip and Flint were still thoughtfully considering something deeper, both gazing at the tic-tac-toe grid with contemplative expressions like scholars pondering mysteries. \"What's still on your minds, dear ones?\" he asked gently. \"Well,\" said Flint slowly-slowly, \"we figured out how to fix hurt feelings, how to mend what was broken. But we still have different family rules for games, different but both good.\" \"Right, exactly right,\" said Pip, equally thoughtful. \"We don't want to hurt feelings again, not ever. So how do we decide which rule to use when we play? How do we choose fairly and kindly?\"",
       "choices": [
-        { 
-          "label": "Think carefully about the fairest rule", 
+        {
+          "label": "Think carefully about the fairest rule",
           "nextSceneId": "ending-patience-helps-hearts-heal",
           "choiceType": "fairest-approach"
         },
-        { 
-          "label": "Let the answer come naturally over time", 
+        {
+          "label": "Let the answer come naturally over time",
           "nextSceneId": "ending-patience-helps-hearts-heal",
           "choiceType": "natural-solution"
         }
@@ -206,19 +191,18 @@
       "emotionalBeat": "reflective-consideration",
       "readAloudNotes": "Show Hazel's wise, calming presence as she assesses the situation. Make both children sound thoughtfully honest about their process. End with them still pondering the deeper question about how to move forward fairly."
     },
-    
     {
       "id": "dp3-c-1",
       "background": "woodland-clearing-hazel-balanced-wisdom",
       "text": "As Pip and Flint worked through their friendship muddle—learning about each other's differences AND healing hurt feelings, both together like two streams joining into one river—Hazel approached through the dappled woodland light that painted golden patterns on the forest floor. Her basket swayed gently-gently with her characteristic steady pace like a metronome keeping time, and her wise badger eyes took in the scene with satisfaction warm as fresh bread cooling. \"Hello, young friends,\" she said warmly, settling down beside them with her usual methodical care, each movement deliberate and kind. \"It looks like you've been having quite the adventure, quite the journey of discovery.\" \"We had a friendship muddle, Aunt Hazel,\" Flint said, but his voice was bright-bright-bright, not sad—stronger and more confident than when she'd left him earlier, like a candle that burns brighter in the wind. \"But we're learning how to unknot it, thread by careful thread.\" \"Flint's family has different game rules than mine,\" Pip explained, his nose twitching with interest rather than anxiety, like a flower turning toward interesting sunshine, \"and at first we thought one of us was wrong, one of us was silly. But really we were both right, both perfectly right!\" \"Just in different ways, different but both good,\" Flint added, nodding seriously but not nervously—his paws resting calmly rather than fidgeting like worried butterflies. Hazel settled her basket beside her with a satisfied smile that reached all the way to her eyes and warmed her whole face. \"Ah, different family traditions. In my experience, that's something many friends have to work through, like sailors learning to navigate together. It sounds like you're handling it very thoughtfully, very wisely indeed.\" \"We learned that we can understand differences AND work through hurt feelings,\" said Pip, glancing at Flint with new appreciation, his ears relaxed and happy like flags on a peaceful day. \"Both things are important, precious important,\" Flint agreed, his posture straight with newfound confidence like a young tree that's found its place in the forest. \"Understanding AND kindness, both together like sunshine and rain.\" \"So what happens next in your friendship story?\" Bramble asked with genuine curiosity. \"That's what we're wondering-wondering-wondering,\" said Pip thoughtfully, sitting still for once instead of bouncing, like a river that's found its peaceful course. \"We want to keep playing together, but we need to decide how, decide the best and fairest way.\"",
       "choices": [
-        { 
-          "label": "Take turns choosing who goes first", 
+        {
+          "label": "Take turns choosing who goes first",
           "nextSceneId": "ending-building-bridges-together",
           "choiceType": "turn-taking"
         },
-        { 
-          "label": "Ask each other what feels fair each time", 
+        {
+          "label": "Ask each other what feels fair each time",
           "nextSceneId": "ending-building-bridges-together",
           "choiceType": "collaborative-decisions"
         }
@@ -226,7 +210,6 @@
       "emotionalBeat": "creative-cooperation",
       "readAloudNotes": "Show both understanding and healing coming together beautifully. Make the children sound confident and collaborative in their approach to the remaining challenge. Build excitement about their creative problem-solving."
     },
-    
     {
       "id": "ending-understanding-differences",
       "background": "woodland-clearing-celebrating-differences",
@@ -235,7 +218,6 @@
       "emotionalBeat": "joyful-appreciation",
       "readAloudNotes": "Build excitement as they discover they can honor both traditions. Make their playing together sound delightful and celebratory. Show the joy of learning that different ways can both be wonderful. End with Bramble's wisdom about differences being treasures to share."
     },
-    
     {
       "id": "ending-patience-helps-hearts-heal",
       "background": "woodland-clearing-peaceful-resolution",
@@ -244,7 +226,6 @@
       "emotionalBeat": "peaceful-resolution",
       "readAloudNotes": "Use calm, patient pacing throughout. Show the magic of letting time and patience work. Make their discovery sound genuine and heartfelt. End with the peaceful satisfaction of wisdom gained through gentle patience."
     },
-    
     {
       "id": "ending-building-bridges-together",
       "background": "woodland-clearing-friendship-bridge",
@@ -253,31 +234,50 @@
       "emotionalBeat": "creative-bridge-building",
       "readAloudNotes": "Build excitement as they create their friendship bridge solution. Make their collaborative decision-making sound natural and innovative. Show the pride in their creativity and the joy of building something new together. End with the celebration of their unique friendship solution."
     }
-  ]
-},
-  
+  ],
   "pathways": {
     "1A2A": {
       "description": "Listen separately, then teach traditions - understanding differences through education",
       "theme": "Celebrating different family traditions by learning from each other",
       "learningOutcome": "Different families can have different good ways of doing things, and sharing traditions makes friendship richer",
-      "scenes": ["opening-1", "branch-a-1", "dp2-a-1", "journey-1a2a-1", "dp3-a-1", "ending-understanding-differences"],
+      "scenes": [
+        "opening-1",
+        "branch-a-1",
+        "dp2-a-1",
+        "journey-1a2a-1",
+        "dp3-a-1",
+        "ending-understanding-differences"
+      ],
       "totalScenes": 6,
       "emotionalArc": "confused conflict → understanding dawning → collaborative discovery → celebratory learning → joyful appreciation"
     },
     "1A2B": {
       "description": "Listen separately, then find fair solutions - understanding leading to fairness",
-      "theme": "Building bridges between different approaches through understanding and fairness", 
+      "theme": "Building bridges between different approaches through understanding and fairness",
       "learningOutcome": "When friends understand each other's backgrounds, they can create fair solutions that work for everyone",
-      "scenes": ["opening-1", "branch-a-1", "dp2-a-1", "journey-1a2b-1", "dp3-c-1", "ending-building-bridges-together"],
+      "scenes": [
+        "opening-1",
+        "branch-a-1",
+        "dp2-a-1",
+        "journey-1a2b-1",
+        "dp3-c-1",
+        "ending-building-bridges-together"
+      ],
       "totalScenes": 6,
       "emotionalArc": "confused conflict → understanding dawning → collaborative discovery → thoughtful consideration → creative bridge-building"
     },
     "1B2A": {
       "description": "Direct mediation, then find common ground - healing hurt feelings through connection",
       "theme": "Building bridges between different approaches through understanding and fairness",
-      "learningOutcome": "Even when feelings get hurt, friends can find what they have in common and build from there", 
-      "scenes": ["opening-1", "branch-b-1", "dp2-b-1", "journey-1b2a-1", "dp3-c-1", "ending-building-bridges-together"],
+      "learningOutcome": "Even when feelings get hurt, friends can find what they have in common and build from there",
+      "scenes": [
+        "opening-1",
+        "branch-b-1",
+        "dp2-b-1",
+        "journey-1b2a-1",
+        "dp3-c-1",
+        "ending-building-bridges-together"
+      ],
       "totalScenes": 6,
       "emotionalArc": "confused conflict → escalating hurt → gentle healing → bridge building → creative cooperation"
     },
@@ -285,14 +285,24 @@
       "description": "Direct mediation, then patience and reflection - letting hearts heal naturally",
       "theme": "Learning that patience and reflection help hearts heal and grow wiser",
       "learningOutcome": "Taking time to heal hurt feelings often leads to the best solutions naturally emerging",
-      "scenes": ["opening-1", "branch-b-1", "dp2-b-1", "journey-1b2b-1", "dp3-b-1", "ending-patience-helps-hearts-heal"],
+      "scenes": [
+        "opening-1",
+        "branch-b-1",
+        "dp2-b-1",
+        "journey-1b2b-1",
+        "dp3-b-1",
+        "ending-patience-helps-hearts-heal"
+      ],
       "totalScenes": 6,
       "emotionalArc": "confused conflict → escalating hurt → gentle healing → patient reflection → peaceful resolution"
     }
   },
-  
   "videoCallOptimization": {
-    "pausePoints": ["opening-1", "dp2-a-1", "dp2-b-1"],
+    "pausePoints": [
+      "opening-1",
+      "dp2-a-1",
+      "dp2-b-1"
+    ],
     "interactionMoments": [
       "Have child act out Bramble's scarf-twisting when he's thinking",
       "Let child voice different characters' family rules explanations",
@@ -300,7 +310,7 @@
       "Encourage child to suggest their own family's game rules"
     ],
     "voiceVariationCues": [
-      "Bramble: Warm and thoughtful, distinctive 'Oh my paws!' and scarf-fidgeting", 
+      "Bramble: Warm and thoughtful, distinctive 'Oh my paws!' and scarf-fidgeting",
       "Pip: Higher, more energetic voice, bouncy speech pattern with 'Ooh, ooh!'",
       "Flint: Smaller, more careful voice, speaks politely and thoughtfully",
       "Hazel: Steady, reassuring voice, speaks slowly with practical wisdom",
@@ -312,83 +322,116 @@
       "How did it feel when Bramble helped them understand that both ways could be right?"
     ]
   },
-  
-  "characters": {
-    "bramble": {
-      "description": "A small, fluffy brown bear with a distinctive white star-shaped patch on his chest, wearing a soft blue knitted scarf made by his Nana. Thoughtful mediator who helps friends work through conflicts.",
-      "voice": "Warm and gentle, says 'I can help with that!' and 'Oh my paws!' frequently. Fidgets with his scarf when thinking through problems.",
-      "illustration_prompt": "Small fluffy brown bear with white star-shaped patch on chest, wearing cozy blue knitted scarf, thoughtful expression, sitting between two smaller animals in mediator pose, Julia Donaldson illustration style, full body, plain white background"
+  "interactive": true,
+  "storyType": "original",
+  "access": {
+    "tier": "paid",
+    "releaseStatus": "published"
+  },
+  "description": "Bramble Bear was collecting smooth river stones—the roundest, most perfect ones that felt like silk under his paws—for Nana's garden path, when he heard voices floating and driftin…",
+  "media": {
+    "backgrounds": {
+      "woodland-clearing-friendship-conflict": {
+        "description": "A sunny woodland clearing where friends usually play, but now showing signs of conflict with an abandoned tic-tac-toe game in the dirt",
+        "illustration_prompt": "Sunny woodland clearing with fallen log, abandoned tic-tac-toe game scratched in dirt between two sides, conflict atmosphere but still beautiful natural setting, Julia Donaldson illustration style, landscape format, no characters"
+      },
+      "woodland-clearing-investigation-approach": {
+        "description": "The same clearing but with a more thoughtful, investigative atmosphere as Bramble carefully listens to both sides",
+        "illustration_prompt": "Peaceful woodland clearing with dappled sunlight, investigative atmosphere, spaces for private conversations under different trees, thoughtful and calm mood, Julia Donaldson illustration style, landscape format, no characters"
+      },
+      "woodland-clearing-direct-approach": {
+        "description": "The clearing with all friends gathered together for direct discussion, showing both tension and potential for resolution",
+        "illustration_prompt": "Woodland clearing set up for group discussion, central meeting space, both tension and hope in the atmosphere, natural seating arrangements, Julia Donaldson illustration style, landscape format, no characters"
+      },
+      "woodland-clearing-understanding-moment": {
+        "description": "The clearing transformed by understanding, with warm light suggesting breakthrough moments and clarity",
+        "illustration_prompt": "Woodland clearing with warm, enlightening sunlight filtering through trees, breakthrough atmosphere, clarity and understanding mood, hopeful and bright, Julia Donaldson illustration style, landscape format, no characters"
+      },
+      "woodland-clearing-willow-wisdom": {
+        "description": "The clearing with Willow's oak tree prominent, creating an atmosphere of wise counsel and gentle guidance",
+        "illustration_prompt": "Woodland clearing with prominent oak tree and branch for wise owl, counseling atmosphere, gentle wisdom mood, peaceful and contemplative, Julia Donaldson illustration style, landscape format, no characters"
+      },
+      "woodland-clearing-teaching-traditions": {
+        "description": "The clearing set up for learning and sharing, with space for demonstrating different family traditions and ways of playing",
+        "illustration_prompt": "Woodland clearing with teaching and learning atmosphere, space for demonstrations, celebratory mood of sharing traditions, educational and joyful, Julia Donaldson illustration style, landscape format, no characters"
+      },
+      "woodland-clearing-thoughtful-reflection": {
+        "description": "The clearing with a contemplative atmosphere, perfect for thinking through problems and finding fair solutions",
+        "illustration_prompt": "Woodland clearing with contemplative atmosphere, thoughtful mood, perfect for reflection and problem-solving, calm and wise setting, Julia Donaldson illustration style, landscape format, no characters"
+      },
+      "woodland-clearing-bridge-building": {
+        "description": "The clearing representing connection and cooperation, where different approaches come together harmoniously",
+        "illustration_prompt": "Woodland clearing with bridge-building atmosphere, connection and cooperation mood, harmony between different elements, collaborative and hopeful, Julia Donaldson illustration style, landscape format, no characters"
+      },
+      "woodland-clearing-peaceful-reflection": {
+        "description": "The clearing in a state of peaceful resolution, with gentle healing energy and time for hearts to rest and grow",
+        "illustration_prompt": "Peaceful woodland clearing with healing atmosphere, gentle and restful mood, time and space for growth, calm and nurturing environment, Julia Donaldson illustration style, landscape format, no characters"
+      },
+      "woodland-clearing-hazel-understanding": {
+        "description": "The clearing with Aunt Hazel's presence bringing practical wisdom and family understanding to the friendship conflict",
+        "illustration_prompt": "Woodland clearing with practical, family-oriented atmosphere, Aunt Hazel's wise presence implied, understanding and support mood, warm and welcoming, Julia Donaldson illustration style, landscape format, no characters"
+      },
+      "woodland-clearing-celebrating-differences": {
+        "description": "The clearing transformed into a celebration space where different traditions are honored and appreciated",
+        "illustration_prompt": "Woodland clearing with celebratory atmosphere, different traditions being honored, joyful appreciation mood, festive and inclusive, Julia Donaldson illustration style, landscape format, no characters"
+      },
+      "woodland-clearing-friendship-bridge": {
+        "description": "The clearing representing the successful creation of a friendship bridge between different ways of doing things",
+        "illustration_prompt": "Woodland clearing with bridge metaphor realized, successful connection between different approaches, triumph and harmony mood, creative and collaborative, Julia Donaldson illustration style, landscape format, no characters"
+      },
+      "woodland-clearing-hazel-reflection": {
+        "description": "woodland-clearing-hazel-reflection",
+        "illustration_prompt": ""
+      },
+      "woodland-clearing-hazel-balanced-wisdom": {
+        "description": "woodland-clearing-hazel-balanced-wisdom",
+        "illustration_prompt": ""
+      },
+      "woodland-clearing-peaceful-resolution": {
+        "description": "woodland-clearing-peaceful-resolution",
+        "illustration_prompt": ""
+      }
     },
-    "pip": {
-      "description": "Small energetic grey rabbit with one floppy ear and one upright ear, bouncy and enthusiastic but can get defensive when confused.",
-      "voice": "Higher pitch, energetic and bouncy, says 'Ooh, ooh!' frequently. Gets louder when frustrated but quickly shows regret when he hurts feelings.",
-      "illustration_prompt": "Small energetic grey rabbit with one floppy ear and one upright ear, expressive face showing both excitement and concern, mid-bounce or fidgeting pose, Julia Donaldson illustration style, full body, plain white background"
-    },
-    "flint": {
-      "description": "Small badger kit with distinctive black and white markings, polite and well-mannered but sensitive about being new and different. Nephew visiting Aunt Hazel.",
-      "voice": "Smaller, more careful voice, speaks politely with good manners. Gets quieter when worried but grows more confident through the story.",
-      "illustration_prompt": "Small badger kit with classic black and white markings, younger and smaller than adult badgers, thoughtful expression, holding a smooth pebble or fidgeting with paws, Julia Donaldson illustration style, full body, plain white background"
-    },
-    "hazel": {
-      "description": "Sturdy adult badger with wise, caring demeanor. Flint's aunt, provides steady wisdom and practical solutions to friendship conflicts.",
-      "voice": "Steady, reassuring voice, speaks slowly with measured wisdom. Provides practical advice with warm approval.",
-      "illustration_prompt": "Sturdy adult badger with kind expression, carrying her characteristic woven basket, wise and motherly appearance, calm and steady posture, Julia Donaldson illustration style, full body, plain white background"
-    },
-    "willow": {
-      "description": "Large tawny owl with bright amber eyes, wise mentor figure who helps with thoughtful questions and gentle guidance.",
-      "voice": "Gentle and wise with thoughtful pauses, says 'Hmm' frequently while considering. Asks guiding questions rather than giving direct answers.",
-      "illustration_prompt": "Large tawny owl with bright amber eyes, perched thoughtfully on branch, wise and gentle expression, head slightly tilted in contemplation, Julia Donaldson illustration style, full body, plain white background"
+    "characters": {
+      "bramble": {
+        "description": "A small, fluffy brown bear with a distinctive white star-shaped patch on his chest, wearing a soft blue knitted scarf made by his Nana. Thoughtful mediator who helps friends work through conflicts.",
+        "voice": "Warm and gentle, says 'I can help with that!' and 'Oh my paws!' frequently. Fidgets with his scarf when thinking through problems.",
+        "illustration_prompt": "Small fluffy brown bear with white star-shaped patch on chest, wearing cozy blue knitted scarf, thoughtful expression, sitting between two smaller animals in mediator pose, Julia Donaldson illustration style, full body, plain white background"
+      },
+      "pip": {
+        "description": "Small energetic grey rabbit with one floppy ear and one upright ear, bouncy and enthusiastic but can get defensive when confused.",
+        "voice": "Higher pitch, energetic and bouncy, says 'Ooh, ooh!' frequently. Gets louder when frustrated but quickly shows regret when he hurts feelings.",
+        "illustration_prompt": "Small energetic grey rabbit with one floppy ear and one upright ear, expressive face showing both excitement and concern, mid-bounce or fidgeting pose, Julia Donaldson illustration style, full body, plain white background"
+      },
+      "flint": {
+        "description": "Small badger kit with distinctive black and white markings, polite and well-mannered but sensitive about being new and different. Nephew visiting Aunt Hazel.",
+        "voice": "Smaller, more careful voice, speaks politely with good manners. Gets quieter when worried but grows more confident through the story.",
+        "illustration_prompt": "Small badger kit with classic black and white markings, younger and smaller than adult badgers, thoughtful expression, holding a smooth pebble or fidgeting with paws, Julia Donaldson illustration style, full body, plain white background"
+      },
+      "hazel": {
+        "description": "Sturdy adult badger with wise, caring demeanor. Flint's aunt, provides steady wisdom and practical solutions to friendship conflicts.",
+        "voice": "Steady, reassuring voice, speaks slowly with measured wisdom. Provides practical advice with warm approval.",
+        "illustration_prompt": "Sturdy adult badger with kind expression, carrying her characteristic woven basket, wise and motherly appearance, calm and steady posture, Julia Donaldson illustration style, full body, plain white background"
+      },
+      "willow": {
+        "description": "Large tawny owl with bright amber eyes, wise mentor figure who helps with thoughtful questions and gentle guidance.",
+        "voice": "Gentle and wise with thoughtful pauses, says 'Hmm' frequently while considering. Asks guiding questions rather than giving direct answers.",
+        "illustration_prompt": "Large tawny owl with bright amber eyes, perched thoughtfully on branch, wise and gentle expression, head slightly tilted in contemplation, Julia Donaldson illustration style, full body, plain white background"
+      }
     }
   },
-  
-  "backgrounds": {
-    "woodland-clearing-friendship-conflict": {
-      "description": "A sunny woodland clearing where friends usually play, but now showing signs of conflict with an abandoned tic-tac-toe game in the dirt",
-      "illustration_prompt": "Sunny woodland clearing with fallen log, abandoned tic-tac-toe game scratched in dirt between two sides, conflict atmosphere but still beautiful natural setting, Julia Donaldson illustration style, landscape format, no characters"
-    },
-    "woodland-clearing-investigation-approach": {
-      "description": "The same clearing but with a more thoughtful, investigative atmosphere as Bramble carefully listens to both sides",
-      "illustration_prompt": "Peaceful woodland clearing with dappled sunlight, investigative atmosphere, spaces for private conversations under different trees, thoughtful and calm mood, Julia Donaldson illustration style, landscape format, no characters"
-    },
-    "woodland-clearing-direct-approach": {
-      "description": "The clearing with all friends gathered together for direct discussion, showing both tension and potential for resolution",
-      "illustration_prompt": "Woodland clearing set up for group discussion, central meeting space, both tension and hope in the atmosphere, natural seating arrangements, Julia Donaldson illustration style, landscape format, no characters"
-    },
-    "woodland-clearing-understanding-moment": {
-      "description": "The clearing transformed by understanding, with warm light suggesting breakthrough moments and clarity",
-      "illustration_prompt": "Woodland clearing with warm, enlightening sunlight filtering through trees, breakthrough atmosphere, clarity and understanding mood, hopeful and bright, Julia Donaldson illustration style, landscape format, no characters"
-    },
-    "woodland-clearing-willow-wisdom": {
-      "description": "The clearing with Willow's oak tree prominent, creating an atmosphere of wise counsel and gentle guidance",
-      "illustration_prompt": "Woodland clearing with prominent oak tree and branch for wise owl, counseling atmosphere, gentle wisdom mood, peaceful and contemplative, Julia Donaldson illustration style, landscape format, no characters"
-    },
-    "woodland-clearing-teaching-traditions": {
-      "description": "The clearing set up for learning and sharing, with space for demonstrating different family traditions and ways of playing",
-      "illustration_prompt": "Woodland clearing with teaching and learning atmosphere, space for demonstrations, celebratory mood of sharing traditions, educational and joyful, Julia Donaldson illustration style, landscape format, no characters"
-    },
-    "woodland-clearing-thoughtful-reflection": {
-      "description": "The clearing with a contemplative atmosphere, perfect for thinking through problems and finding fair solutions",
-      "illustration_prompt": "Woodland clearing with contemplative atmosphere, thoughtful mood, perfect for reflection and problem-solving, calm and wise setting, Julia Donaldson illustration style, landscape format, no characters"
-    },
-    "woodland-clearing-bridge-building": {
-      "description": "The clearing representing connection and cooperation, where different approaches come together harmoniously",
-      "illustration_prompt": "Woodland clearing with bridge-building atmosphere, connection and cooperation mood, harmony between different elements, collaborative and hopeful, Julia Donaldson illustration style, landscape format, no characters"
-    },
-    "woodland-clearing-peaceful-reflection": {
-      "description": "The clearing in a state of peaceful resolution, with gentle healing energy and time for hearts to rest and grow",
-      "illustration_prompt": "Peaceful woodland clearing with healing atmosphere, gentle and restful mood, time and space for growth, calm and nurturing environment, Julia Donaldson illustration style, landscape format, no characters"
-    },
-    "woodland-clearing-hazel-understanding": {
-      "description": "The clearing with Aunt Hazel's presence bringing practical wisdom and family understanding to the friendship conflict",
-      "illustration_prompt": "Woodland clearing with practical, family-oriented atmosphere, Aunt Hazel's wise presence implied, understanding and support mood, warm and welcoming, Julia Donaldson illustration style, landscape format, no characters"
-    },
-    "woodland-clearing-celebrating-differences": {
-      "description": "The clearing transformed into a celebration space where different traditions are honored and appreciated",
-      "illustration_prompt": "Woodland clearing with celebratory atmosphere, different traditions being honored, joyful appreciation mood, festive and inclusive, Julia Donaldson illustration style, landscape format, no characters"
-    },
-    "woodland-clearing-friendship-bridge": {
-      "description": "The clearing representing the successful creation of a friendship bridge between different ways of doing things",
-      "illustration_prompt": "Woodland clearing with bridge metaphor realized, successful connection between different approaches, triumph and harmony mood, creative and collaborative, Julia Donaldson illustration style, landscape format, no characters"
-    }
+  "pedagogy": {
+    "estimatedReadTime": "10-15 minutes",
+    "learningObjectives": [
+      "Understanding that different families can have different good ways of doing things",
+      "Learning to work through hurt feelings with patience and communication",
+      "Practicing how to find fair solutions when friends have different traditions",
+      "Developing skills for building bridges between different backgrounds"
+    ],
+    "discussionPrompts": [
+      "Before: Have you ever had a disagreement with a friend about how to play a game? How did it feel?",
+      "During: Why do you think Pip and Flint both thought they were right about the game rules?",
+      "After: How did Bramble help them understand that both families' ways could be good? What did they create together?"
+    ]
   }
 }

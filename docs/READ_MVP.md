@@ -1,5 +1,8 @@
 # Read MVP Overview
 
+> Legacy Notice
+> - This document describes the legacy static MVP. The production app now lives in `apps/read` (React + Supabase). The legacy code is retained at `apps/mvp/read-old` for reference only.
+
 Goals
 
 - Simple, resilient two-person storytelling over WebRTC

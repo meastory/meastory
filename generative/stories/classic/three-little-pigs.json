@@ -1,0 +1,347 @@
+{
+  "id": "three-little-pigs-boynton-interactive",
+  "title": "The Three Little Pigs and {{childName}}: A Building Adventure",
+  "ageRange": [3, 8],
+  "themes": ["problem-solving", "collaboration", "community-building", "creative-thinking"],
+  "author_style": "Sandra Boynton",
+  "source_story": "The Three Little Pigs",
+  "scenes": [
+    {
+      "id": "opening-1",
+      "background": "Rolling green hillside with wildflowers, clear blue sky with white clouds, welcoming home in background",
+      "text": "Oh my, oh my!\nWhat a day for {{childName}} to play!\nTime to build and time to learn,\nUp the hill now, off we turn!\n\nMama Pig gives the biggest hug:\n\"Go build your house, my little bug!\nPenny, Benny, Bella too\nThey're all waiting there for you!\"\n\n{{childName}} bounces, bounces high,\nBuilding houses in the sky!\nWell, not really in the sky,\nBut it's fun to dream and fun to try!",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "opening-2"
+        }
+      ],
+      "characters": ["childName", "Mama Pig"],
+      "pathway": ["1A2A", "1A2B", "1B2A", "1B2B"]
+    },
+    {
+      "id": "opening-2", 
+      "background": "Sunny hillside building site with three neat piles of materials - golden straw, brown sticks, red bricks - wooden workbench with tools",
+      "text": "Up the hill goes {{childName}}\nBounce, bounce, bounce!\nHere's a bear with a great big smile\nAnd tools that really count!\n\n\"Hello, {{childName}}!\" calls Builder Burt.\n\"Welcome to my favorite place!\nBuilding things is so much fun\nLet's start our day with a happy face!\"\n\nThree big piles sit in the sun:\nGolden straw that sparkles bright,\nBrown sticks standing straight and tall,\nRed bricks strong with all their might!\n\n\"Every builder picks what's right,\nEvery choice is good and true.\nTake your time, look all around\nWhat feels perfect, {{childName}}, for you?\"",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "opening-3"
+        }
+      ],
+      "characters": ["childName", "Builder Burt"],
+      "pathway": ["1A2A", "1A2B", "1B2A", "1B2B"]
+    },
+    {
+      "id": "opening-3",
+      "background": "Cheerful building site with three pig siblings demonstrating their building approaches, materials scattered around",
+      "text": "\"{{childName}}! {{childName}}! {{childName}}!\"\nThree voices call so sweet!\nHere come the pig siblings,\nDancing up the street!\n\nPenny bounces up and down:\n\"Quick-quick-quick is how I play!\nBuild it fast with golden straw,\nThen we'll laugh the day away!\"\n\nBenny carries sticks with care:\n\"Not too fast, not too slow,\nRight between is where I like\nThat's the way I like to go!\"\n\nBella holds her bricks up high:\n\"Slow and steady wins the race,\nBrick by brick and nice and strong,\nEverything in its right place!\"\n\nAll three siblings gather 'round\nWith excitement in their eyes:\n\"Which way feels just right for you?\nWhat will be your building surprise?\"",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "opening-4"
+        }
+      ],
+      "characters": ["childName", "Penny", "Benny", "Bella"],
+      "pathway": ["1A2A", "1A2B", "1B2A", "1B2B"]
+    },
+    {
+      "id": "opening-4",
+      "background": "Building site with choice materials prominently displayed, siblings showing their methods",
+      "text": "{{childName}} looks at the straw so bright,\n{{childName}} looks at the bricks so tight.\nQuick or careful? Fast or slow?\nWhich way should our {{childName}} go?\n\nPenny sings her happy song:\n\"Fast is fun and never wrong!\nBuild it quick and then we'll play\nThat's my favorite kind of day!\"\n\nBella hums her gentle tune:\n\"Careful work will be done soon.\nStrong and steady, built with care\nLove and patience everywhere!\"\n\nBuilder Burt nods with a smile:\n\"Both are good and both worthwhile!\nListen close to your own heart\nThat's the very best place to start!\"\n\nReady, {{childName}}? Here we go!\nFast or careful, what do you know?",
+      "choices": [
+        {
+          "label": "Let's build fast and go play!",
+          "nextSceneId": "branch-a-1"
+        },
+        {
+          "label": "Let's build careful and strong!",
+          "nextSceneId": "branch-b-1"
+        }
+      ],
+      "characters": ["childName", "Penny", "Bella", "Builder Burt"],
+      "pathway": ["1A2A", "1A2B", "1B2A", "1B2B"]
+    },
+    {
+      "id": "branch-a-1",
+      "background": "Active building scene with straw materials, tools scattered energetically, sunny and busy atmosphere",
+      "text": "\"Fast-fast-fast!\" calls {{childName}} loud.\nPenny bounces, feeling proud:\n\"Straw is light and straw is fun!\nWe'll be done before the sun!\"\n\nStack, stack, stack the golden straw!\nPat, pat, pat without a flaw!\nBuilder Burt brings armload more:\n\"Learning's what building is for!\"\n\nUp goes the house, quick as can be\n{{childName}} builds it happily!\nSoft and cozy, light and bright,\nDone already? What a sight!\n\n\"Hooray, hooray!\" both piggies cheer.\n\"Fast building brings us joy and cheer!\nLook what {{childName}} built today\nNow it's time to run and play!\"",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "branch-a-2"
+        }
+      ],
+      "characters": ["childName", "Penny", "Builder Burt"],
+      "pathway": ["1A2A", "1A2B"]
+    },
+    {
+      "id": "branch-a-2",
+      "background": "Forest clearing with scattered straw, siblings' houses visible, peaceful but slightly concerning atmosphere",
+      "text": "Just as {{childName}} starts to play,\nSomeone's walking down the way.\nRustle, rustle in the trees\n\"Oh my goodness, who is he?\"\n\nOut steps Walter, looking sad,\nTrying not to feel too bad:\n\"Hello, pigs, I'm Walter Wolf.\nI'm confused about myself.\"\n\n\"I'm supposed to huff and puff,\nBut that never works enough.\nHouses fall, and no one's glad\nIt just makes me feel so bad.\"\n\nWhen Walter huffs at the straw house\nWhoosh! It scatters like a mouse!\nBut Walter doesn't look mean,\nHe's the saddest wolf I've seen!\n\n\"Oh, I'm sorry!\" Walter cries.\n\"I just want to fit in, but I...\nAll I know is huff and puff,\nAnd that's never good enough!\"\n\nNow what should {{childName}} do?\nHelp everyone, or think it through?",
+      "choices": [
+        {
+          "label": "Let's all work together now!",
+          "nextSceneId": "journey-1A2A-1"
+        },
+        {
+          "label": "Let me think of something new!",
+          "nextSceneId": "journey-1A2B-1"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny"],
+      "pathway": ["1A2A", "1A2B"]
+    },
+    {
+      "id": "branch-b-1",
+      "background": "Methodical building scene with brick materials, organized tools, patient and steady atmosphere",
+      "text": "\"Careful-careful!\" says {{childName}} wise.\nBella smiles with happy eyes:\n\"Bricks are heavy, bricks are strong!\nWe'll take our time and sing this song!\"\n\nLift and place and check it's right,\nLift and place from morn to night.\nBuilder Burt shows how it's done:\n\"Patient work can be such fun!\"\n\nBrick by brick, the house grows tall,\nStraight and strong, it will not fall.\n{{childName}} learns with every stone\nHow to build a loving home.\n\n\"Well done, well done!\" the siblings say.\n\"What a house you built today!\nStrong and safe from roof to floor\nWhat could anyone want more?\"",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "branch-b-2"
+        }
+      ],
+      "characters": ["childName", "Bella", "Builder Burt"],
+      "pathway": ["1B2A", "1B2B"]
+    },
+    {
+      "id": "branch-b-2",
+      "background": "Village scene with three different houses, one scattered straw, one fallen sticks, one strong brick house standing",
+      "text": "{{childName}} admires the house so neat\nWhen footsteps come down the street.\nRustle-bustle, who could it be?\n\"Oh!\" says {{childName}}, \"Come and see!\"\n\nWalter Wolf steps into sight,\nLooking tired, not wanting to fight:\n\"Hello, everyone, I'm here,\nBut I don't want to cause you fear.\"\n\n\"I'm supposed to huff and blow,\nBut that makes everyone feel low.\nI just want a cozy place,\nAnd friends with a smiling face.\"\n\nHuff-puff at the straw it flies!\nHuff-puff at the sticks surprise!\nBut the brick house stands up strong,\nWalter's confused what went wrong.\n\n\"I don't understand!\" he sighs.\n\"Huffing makes everyone cry.\nI just want to learn something new\nCould someone like me belong too?\"\n\n{{childName}} has built the strongest house,\nBut quiet they sit, as a little mouse,\nWhat's the kindest thing to do?\nHelp them all, or teach them too?",
+      "choices": [
+        {
+          "label": "Come inside my house so strong!",
+          "nextSceneId": "journey-1B2A-1"
+        },
+        {
+          "label": "Let me teach you right from wrong!",
+          "nextSceneId": "journey-1B2B-1"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny"],
+      "pathway": ["1B2A", "1B2B"]
+    },
+    {
+      "id": "journey-1A2A-1",
+      "background": "Collaborative building scene with all characters working together, tools and materials shared, teamwork atmosphere",
+      "text": "\"Together-together!\" {{childName}} calls,\n\"We can fix whatever falls!\nWalter, don't be sad or blue\nThere's a place here just for you!\"\n\n\"Really-really?\" Walter asks,\n\"Could I help with building tasks?\nAll I know is how to blow,\nBut I'd love to help you grow!\"\n\n{{childName}} thinks and gets an idea:\n\"Your huffing could help us clear!\nBlow away the old debris,\nHelp our building spirits free!\"\n\nPenny bounces: \"What great fun!\nWorking together, everyone!\"\nBenny nods: \"A building team\nMakes the best of every dream!\"\n\nBuilder Burt claps with delight:\n\"{{childName}}, you make everything right!\nLeading friends to work as one\nThat's how great things get done!\"",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "journey-1A2A-2"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny", "Bella", "Builder Burt"],
+      "pathway": ["1A2A"]
+    },
+    {
+      "id": "journey-1A2A-2",
+      "background": "Thriving village scene with multiple improved houses, community windmill, celebration atmosphere",
+      "text": "The Super Team works all day long,\nBuilding houses, singing songs!\n{{childName}} leads with happy cheer,\nMaking sure that all feel dear.\n\nHammer-hammer, stack-stack-stack!\nWalter's huffing helps us pack\nOld stuff away and new stuff dry\n\"I can help!\" he says with a sigh!\n\nPenny zips and Benny plans,\nBella teaches with gentle hands,\nEvery house gets strong and new,\nBuilt with love from me and you!\n\n\"This is wonderful!\" Walter beams,\n\"Better than my wildest dreams!\nMy huffing helps instead of harms\n{{childName}} welcomed me with open arms!\"\n\nSoon the village looks so bright,\nEvery house a happy sight.\n{{childName}} smiles with pride so true:\n\"The best building has me and you!\"",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "ending-collaborative-action"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny", "Bella"],
+      "pathway": ["1A2A"]
+    },
+    {
+      "id": "journey-1A2B-1",
+      "background": "Individual innovation scene with {{childName}} working creatively, mixed materials, problem-solving atmosphere",
+      "text": "\"Think-think-think,\" says {{childName}} bright,\n\"I can make this problem right!\nBuilding fast taught me so much,\nNow I'll add the special touch!\"\n\nStack the straw but add some sticks,\nUse all the building tricks!\nBella's wisdom, Benny's way,\nPlus my speed to save the day!\n\nBuilder Burt nods with a grin:\n\"Smart thinking always wins!\nLearning how to blend and mix\nMakes the very strongest fix!\"\n\nWalter watches, eyes so wide:\n\"{{childName}}'s thinking with such pride!\nHow did you learn to combine\nAll those ways to make them shine?\"\n\nUp goes a house that's something new\nFast and strong and lovely too!\n\"I learned that quick can also be\nSmart as smart as smart can be!\"",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "journey-1A2B-2"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Builder Burt", "Penny", "Benny"],
+      "pathway": ["1A2B"]
+    },
+    {
+      "id": "journey-1A2B-2",
+      "background": "Creative innovation scene with {{childName}} and Walter working together, invention atmosphere, windmill elements",
+      "text": "{{childName}}'s new house stands so proud,\nDrawing quite a happy crowd!\nBut looking at poor Walter's face,\n{{childName}} thinks of a helping place.\n\n\"Walter, Walter, don't be sad,\nYour huffing isn't really bad!\nWhat if we could find a way\nTo make your talent help all day?\"\n\nWalter perks up, hope in sight:\n\"Could my huffing be just right\nFor something good instead of wrong?\nCould I finally belong?\"\n\n{{childName}} gets excited-cited-cited:\n\"Your breath could get us all delighted!\nWindmills powered by your puff,\nPaint dried gently that's not rough!\"\n\n\"Really?\" Walter starts to glow,\n\"My huffing could help things grow?\n{{childName}}, you're so smart and kind\nTo help me use my heart and mind!\"\n\nBoth friends think of ways to share\nTalents that show they really care!",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "ending-adaptive-innovation"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Bella", "Benny"],
+      "pathway": ["1A2B"]
+    },
+    {
+      "id": "journey-1B2A-1",
+      "background": "Safe shelter scene inside strong brick house, cozy interior, protective atmosphere",
+      "text": "\"Come in, come in!\" {{childName}} calls,\n\"My house has very sturdy walls!\nRoom for everyone inside,\nSafe and cozy, warm with pride!\"\n\nIn they hurry, in they go,\nSafe from Walter's wind and blow.\n\"Thank you, {{childName}}!\" the siblings cheer,\n\"Your house keeps us safe from fear!\"\n\nWalter stands outside alone,\nWishing for a friendly home:\n\"May I come in your house too?\nI promise to be good and true!\"\n\n\"Of course!\" says {{childName}} with care,\n\"There's always room for friends to share!\nMy strong house was built for all\nWho need help when troubles call!\"\n\nSafe inside, they sit and discuss,\nCozy and warm, the room a-buzz.\n{{childName}} looks around and sees\nEveryone's happy, as can be.",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "journey-1B2A-2"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny"],
+      "pathway": ["1B2A"]
+    },
+    {
+      "id": "journey-1B2A-2",
+      "background": "Community planning scene inside house, characters gathered in circle, warm and inclusive atmosphere",
+      "text": "Sitting safe in {{childName}}'s strong place,\nEveryone shares with loving grace.\nWalter's not scary, just feeling blue,\nNeeding friends who are kind and true.\n\n\"I never had a real home,\nAlways wandering, always alone.\nI don't even know what I like to do\nBesides huffing that makes folks blue.\"\n\n{{childName}} thinks with heart so wise:\n\"Walter, you've got a sweet surprise!\nYour huffing could be something good\nIf we help you like we should!\"\n\n\"A community!\" {{childName}} declares,\n\"Where everyone helps and everyone cares!\nWalter, you could have a place\nWith your own important space!\"\n\n\"Really?\" Walter's eyes grow bright,\n\"Could I belong and be just right?\n{{childName}}, you make me feel so glad\nTo know I don't have to be sad!\"\n\nPlanning together, hearts so warm,\nSafe from any kind of storm!",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "ending-protective-community"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny"],
+      "pathway": ["1B2A"]
+    },
+    {
+      "id": "journey-1B2B-1",
+      "background": "Teaching scene with building school setup, students and teacher, educational atmosphere",
+      "text": "\"Teach-teach-teach!\" says {{childName}} proud,\n\"Let's share knowledge with this crowd!\nBuilding secrets I have learned\nShould be freely shared and earned!\"\n\n\"Really-really?\" siblings say,\n\"You'll teach us the building way?\nShow us how to make things strong\nAnd help us sing the building song?\"\n\n{{childName}} opens up the door:\n\"Come and learn building lore!\nBella taught me, now I'll share\nBuilding wisdom everywhere!\"\n\nPenny learns to slow down some,\nBenny learns that patience comes.\nSoon they both build strong and neat\nTeaching makes learning so sweet!\n\nWalter watches from outside:\n\"Learning fills me up with pride!\nCould someone like me ever learn\nTo build and grow and take my turn?\"",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "journey-1B2B-2"
+        }
+      ],
+      "characters": ["childName", "Penny", "Benny", "Bella", "Walter Wolf", "Builder Burt"],
+      "pathway": ["1B2B"]
+    },
+    {
+      "id": "journey-1B2B-2",
+      "background": "Thriving building school scene with multiple students learning, teaching success atmosphere",
+      "text": "The Little Building School is here!\n{{childName}} teaches with such cheer!\nPenny learns to build strong-fast,\nBenny's houses always last!\n\n\"You're the best teacher!\" Penny sings,\n\"Look at all the joy learning brings!\"\n\"I love building more each day!\"\nBenny says in his thoughtful way.\n\nBella gives a hug so tight:\n\"{{childName}}, you make everything bright!\nTeaching others what you know\nHelps the whole wide world to grow!\"\n\nWalter creeps up, shy but true:\n\"Excuse me, could I learn from you?\nI only know how to huff and blow,\nBut I'd love to learn and grow!\"\n\n{{childName}} looks with teacher eyes,\nSeeing potential as a prize.\n\"Every student can learn well\nWhat a wonderful story to tell!\"",
+      "choices": [
+        {
+          "label": "Continue...",
+          "nextSceneId": "ending-wise-mentorship"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny", "Bella"],
+      "pathway": ["1B2B"]
+    },
+    {
+      "id": "ending-collaborative-action",
+      "background": "Festive village celebration with all characters, community windmill, collaborative success atmosphere",
+      "text": "The Super Team has built so well,\nWhat a happy tale to tell!\n{{childName}} led everyone\nTill the building work was done!\n\nWalter wears his helper badge,\nStanding proud upon the ridge:\n\"My huffing helps instead of harms\n{{childName}} welcomed me with open arms!\"\n\n\"Together-together!\" Penny cheers,\n\"Building joy throughout the years!\"\n\"Balance-balance!\" Benny sings,\n\"See what working together brings!\"\n\nBuilder Burt claps: \"Hip hooray!\n{{childName}} saved the day!\nNot with bricks or sticks or straw,\nBut with the kindest heart I saw!\"\n\nAnd so our {{childName}} learned to see\nThat building's best when we are free\nTo work together, hand in hand\nThe strongest houses fill the land!\n\nHuff and puff and blow no more!\nNow Walter helps with building chore!\nAnd {{childName}} leads with love so true\nBuilding dreams for me and you!",
+      "choices": [],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny", "Bella", "Builder Burt"],
+      "pathway": ["1A2A"]
+    },
+    {
+      "id": "ending-wise-mentorship",
+      "background": "Building school with teacher and students, educational success, wisdom-sharing atmosphere",
+      "text": "Teacher {{childName}} stands so proud,\nDrawing quite a learning crowd!\nWalter says with hope so bright:\n\"Could you teach me to build right?\"\n\n\"Yes-yes-yes!\" {{childName}} replies,\n\"Everyone can win the prize!\nShow me your gentle puff so sweet\nThat's a skill that can't be beat!\"\n\nWalter puffs so soft, so light,\nClearing sawdust left and right!\n\"You're already building, friend!\nOn my teaching you can depend!\"\n\nSoon the Building School is known\nThroughout the forest, fully grown!\n{{childName}} teaches big and small\nThere's room for learning, one and all!\n\nAnd so our {{childName}} learned that day\nThe very best and wisest way\nTo use the knowledge in your heart\nIs sharing it that's the finest art!\n\nHuff and puff? Now Walter knows\nHow to help a building grow!\nAnd {{childName}} teaches, kind and true\nBuilding wisdom, me and you!",
+      "choices": [],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny", "Bella", "Builder Burt"],
+      "pathway": ["1B2B"]
+    },
+    {
+      "id": "ending-adaptive-innovation",
+      "background": "Innovation workshop with creative inventions, wind-powered tools, invention success atmosphere",
+      "text": "{{childName}} and Walter think\nOf ways to make their friendship link.\n\"Your huffing is a gift!\" they say,\n\"Let's find the most creative way!\"\n\nWalter becomes Wind Engineer,\nThe first and only one round here!\nHis breath powers the lifting wheel,\nMaking building work feel real!\n\n\"I love my job!\" Walter sings,\n\"Look at all the help it brings!\"\n{{childName}} invented something new\nA way for talents to shine through!\n\nBuilder Burt presents the prize:\n\"Creative thinking!\" he replies.\n\"{{childName}} saw what others missed\nEvery talent should be kissed!\"\n\nAnd so our {{childName}} learned to find\nThe creative, open mind\nThat sees problems as a chance\nTo give every gift a dance!\n\nHuff and puff now helps us build!\nWalter's heart is truly thrilled!\nAnd {{childName}} innovates so true\nBuilding creativity, me and you!",
+      "choices": [],
+      "characters": ["childName", "Walter Wolf", "Builder Burt"],
+      "pathway": ["1A2B"]
+    },
+    {
+      "id": "ending-protective-community",
+      "background": "Thriving community with homes for everyone, community helper Walter, inclusive neighborhood atmosphere",
+      "text": "{{childName}}'s house kept everyone safe,\nNo one sad, each with a place!\n\"Let's build homes for everyone!\nA neighborhood second to none!\"\n\nWalter claps with joy so bright:\n\"Could I really live here right\nNext to friends who care for me?\nWhat a wonderful family!\"\n\nWalter the Protector is his new name,\nNow he's playing the neighborhood game!\nHis gentle puffs help gardens grow,\nHis care makes friendship's flowers show!\n\nBuilder Burt designs with care\nA place where all can live and share:\n\"{{childName}} built with heart so true\nA home for me, a home for you!\"\n\nAnd so our {{childName}} learned to build\nNot just houses, but hearts filled\nWith love and care for everyone\nThe strongest community under the sun!\n\nHuff and puff now tends the flowers!\nWalter helps through all the hours!\nAnd {{childName}} builds with love so true\nBuilding community, me and you!",
+      "choices": [],
+      "characters": ["childName", "Walter Wolf", "Builder Burt"],
+      "pathway": ["1B2A"]
+    }
+  ],
+  "pathways": {
+    "1A2A": {
+      "description": "Build fast, then work together as a team - leads to collaborative community building",
+      "theme": "Collaborative Action",
+      "scenes": ["opening-1", "opening-2", "opening-3", "opening-4", "branch-a-1", "branch-a-2", "journey-1A2A-1", "journey-1A2A-2", "ending-collaborative-action"]
+    },
+    "1A2B": {
+      "description": "Build fast, then focus on individual innovation - leads to creative problem-solving",
+      "theme": "Adaptive Innovation", 
+      "scenes": ["opening-1", "opening-2", "opening-3", "opening-4", "branch-a-1", "branch-a-2", "journey-1A2B-1", "journey-1A2B-2", "ending-adaptive-innovation"]
+    },
+    "1B2A": {
+      "description": "Build carefully, then share resources protectively - leads to community building",
+      "theme": "Protective Community",
+      "scenes": ["opening-1", "opening-2", "opening-3", "opening-4", "branch-b-1", "branch-b-2", "journey-1B2A-1", "journey-1B2A-2", "ending-protective-community"]
+    },
+    "1B2B": {
+      "description": "Build carefully, then teach others your knowledge - leads to wisdom mentorship",
+      "theme": "Wise Mentorship",
+      "scenes": ["opening-1", "opening-2", "opening-3", "opening-4", "branch-b-1", "branch-b-2", "journey-1B2B-1", "journey-1B2B-2", "ending-wise-mentorship"]
+    }
+  },
+  "characters": {
+    "childName": {
+      "description": "The fourth little pig sibling, eager and curious, learning through choices and growing in confidence",
+      "voice": "Enthusiastic, questioning, celebratory with age-appropriate excitement",
+      "illustration_prompt": "Full body illustration of a small, bright pink pig character with large curious eyes and cheerful round snout, wearing blue overalls and a small tool belt. Standing in alert, eager posture with slight forward lean showing readiness for adventure. Sandra Boynton art style with bold simple shapes, friendly rounded features, and vibrant colors."
+    },
+    "Penny": {
+      "description": "First pig sibling, energetic and fast, loves quick building and immediate action",
+      "voice": "Quick, bouncy speech with repetitive words like 'quick-quick-quick' and 'fun-fun-fun'",
+      "illustration_prompt": "Full body illustration of a medium-sized bright yellow pig with sparkly energetic eyes, wearing an orange t-shirt and sneakers. Standing in bouncy pose with one hoof raised, showing constant motion and enthusiasm. Slightly messy appearance with wide excited smile. Sandra Boynton art style with dynamic, energetic posture and vivid colors."
+    },
+    "Benny": {
+      "description": "Second pig sibling, thoughtful and balanced, finds middle-ground solutions",
+      "voice": "Thoughtful, reasonable speech with 'hmm' and balanced suggestions",
+      "illustration_prompt": "Full body illustration of a medium-sized warm brown pig with intelligent, kind eyes, wearing a green plaid shirt and sturdy work boots. Standing in balanced, steady posture with contemplative expression showing thoughtful, reasonable nature. Sandra Boynton art style with solid, dependable appearance and earthy colors."
+    },
+    "Bella": {
+      "description": "Third pig sibling, patient and wise, loves careful, quality building",
+      "voice": "Gentle, flowing speech with longer sentences showing patience and wisdom",
+      "illustration_prompt": "Full body illustration of a slightly larger reddish-pink pig with gentle, wise features and warm patient eyes, wearing a cozy purple cardigan. Standing in graceful, dignified posture with serene expression showing caring teacher nature. Optional small glasses for wise appearance. Sandra Boynton art style with maternal, welcoming design."
+    },
+    "Walter Wolf": {
+      "description": "Confused, lonely wolf who learns to use his huffing and puffing talents helpfully",
+      "voice": "Vulnerable, confused speech with 'oh my' and 'oh dear', growing more confident and grateful",
+      "illustration_prompt": "Full body illustration of a medium-sized friendly gray wolf with soft features and large expressive eyes showing vulnerability rather than menace. Slightly scruffy fur and initially uncertain posture that shows confusion but hope. Sandra Boynton art style with gentle, approachable wolf design that's clearly friendly rather than threatening."
+    },
+    "Mama Pig": {
+      "description": "Loving mother pig who encourages independence and celebrates her children's growth",
+      "voice": "Warm, blessing-style speech with endearments and encouraging send-offs",
+      "illustration_prompt": "Full body illustration of a larger, maternal pink pig with kind loving features and gentle smile, wearing a floral apron over a comfortable dress. Standing in nurturing, open-armed posture showing warmth and reliability. Sandra Boynton art style with round, welcoming maternal design and soft, comforting colors."
+    },
+    "Builder Burt": {
+      "description": "Helpful bear construction worker who provides materials and building wisdom",
+      "voice": "Enthusiastic, supportive speech with construction metaphors and encouraging language",
+      "illustration_prompt": "Full body illustration of a large, friendly brown bear with gentle features, wearing a yellow hard hat, brown leather tool belt with building tools, and blue work shirt. Standing in confident, helpful pose with big enthusiastic smile. Sandra Boynton art style with sturdy, reliable appearance and cheerful work-focused design."
+    }
+  },
+  "backgrounds": {
+    "building-site-hill": {
+      "description": "Rolling green hillside with gentle slope, three piles of building materials, wooden workbench with tools, clear blue sky",
+      "illustration_prompt": "Wide landscape illustration of a sunny hillside building site with three neat piles of materials - golden straw, brown wooden sticks, and red bricks - arranged on green grass dotted with colorful wildflowers. Include a friendly wooden workbench with simple building tools. Rolling hills in background under bright blue sky with puffy white clouds. Sandra Boynton illustration style with bold, simple shapes and vibrant colors."
+    },
+    "village-path": {
+      "description": "Winding dirt path through friendly forest clearing with houses in various stages, dappled sunlight, wooden fences",
+      "illustration_prompt": "Wide landscape illustration of a charming village path winding through a sunny forest clearing. Show dappled sunlight through friendly green trees, a babbling brook with stepping stones, wooden fence posts, and small garden patches with colorful flowers. Sandra Boynton illustration style with warm, inviting colors and simple, rounded shapes."
+    },
+    "community-celebration": {
+      "description": "Open meadow with picnic tables, bunting flags, windmill in background, rainbow of flowers, festive atmosphere",
+      "illustration_prompt": "Wide landscape illustration of a festive meadow celebration space with colorful bunting flags strung between trees, wooden picnic tables, and rainbow flower borders. Include a cheerful windmill in the background and rolling green hills under a bright sunny sky. Sandra Boynton illustration style with bold, happy colors and playful decorative elements."
+    },
+    "cozy-interior": {
+      "description": "Safe, warm interior of brick house with circular seating arrangement, soft lighting, welcoming atmosphere",
+      "illustration_prompt": "Wide landscape illustration of a cozy house interior with warm lighting, comfortable seating arranged in a circle, wooden floors, and homey decorative touches. Soft, welcoming atmosphere with windows showing peaceful exterior view. Sandra Boynton illustration style with warm, comforting colors and rounded, friendly shapes."
+    },
+    "building-school": {
+      "description": "Educational space with building materials, teaching tools, student work areas, encouraging learning atmosphere",
+      "illustration_prompt": "Wide landscape illustration of a cheerful building school workspace with organized materials, teaching demonstration area, student work stations, and educational posters. Bright, encouraging learning environment with natural lighting. Sandra Boynton illustration style with clear, organized layout and inspiring educational colors."
+    },
+    "innovation-workshop": {
+      "description": "Creative workspace with inventions, wind-powered tools, experimental building setups, discovery atmosphere",
+      "illustration_prompt": "Wide landscape illustration of an innovative workshop space with creative building experiments, wind-powered mechanisms, invention prototypes, and discovery tools. Bright, inspiring atmosphere showing creativity and problem-solving. Sandra Boynton illustration style with dynamic, inventive elements and encouraging colors."
+    }
+  }
+}

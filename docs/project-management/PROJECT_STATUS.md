@@ -1,155 +1,47 @@
-# Project Status — Me A Story Production Development
+# Project Status — Me A Story
 
-## Current Phase: Phase 1A (Foundation & Migration)
+## Current Phase: Sprint 3 — Guest Flow, Limits, and Metrics
 
 ### Overall Progress
-- **Start Date**: $(date +%Y-%m-%d)
-- **Current Phase**: Phase 1A (Weeks 1-2 of 12-week plan)
-- **Next Milestone**: Complete MVP to React/TypeScript migration
+- **Focus**: Ship a resilient guest storytelling flow with WebRTC + Supabase
+- **Frontend**: React 18 + TypeScript + Vite app in `apps/read`
+- **Backend**: Supabase (Postgres + Auth + Realtime + Edge Functions)
+- **State**: Zustand stores for auth, room, UI, WebRTC
 
-## Weekly Status
+### Highlights (Completed)
+- **Guest Flow**: `/start` → `/invite/:code` → `/join/:code`
+- **Signaling**: Supabase Realtime channels per room code with presence-based host/guest role
+- **WebRTC**: Perfect negotiation, ICE candidate queuing, phased TURN enable, reconnect/backoff
+- **DataChannel Sync**: Story choices, story change, and child name propagate to peers; Realtime fallback
+- **Stories**: Library to pick/change stories without dropping connections; end-of-story actions (Read Again / Open Library)
+- **Persistence**: Minimal scene resume (`rooms.current_story_id`, `rooms.current_scene_id`) with host-only RPC `rpc_update_room_scene`
+- **Guest Sessions**: RPC `guest_check_and_start_session` enforces room capacity (2) and daily device limits (3/day), plus `rpc_log_connection_event`, `rpc_end_guest_session`, and heartbeat timer
+- **Edge Function**: `identify_device` returns `ip_hash` and `device_hash` for usage limits
+- **UX**: Fullscreen toggle, PWA install prompt, persistent text scaling
 
-### Week 1 (Current)
-**Status**: ✅ Completed
-**Focus**: Infrastructure setup and architecture foundation
+### In Progress
+- Connection health UI (peer and data channel indicators)
+- Error/notice toasts for signaling and RTC edge cases
+- QA pass across iOS/Android/desktop networks per `docs/qa/QA_DEVICE_MATRIX.md`
 
-#### Completed ✅
-- [x] Production development plan documented
-- [x] Project management structure created
-- [x] MVP code moved to `apps/mvp/` folder for reference
-- [x] New React/TypeScript project initialized in `apps/read/`
-- [x] Core dependencies installed (Zustand, Supabase, Tailwind, etc.)
-- [x] Tailwind CSS configured with brand colors
-- [x] Basic project structure created (components/, stores/, types/, etc.)
-- [x] TypeScript type definitions created
-- [x] Supabase client configuration set up
-- [x] Zustand stores for state management (room, UI)
-- [x] Basic component architecture established
-- [x] Environment variables template created
+### Next Milestones
+- Polish guest flow and error states; add TURN credentials for production networks
+- Add basic analytics views over `connection_events`
+- Expand story set and seed content; authoring workflow
 
-#### In Progress 🔄
-- [ ] Supabase project configuration and database schema
-- [ ] WebRTC signaling migration from custom server to Supabase Realtime
-- [ ] Test the new React application
+### Known Risks
+- WebRTC across strict corporate/firewalled networks (mitigated by TURN config and audio-only fallback)
+- Browser autoplay and device permission quirks (preflight test implemented)
 
-#### Planned 📋
-- [ ] Configure Supabase project and database schema
-- [ ] Begin WebRTC signaling migration
-- [ ] Create video calling components
-- [ ] Implement story synchronization
+### Current State
+- Build: passing; Vite dev server runs locally
+- Supabase: migrations applied for rooms/stories/guest_sessions/device_limits/connection_events
+- Features: video calling with sync, guest limits, invite QR/link, PWA/Fullscreen
 
-### Week 2 (Upcoming)
-**Focus**: Core component migration
-
-#### Planned Tasks
-- [ ] Migrate video calling functionality to React components
-- [ ] Implement story synchronization with Supabase
-- [ ] Create responsive layout system
-- [ ] Set up basic authentication flow
-
-## Key Decisions Made
-
-### Tech Stack ✅
-- **Frontend**: React 18 + TypeScript + Vite
-- **Styling**: Tailwind CSS + Radix UI
-- **State**: Zustand
-- **Backend**: Supabase (Data + Auth + Realtime)
-- **Hosting**: Netlify
-- **CI/CD**: GitHub Actions
-
-### Architecture Decisions ✅
-- **Component Structure**: Feature-based organization
-- **State Management**: Zustand stores for room, story, and user state
-- **WebRTC**: Migrate from custom WebSocket to Supabase Realtime
-- **Database**: PostgreSQL via Supabase with proper schema
-
-## Current Blockers
-
-### None identified at this time
-
-## Risk Status
-
-### High Priority
-- **WebRTC Migration Complexity**: Medium risk - extensive testing required
-- **Timeline Pressure**: Low risk - phased approach provides flexibility
-
-### Medium Priority  
-- **Supabase Learning Curve**: Medium risk - team familiarization needed
-- **Component Architecture**: Low risk - well-established patterns
-
-### Low Priority
-- **Performance Optimization**: Low risk - addressed in Phase 3
-- **AI Integration**: Low risk - planned for Phase 3
-
-## Next Actions
-
-1. **Immediate** (Today):
-   - Test the new React application (`npm run dev`)
-   - Set up Supabase project and configure environment variables
-   - Create database schema
-
-2. **This Week**:
-   - Begin WebRTC signaling migration
-   - Create video calling components
-   - Test basic room functionality
-
-3. **Next Week**:
-   - Complete component architecture
-   - Test basic video functionality
-   - Begin story synchronization
-
-## Team Capacity
-
-### Current Workload
-- **Development**: 100% focused on Phase 1A infrastructure
-- **Design**: 20% planning component architecture
-- **Testing**: 0% (will increase in Phase 2)
-
-### Resource Allocation
-- **Week 1**: 100% infrastructure and setup ✅ COMPLETED
-- **Week 2**: 70% component migration, 30% testing
-- **Week 3+**: 50% development, 30% testing, 20% optimization
-
-## Communication
-
-### Weekly Check-ins
-- **Monday**: Sprint planning and progress review
-- **Friday**: Retrospective and next week planning
-
-### Documentation Updates
-- **Daily**: Code changes and decisions
-- **Weekly**: Progress updates and blocker resolution
-- **Bi-weekly**: Architecture and design reviews
+### How to Run (Dev)
+- App: `cd apps/read && npm install && cp .env.example .env && npm run dev`
+- Supabase: set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`; apply SQL in `/supabase/migrations/`; deploy `functions/identify_device`
 
 ---
 
-*Last Updated: $(date)*
-*Status Version: 1.0*
-
-## Sprint Update — WebRTC & Story Sync (Today)
-
-### Highlights
-- ✅ Remote video feeds now render reliably (local and remote) in `VideoGrid`/`VideoFeed`.
-- ✅ Story choices and "Read Again" sync across peers via RTC data channel with Supabase fallback.
-- ✅ Signaling is recipient-filtered; self-messages ignored; offerer-only data channel creation.
-- ✅ ICE resilience added (iceconnectionstatechange + offer-side ICE restarts).
-- ✅ Type hygiene pass: replaced most `any` with proper types/unknown + narrowing; fixed exhaustive-deps.
-
-### Key Changes
-- `services/webrtcManager.ts`: ontrack stream wiring; data channel setup; queued message broadcast; story-choice and story-change sync; ICE restart handling; logging.
-- `stores/webrtcStore.ts`: Supabase Realtime filtering by `to`/self; participant stream updates; typed signaling; fallbacks for story-choice/story-change.
-- `components/StoryPlayer.tsx`: load-by-id/order; sync on choice and "Read Again".
-- `components/StoryLibrary.tsx`: broadcast story-change after room update.
-- `components/VideoFeed.tsx`: robust MediaStream attachment and autoplay fallback; logging.
-- Type cleanup across `authStore`, `roomStore`, `uiStore`, `VideoGrid`, `Auth`, hooks.
-
-### Current State
-- Build: passing
-- Dev: Vite runs; rooms, video, and story sync functioning
-- Known warnings: chunking notices due to dynamic+static imports (cosmetic)
-
-### Next Focus
-- Connection health UI (peer/data-channel states)
-- Error toasts for signaling/RTC failures
-- E2E flow tests and room lifecycle edge cases (refresh/rejoin)
-- Performance pass (track replace and teardown paths)
+Last updated: Sprint 3
