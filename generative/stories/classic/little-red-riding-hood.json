@@ -1,0 +1,403 @@
+{
+  "id": "safety-wisdom-little-red-riding-hood",
+  "title": "{{childName}} and the Path to Granny's House",
+  "ageRange": [3, 8],
+  "themes": ["safety-awareness", "emotional-intelligence", "balanced-thinking"],
+  "author_style": "Dr. Seuss",
+  "source_story": "Little Red Riding Hood",
+  "scenes": [
+    {
+      "id": "opening-1",
+      "background": "cozy-home-interior",
+      "text": "In a house on a hill lived {{childName}} one day,\nWith a Mama so loving in every loving way.\nThe sun was bright-bright, the sky was blue,\nWhat a wonderful day for me and for you!\n\nBut then came a sound from the room down the hall,\n\"Oh dear!\" said Mama. \"Oh my! Oh small!\nPoor Granny is sick in her house far away,\nShe needs some love on this bright, sunny day!\"\n\n\"Can I help?\" asked {{childName}} with eyes big and round,\n\"Can I help make Granny feel safe and sound?\"\n\"Yes indeed!\" said Mama with love in her voice,\n\"You're the perfect helper - what a good choice!\"",
+      "choices": [
+        {
+          "label": "Continue the story",
+          "nextSceneId": "opening-2"
+        }
+      ],
+      "characters": ["childName", "Mama"],
+      "pathway": ["1A2A", "1A2B", "1B2A", "1B2B"]
+    },
+    {
+      "id": "opening-2",
+      "background": "cozy-home-interior",
+      "text": "Mama packed goodies in a basket so neat,\nYummy-sweet cookies and cakes good to eat!\n\"Take these,\" said Mama, \"to Granny's place,\nThey'll put a big smile on her dear, sweet face!\"\n\n\"Now {{childName}}, my dear one, before you go,\nThere are some important things you should know:\nStay on the path - it's safe and it's right,\nDon't talk to strangers, day or night!\n\nDon't wander or wonder to left or to right,\nKeep on the path and you'll be alright!\nIf someone asks questions, just smile and say 'Hi,'\nThen hurry on by, like a bird in the sky!\"",
+      "choices": [
+        {
+          "label": "Begin the journey",
+          "nextSceneId": "opening-3"
+        }
+      ],
+      "characters": ["childName", "Mama"],
+      "pathway": ["1A2A", "1A2B", "1B2A", "1B2B"]
+    },
+    {
+      "id": "opening-3",
+      "background": "forest-path-beginning",
+      "text": "{{childName}} took up that basket with care,\n\"I'll help dear Granny! I'll show how much I care!\"\nOff to the woods with a hop-skip-hop,\nFollowing the path - clop, clip, clip, clop!\n\nThe trees were tall-tall, the flowers bright,\nBirds singing songs in the morning light!\nYellow and purple and pink flowers grew,\nRed ones and orange and bright green-blue too!\n\nBut what do you think came along the way?\nA Wolf with a smile on this bright sunny day!\n\"Well, well!\" said Wolf, \"Where are you going?\nYour basket looks heavy - the top's overflowing!\"",
+      "choices": [
+        {
+          "label": "Meet the Wolf",
+          "nextSceneId": "dp1-choice"
+        }
+      ],
+      "characters": ["childName", "Wolf"],
+      "pathway": ["1A2A", "1A2B", "1B2A", "1B2B"]
+    },
+    {
+      "id": "dp1-choice",
+      "background": "forest-path-beginning",
+      "text": "\"I'm going to Granny's!\" said {{childName}} with glee,\n\"She's sick and she's sad, as sad as can be!\nI've got yummy treats to make her feel better,\nCookies and cakes - I'm love's little getter!\"\n\n\"How nice!\" said the Wolf with a grin-grin-grin,\n\"But look all around! Look out and look in!\nPretty flowers everywhere, here and there,\nFlowers to pick with love and with care!\n\nYour Granny would love them, don't you think so?\nYellow ones and red ones all in a row!\"\n{{childName}} looked left, {{childName}} looked right,\n\"What should I do? What would be right?\"",
+      "choices": [
+        {
+          "label": "I'll stay on the path like Mama said true!",
+          "nextSceneId": "branch-a-1"
+        },
+        {
+          "label": "I'll pick pretty flowers - wouldn't you?",
+          "nextSceneId": "branch-b-1"
+        }
+      ],
+      "characters": ["childName", "Wolf"],
+      "pathway": ["1A2A", "1A2B", "1B2A", "1B2B"]
+    },
+    {
+      "id": "branch-a-1",
+      "background": "forest-path-beginning",
+      "text": "\"No-no,\" said {{childName}}, \"I'll stay where it's right,\nMama knows best from morning till night.\nI'll stick to the path, I'll do what she said,\nI'll keep my two feet where it's safe to tread!\"\n\nThe Wolf's grin wobbled, his eyes got thin-thin,\nBut {{childName}} just smiled with a happy grin.\n\"Oh well,\" huffed Wolf, \"perhaps another day,\nI'll see you around!\" Then he slunk away.\n\n\"That felt funny-strange,\" thought {{childName}} walking along,\n\"But doing what's right can't be wrong!\nStep-step-step down the path so neat,\nMoving along on happy-happy feet!\"",
+      "choices": [
+        {
+          "label": "Continue on the safe path",
+          "nextSceneId": "branch-a-2"
+        }
+      ],
+      "characters": ["childName", "Wolf"],
+      "pathway": ["1A2A", "1A2B"]
+    },
+    {
+      "id": "branch-a-2",
+      "background": "forest-path-beginning",
+      "text": "That Wolf ran fast-fast through the thick-thick trees,\nRunning and racing quick as you please!\n\"I'll get there first!\" he said with a wheeze,\n\"My tricky-slick plan will work with such ease!\"\n\nKnock-knock-knock at Granny's front door,\n\"Who's there?\" called Granny, weak and poor.\n\"It's {{childName}}, Granny! Let me come in!\nI've brought you treats!\" (What a fib-fibber's grin!)\n\nPoor Granny opened the door nice and wide,\nBut Wolf swooshed in with a bounce and stride!\n\"Don't worry-worry,\" he said with a grin,\n\"Just hide right here while I... tuck myself in!\"\n\nAnd who should come walking around and about?\nSounder Rounder with question and doubt!\n\"That voice sounds rumbly, not gentle and sweet,\nSomething's not right from my head to my feet!\"",
+      "choices": [
+        {
+          "label": "Arrive at Granny's cottage",
+          "nextSceneId": "dp2-a-choice"
+        }
+      ],
+      "characters": ["Wolf", "Granny", "Sounder Rounder"],
+      "pathway": ["1A2A", "1A2B"]
+    },
+    {
+      "id": "branch-b-1",
+      "background": "flower-meadow-off-path",
+      "text": "\"Oh yes-yes-yes!\" cried {{childName}} with glee,\n\"Pretty flowers for Granny from you and me!\nOff the path I'll go with a bound and a hop,\nTo pick all the flowers - just a quick stop!\"\n\n\"What a kind heart!\" purred Wolf oh-so-sweet,\n\"Your Granny is lucky from her head to feet!\nTell me, dear child, where does she stay?\nI'd love to visit some other day!\"\n\n\"She lives by the oak trees down the hill,\nIn a house with roses by the windowsill!\"\n\"How lovely!\" said Wolf, then away-away,\nWhile {{childName}} picked flowers the rest of the day!\n\nRed ones and blue ones and purple too,\nYellow and pink ones of every hue!\n\"Granny will smile when she sees what I bring,\nThese flowers will make her poor heart sing!\"",
+      "choices": [
+        {
+          "label": "Continue picking beautiful flowers",
+          "nextSceneId": "branch-b-2"
+        }
+      ],
+      "characters": ["childName", "Wolf"],
+      "pathway": ["1B2A", "1B2B"]
+    },
+    {
+      "id": "branch-b-2",
+      "background": "flower-meadow-off-path",
+      "text": "{{childName}} hummed while picking flowers bright,\n\"Tra-la-la-la from morning till night!\"\nDaisies and roses for an hour-hour,\nBuilding a beautiful flower tower!\n\nBut while {{childName}} picked with love-love-love,\nThat sneaky-sneak Wolf was flying above!\nWell, not really flying, but running quite fast,\nTo Granny's house first - he'd beat them at last!\n\nHe crept-crept-crept with his trickiest grin,\n\"Let me inside! I have goodies within!\"\nHe hid gentle Granny safe and sound,\nThen put on her gown and laid himself down!\n\nAnd walking around came Sounder Rounder,\nObserver of sounds and secret-keeper!\n\"That voice sounds different, rumbly-rough,\nThis doesn't seem right - I've heard enough!\"",
+      "choices": [
+        {
+          "label": "Head to Granny's with flowers",
+          "nextSceneId": "dp2-b-choice"
+        }
+      ],
+      "characters": ["childName", "Wolf", "Granny", "Sounder Rounder"],
+      "pathway": ["1B2A", "1B2B"]
+    },
+    {
+      "id": "dp2-a-choice",
+      "background": "cottage-exterior",
+      "text": "{{childName}} walked up to Granny's front door,\nBut something felt different than times before.\nThe door was wide-wide, that wasn't quite right,\nAnd the voice from inside gave them a fright!\n\n\"Come in! Come in!\" called a voice rumbly-deep,\nMuch louder than Granny's, gentle and sweet.\n\"Hello, Granny dear!\" called {{childName}} outside,\n\"Are you feeling better?\" (But something felt... tried?)\n\n\"YES-YES-YES!\" boomed the voice from within,\n\"Don't wait out there - just come right in!\"\nBut {{childName}}'s heart went thump-thump-thump,\n\"Something's not right - I feel a bump!\"",
+      "choices": [
+        {
+          "label": "I'll look-look-look before I go in!",
+          "nextSceneId": "journey-1a2a-1"
+        },
+        {
+          "label": "I followed the path, so let's begin!",
+          "nextSceneId": "journey-1a2b-1"
+        }
+      ],
+      "characters": ["childName", "Wolf"],
+      "pathway": ["1A2A", "1A2B"]
+    },
+    {
+      "id": "dp2-b-choice",
+      "background": "cottage-exterior",
+      "text": "{{childName}} came with flowers bright-bright,\nBut something at Granny's didn't feel right.\n\"Granny! I'm here with flowers for you!\nRed ones and yellow and purple-pink too!\"\n\n\"Come in, my dear!\" came a rumbly roar,\nMuch louder than the time they'd heard it before.\n{{childName}} looked at their flowers so pretty, so neat,\nAnd thought back to the Wolf that they chanced to meet.\n\n\"I told that Wolf where my Granny stays,\nWas that okay? In how many ways?\nShould I worry-worry? Should I think twice?\nWas telling him really that nice?\"",
+      "choices": [
+        {
+          "label": "Maybe I should have been more wise today!",
+          "nextSceneId": "journey-1b2a-1"
+        },
+        {
+          "label": "Everything's fine - let's go and play!",
+          "nextSceneId": "journey-1b2b-1"
+        }
+      ],
+      "characters": ["childName", "Wolf"],
+      "pathway": ["1B2A", "1B2B"]
+    },
+    {
+      "id": "journey-1a2a-1",
+      "background": "cottage-exterior",
+      "text": "\"I'll peek-peek-peek,\" said {{childName}} so wise,\n\"That's the smart thing with my two eyes!\"\nThey crept to the window, quiet as a mouse,\nTo take a quick peek, inside Granny's sweet house.\n\nOh my! Oh me! What a sight they did see!\nA Wolf in the bed where Granny should be!\n\"Those ears are pointy! That grin is wide-wide!\nThat's not my Granny!\" {{childName}} cried.\n\nJust then came Sounder Rounder around,\n\"What's wrong?\" they said at the worried sound.\n\"There's a Wolf in Granny's bed!\" cried {{childName}},\n\"He's got her nightcap on his big head!\"\n\n\"Oh my stars!\" said Sounder Rounder with cheer,\n\"Your smart thinking eyes have made it all clear!\nLet's work together, you and me, me and you,\nTo help your poor Granny - that's what we'll do!\"",
+      "choices": [
+        {
+          "label": "Work together to help Granny",
+          "nextSceneId": "journey-1a2a-2"
+        }
+      ],
+      "characters": ["childName", "Wolf", "Sounder Rounder"],
+      "pathway": ["1A2A"]
+    },
+    {
+      "id": "journey-1a2a-2",
+      "background": "cottage-interior-bedroom",
+      "text": "\"Quick as a wink!\" said Sounder with glee,\n\"We'll sneak-sneak-sneak as quiet as can be!\nYour thinking-eyes saw what wasn't right,\nTogether we'll make everything bright!\"\n\nTip-toe toe-tip to the front cottage door,\nWhere Wolf was snore-snoring alone on the floor.\n\"Snore-snozzle-snore!\" whispered Sounder with joy,\n\"He's sleeping sound like a tired little boy!\"\n\nAlone in the closet, tucked away, safe and small,\nThey found dear old Granny, safe after all!\n\"{{childName}}!\" she whispered, \"Oh my dear!\nYour careful heart made the truth all clear!\"\n\nThe Wolf woke up with \"Ah-ah-ah-CHOO!\"\nAnd saw all three faces - what could he do?\n\"Oops-a-daisy!\" said Wolf with shame,\n\"I guess you've won this silly game!\"",
+      "choices": [
+        {
+          "label": "Decide what to do next",
+          "nextSceneId": "dp3-version-1"
+        }
+      ],
+      "characters": ["childName", "Wolf", "Granny", "Sounder Rounder"],
+      "pathway": ["1A2A"]
+    },
+    {
+      "id": "journey-1a2b-1",
+      "background": "cottage-exterior",
+      "text": "\"I did what Mama said was right-right-right,\nSo everything should be perfectly bright.\"\nBut walking closer, something felt queer,\nA fluttery-flutter, a feeling of fear.\n\n\"Hello, Granny!\" they called so sweet,\nBut the voice that came back was not such a treat!\nNot scary or mean, just different-strange,\n\"What's this feeling? What's this change?\"\n\n\"My tummy feels funny, my heart goes thump,\nThese new feelings make me want to jump!\nI followed Mama's rules so true,\nBut maybe my feelings have something to do!\"",
+      "choices": [
+        {
+          "label": "Trust both rules and feelings",
+          "nextSceneId": "journey-1a2b-2"
+        }
+      ],
+      "characters": ["childName"],
+      "pathway": ["1A2B"]
+    },
+    {
+      "id": "journey-1a2b-2",
+      "background": "cottage-interior-bedroom",
+      "text": "{{childName}} peeked through the window with care,\nAnd gasped at the Wolf lying there!\n\"I followed the path AND trusted my feeling,\nOh my! What a wonderful revealing!\"\n\nJust then came Sounder Rounder around,\n\"You look worried!\" they said at the sound.\n\"There's a Wolf in Granny's bed, it's true!\nMy rules and feelings both told me what to do!\"\n\nTogether they opened the cottage door,\nWolf was snoring loud on the floor.\nIn the closet, safe and sound,\nPoor dear Granny could be found!\n\n\"You used two kinds of thinking today,\"\nSaid Sounder Rounder in a proud-proud way.\n\"Rules kept you safe, feelings made you aware,\nTogether they make the perfect pair!\"",
+      "choices": [
+        {
+          "label": "Celebrate balanced thinking",
+          "nextSceneId": "dp3-version-3"
+        }
+      ],
+      "characters": ["childName", "Wolf", "Granny", "Sounder Rounder"],
+      "pathway": ["1A2B"]
+    },
+    {
+      "id": "journey-1b2a-1",
+      "background": "cottage-exterior",
+      "text": "{{childName}} walked over to the small cottage door,\nBut the feeling felt different than it had done before.\nThat voice inside sounded rumbly-deep,\n\"Maybe I told Wolf things to myself I should keep?\"\n\n\"I met a Wolf who asked questions galore,\nMaybe I told him a little too more.\nI said where Granny lives down the hill,\nWas that quite right? Was that quite still?\"\n\nThe flowers looked pretty in their worried hand,\nBut slowly but surely they began to understand:\n\"Being kind is good, that much is still true,\nBut being careful, that is just as important too!\"\n\n\"I'll peek-peek-peek,\" they said with care,\n\"To see what's happening, happening in there.\"",
+      "choices": [
+        {
+          "label": "Learn from experience",
+          "nextSceneId": "journey-1b2a-2"
+        }
+      ],
+      "characters": ["childName"],
+      "pathway": ["1B2A"]
+    },
+    {
+      "id": "journey-1b2a-2",
+      "background": "cottage-interior-bedroom",
+      "text": "{{childName}} peeked with flowers held tight,\nAnd gasp-gasp-gasped at a most surprising sight!\nIn Granny's bed with her cap on so neat,\nSat that Wolf from the path, that earlier they did meet!\n\nJust then came Sounder Rounder along,\n\"You look worried - is something wrong?\"\n\"The Wolf I met is in Granny's bed!\nI think I learned something!\" that's what {{childName}} said.\n\nQuietly-quiet they opened the door,\nWolf was snore-snoring loud on the floor.\nAlone in the closet, but still safe and sound,\nDear Granny was heard, and at long last was found!\n\n\"You learned to be kind AND careful today,\"\nSaid Granny with love in her gentle way.\n\"Your heart helped you care, your mind helped you see,\nThat's how young wise children grow up to be!\"",
+      "choices": [
+        {
+          "label": "Celebrate growing wisdom",
+          "nextSceneId": "dp3-version-3"
+        }
+      ],
+      "characters": ["childName", "Wolf", "Granny", "Sounder Rounder"],
+      "pathway": ["1B2A"]
+    },
+    {
+      "id": "journey-1b2b-1",
+      "background": "cottage-exterior",
+      "text": "{{childName}} knocked with flowers bright-bright,\n\"I brought pretty flowers to make you feel right!\"\n\"Come in! Come in!\" called the voice from the bed,\nBut something felt different, that's what their heart said.\n\n\"Granny sounds rumbly, like she's got a cold,\nDifferent from gentle, from sweet and from old.\"\nBut {{childName}} felt loving and wanted to care,\n\"I'll help her feel better when I get there!\"\n\nThey opened the door just a little-bit wide,\nAnd peeked at the figure on the bed just inside.\n\"Your nightcap looks funny, it covers your ears,\nAnd Granny, your voice sounds quite different I fear.\"\n\nTheir caring heart whispered, \"Something's not right,\nBut maybe she's sicker than usual tonight.\"",
+      "choices": [
+        {
+          "label": "Trust your caring heart",
+          "nextSceneId": "journey-1b2b-2"
+        }
+      ],
+      "characters": ["childName", "Wolf"],
+      "pathway": ["1B2B"]
+    },
+    {
+      "id": "journey-1b2b-2",
+      "background": "cottage-interior-bedroom",
+      "text": "{{childName}} stepped closer but then stopped dead,\n\"Something's just not right - Granny's not in that bed!\"\nTheir heart beat fast as they looked at their features,\n\"The ears are too pointy for an old gentle creature!\"\n\n\"You're NOT my Granny!\" they said standing sure,\n\"My heart tells me so, my eyes tell me more!\nMy Granny speaks softly, speaks gentle and sweet,\nBut your voice is rumbly from your head to your feet!\"\n\nJust then came Sounder Rounder, running around,\n\"What-what-what's all that rumbly-rumbly sound?\"\n\"The Wolf is pretending!\" {{childName}} cried,\n\"My heart helped me see through his sneaky disguise!\"\n\nThe closet was opened, and looked in with care,\nThey found dear old Granny, safe and sound in there!\n\"Your loving heart saved me,\" Granny said,\n\"It knew I wasn't the one in that bed!\"\n\nWolf sat up red-faced with shame-shame-shame,\n\"Your heart-smart thinking has ended my game!\"",
+      "choices": [
+        {
+          "label": "Celebrate heart-smart wisdom",
+          "nextSceneId": "dp3-version-2"
+        }
+      ],
+      "characters": ["childName", "Wolf", "Granny", "Sounder Rounder"],
+      "pathway": ["1B2B"]
+    },
+    {
+      "id": "dp3-version-1",
+      "background": "cottage-interior-bedroom",
+      "text": "{{childName}}, you've been so careful and smart!\nFollowing good rules right from the start.\nYou see this Wolf's game so clear-clear-clear,\nYour thinking has made the truth appear!\n\nSounder Rounder stands right by your side,\n\"Your wisdom fills us all with pride!\"\nBut {{childName}}, you can choose what to do,\nThe next helpful step is all up to you!\n\nYou could help Sounder Rounder save the day,\nOr use your own thinking to show the way.\nBoth choices are good, both choices are right,\nYou've prepared yourself well for this sight!",
+      "choices": [
+        {
+          "label": "I'll help Sounder Rounder - hip hooray!",
+          "nextSceneId": "ending-prepared-wisdom"
+        },
+        {
+          "label": "I'll use my smart thinking to save the day!",
+          "nextSceneId": "ending-prepared-wisdom"
+        }
+      ],
+      "characters": ["childName", "Wolf", "Granny", "Sounder Rounder"],
+      "pathway": ["1A2A"]
+    },
+    {
+      "id": "dp3-version-2",
+      "background": "cottage-interior-bedroom",
+      "text": "{{childName}}, your heart has been kind all along,\nSinging it's beautiful, kind, caring song!\nYour love for Granny helped you see\nThat something was wrong as wrong can be!\n\nYour flowers are pretty, your kind heart is true,\nYour feelings alone, will see you safely through!\nYou can get help with your caring heart,\nOr use your kind wisdom to make a start!\n\nBoth ways show love, both ways are right,\nYour heart has guided you, back into the light!",
+      "choices": [
+        {
+          "label": "My caring heart says get help quick-quick!",
+          "nextSceneId": "ending-heart-smart-learning"
+        },
+        {
+          "label": "I'll help Granny with my heart-smart trick!",
+          "nextSceneId": "ending-heart-smart-learning"
+        }
+      ],
+      "characters": ["childName", "Wolf", "Granny", "Sounder Rounder"],
+      "pathway": ["1B2B"]
+    },
+    {
+      "id": "dp3-version-3",
+      "background": "cottage-interior-bedroom",
+      "text": "{{childName}}, you've learned such wonderful things!\nYou tried different ways - oh, the joy that it brings!\nYou can choose with both wisdom and heart,\nWhat a beautiful, balanced, wonderful start!\n\nRules can help and feelings too,\nTogether they make a smarter you!\nYou can use both to help right now,\nOr trust what you've learned - and take a bow!\n\nWolf looks surprised at how much you've grown,\n\"You figured me out with skills of your own!\"\nWhat will you choose in your balanced way?\nBoth will lead to a wonderful day!",
+      "choices": [
+        {
+          "label": "I'll use both my heart and my head to help!",
+          "nextSceneId": "ending-balanced-wisdom"
+        },
+        {
+          "label": "I'll trust what I learned - hip-hip-yelp!",
+          "nextSceneId": "ending-balanced-wisdom"
+        }
+      ],
+      "characters": ["childName", "Wolf", "Granny", "Sounder Rounder"],
+      "pathway": ["1A2B", "1B2A"]
+    },
+    {
+      "id": "ending-prepared-wisdom",
+      "background": "cottage-interior-bedroom",
+      "text": "Wolf looked up with a sheepish grin,\n\"Oh dear-oh-me, I did not win!\n{{childName}} was too smart for my silly game,\nNow I feel quite full of shame!\"\n\n\"You see,\" said Sounder Rounder with pride,\n\"{{childName}} had wisdom as their guide!\nThey stayed on the path like Mama said true,\nThen peeked and looked before going through!\"\n\nGranny hugged {{childName}} oh-so-tight,\n\"Your careful thinking made everything right!\nYou listened to rules and watched with care,\nWhen trouble came knocking, you were there!\"\n\n\"I'm sorry-sorry,\" said Wolf with a sigh,\n\"I won't play tricks - I'll tell you why:\n{{childName}} taught me today, it's true,\nThat honest and kind is what I should do!\"\n\nSo remember, dear {{childName}}, as you grow tall-tall,\nBeing prepared is best of all!\nWhen you think smart and follow what's true,\nThere's nothing in this world you can't do!",
+      "choices": [],
+      "characters": ["childName", "Wolf", "Granny", "Sounder Rounder"],
+      "pathway": ["1A2A"]
+    },
+    {
+      "id": "ending-heart-smart-learning",
+      "background": "cottage-interior-bedroom",
+      "text": "Wolf sat up with embarrassed eyes wide-wide,\n\"Your heart saw through my silly disguise!\nI thought my trick was oh-so-clever,\nBut your loving heart? Has failed you never!\"\n\n\"I'm sorry-sorry, {{childName}} and Granny too,\nNow I see that hearts can be wise and true!\"\nHe helped untie Granny gently with care,\n\"Your heart helped you know, that I shouldn't be there!\"\n\n\"My dear,\" said Granny, holding {{childName}} tight-tight,\n\"Your loving heart helped you see what's not right.\nYou picked me flowers to show you care,\nThen used that love to know I wasn't there!\n\nYour kind heart is smart, it feels what's true,\nIt kept you safe when you didn't know what to do!\"\nSounder Rounder clapped, \"Hip-hip-hooray!\nYour heart-smart thinking has saved the day!\"\n\nWolf looked thoughtful with a nod-nod-nod,\n\"I've learned something new, how strange, how odd!\nTricks aren't as nice as it is to be true,\nHonest and kind, from now on I'll do!\"\n\nSo {{childName}}, remember as you grow up tall-tall,\nA caring heart will feel best of all!\nWhen you lead with love but you listen inside,\nYour heart will guide you, along this great ride!",
+      "choices": [],
+      "characters": ["childName", "Wolf", "Granny", "Sounder Rounder"],
+      "pathway": ["1B2B"]
+    },
+    {
+      "id": "ending-balanced-wisdom",
+      "background": "cottage-interior-bedroom",
+      "text": "Wolf sat up with a wondering look,\n\"{{childName}} read me just like a book!\nYou used both smart thinking and feelings so true,\nThere's no fooling someone as clever as you!\"\n\n\"I'm sorry for playing my silly game,\" he said,\n\"But watching you learn filled my heart and my head.\nYou showed me that both kinds of thinking are right-right-right,\nWhen used together - what a wonderful sight!\"\n\nSounder Rounder did a happy dance,\n\"{{childName}}, your learning deserves every glance!\nYou started one way but learned something new,\nNow both ways of thinking belong to you!\"\n\n\"My dear child,\" said Granny with love in her voice,\n\"You've made the most wonderful choice!\nSome days use rules to keep you safe,\nSome days your heart will show you the way to navigate!\n\nWolf nodded wise with a smile-smile-smile,\n\"I've learned something too that's worth the while:\nFair games are better, honest and true,\nThat's what I'll play with me and you!\"\n\nSo {{childName}}, remember this lesson so grand-grand-grand:\nYou don't need to pick just one way to stand!\nWhen your head and heart work together as friends,\nThat's when the very best story begins!\n\nOh, the places you'll visit! Oh, the things you will see!\nWhen your heart and your head work in harmony!\nWith wisdom and love, you're ready to start\nAny adventure with head and with heart!",
+      "choices": [],
+      "characters": ["childName", "Wolf", "Sounder Rounder", "Granny"],
+      "pathway": ["1A2B", "1B2A"]
+    }
+  ],
+
+  "pathways": {
+    "1A2A": {
+      "description": "Consistent rule-following approach leading to prepared wisdom",
+      "theme": "The Power of Thoughtful Preparation",
+      "scenes": ["opening-1", "opening-2", "opening-3", "dp1-choice", "branch-a-1", "branch-a-2", "dp2-a-choice", "journey-1a2a-1", "journey-1a2a-2", "dp3-version-1", "ending-prepared-wisdom"]
+    },
+    "1A2B": {
+      "description": "Rule-following to intuition development - balanced wisdom",
+      "theme": "Learning to Trust Both Rules and Feelings", 
+      "scenes": ["opening-1", "opening-2", "opening-3", "dp1-choice", "branch-a-1", "branch-a-2", "dp2-a-choice", "journey-1a2b-1", "journey-1a2b-2", "dp3-version-3", "ending-balanced-wisdom"]
+    },
+    "1B2A": {
+      "description": "Compassionate to cautious - heart-smart growth",
+      "theme": "Kind Hearts Can Grow Wise",
+      "scenes": ["opening-1", "opening-2", "opening-3", "dp1-choice", "branch-b-1", "branch-b-2", "dp2-b-choice", "journey-1b2a-1", "journey-1b2a-2", "dp3-version-3", "ending-balanced-wisdom"]
+    },
+    "1B2B": {
+      "description": "Consistent heart-centered approach with emotional intelligence",
+      "theme": "Heart-Smart Learning",
+      "scenes": ["opening-1", "opening-2", "opening-3", "dp1-choice", "branch-b-1", "branch-b-2", "dp2-b-choice", "journey-1b2b-1", "journey-1b2b-2", "dp3-version-2", "ending-heart-smart-learning"]
+    }
+  },
+  "characters": {
+    "childName": {
+      "description": "The child protagonist represented by {{childName}}, curious and caring with growing wisdom",
+      "voice": "Enthusiastic child-speak with wonder, natural questioning, age-appropriate reasoning, genuine emotions",
+      "illustration_prompt": "Child character in Dr. Seuss style, wearing bright red hooded cape, friendly curious face with large expressive eyes, comfortable walking clothes, carrying woven basket, cheerful and confident posture, full body view, plain white background"
+    },
+    "Mama": {
+      "description": "Loving, nurturing mother who provides guidance and celebrates child's growth",
+      "voice": "Rhythmic, caring instruction with Dr. Seuss bounce, warm encouragement, gentle but clear rules",
+      "illustration_prompt": "Mother character in Dr. Seuss style, warm nurturing adult with kind eyes and gentle smile, wearing comfortable home clothes with apron, welcoming open posture, soft rounded features, full body view, plain white background"
+    },
+    "Wolf": {
+      "description": "Mischievous trickster character who learns to be honest, more theatrical than threatening",
+      "voice": "Smooth tempter becoming theatrical schemer, then sheepish and reformed, overly dramatic expressions",
+      "illustration_prompt": "Cartoon wolf character in Dr. Seuss style, gray fur with friendly exaggerated features, large ears and big expressive eyes, mischievous but not scary appearance, theatrical silly grin, more funny than threatening, full body view, plain white background"
+    },
+    "Granny": {
+      "description": "Gentle, wise grandmother who provides love and wisdom despite being ill",
+      "voice": "Gentle wisdom with gratitude, soft caring phrases, teaching moments woven into love",
+      "illustration_prompt": "Grandmother character in Dr. Seuss style, elderly woman with gentle wise features, white hair and kind eyes, wearing comfortable nightgown, small cozy appearance, warm loving expression, full body view, plain white background"
+    },
+    "Sounder Rounder": {
+      "description": "Community helper who observes, celebrates wisdom, and supports child's success",
+      "voice": "Enthusiastic celebration with Dr. Seuss energy, encouraging support, playful helpful language",
+      "illustration_prompt": "Community helper character in Dr. Seuss style, friendly alert expression with observant eyes, wearing bright practical helper clothes with hat or badge, energetic helpful posture, carrying useful tools, full body view, plain white background"
+    }
+  },
+  "backgrounds": {
+    "cozy-home-interior": {
+      "description": "Warm cottage interior with colorful furniture, round windows, whimsical household items and treats",
+      "illustration_prompt": "Cozy cottage interior in Dr. Seuss style, whimsical kitchen with colorful round furniture, checkered tablecloth, shelves with cookies and treats, curved windows with bright morning light, cheerful primary colors, soft rounded shapes, no characters present, wide landscape format"
+    },
+    "forest-path-beginning": {
+      "description": "Wide, clearly marked path through magical forest with friendly trees and colorful wildflowers",
+      "illustration_prompt": "Magical forest path in Dr. Seuss style, wide safe trail winding through tall whimsical trees, bright colorful wildflowers, dappled golden sunlight, fantastical curved tree shapes, vibrant greens and rainbow flower colors, no dark shadows, cheerful and inviting forest scene, no characters present, wide landscape format"
+    },
+    "flower-meadow-off-path": {
+      "description": "Vibrant meadow with oversized, impossibly colored Dr. Seuss-style flowers and rolling hills",
+      "illustration_prompt": "Whimsical flower meadow in Dr. Seuss style, oversized colorful flowers in impossible colors - purple daisies, blue roses, rainbow tulips, rolling hills with fantastical trees, impossibly bright and cheerful colors, magical but safe atmosphere, no characters present, wide landscape format"
+    },
+    "cottage-exterior": {
+      "description": "Charming cottage with roses around windows, colorful shutters, whimsical details, and small garden",
+      "illustration_prompt": "Grandmother's cottage in Dr. Seuss style, charming house with roses around round windows, colorful shutters, whimsical curved chimney, small garden with fantastical plants, bright cheerful front door, welcoming and cozy atmosphere, no characters present, wide landscape format"
+    },
+    "cottage-interior-bedroom": {
+      "description": "Cozy bedroom with round bed, colorful quilt, rocking chair, whimsical furniture, and visible closet",
+      "illustration_prompt": "Grandmother's bedroom in Dr. Seuss style, round bed with colorful quilt, curved rocking chair, whimsical bedside table with friendly lamp, round window with cheerful light, visible closet door, soft curves and warm colors, cozy and comfortable atmosphere, no characters present, wide landscape format"
+    }
+  }
+}

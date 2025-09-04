@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useWebRTCStore } from '../stores/webrtcStore'
 
 interface Props {
@@ -7,6 +7,8 @@ interface Props {
 
 export default function PresenceBadge({ className }: Props) {
   const { role, participants } = useWebRTCStore()
+  const [hover, setHover] = useState(false)
+
   const label = useMemo(() => {
     const count = participants.size + 1
     const roleText = role ? role.toUpperCase() : '—'
@@ -25,10 +27,27 @@ export default function PresenceBadge({ className }: Props) {
   }, [participants])
 
   return (
-    <div className={className} title={tooltip}>
-      <div className="px-3 py-1 rounded bg-white/10 border border-white/20 text-xs text-white/90">
-        {label}
+    <div
+      className={className}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <div className="flex items-center gap-2 px-3 py-1 rounded bg-white/10 border border-white/20 text-xs text-white/90">
+        <span className="relative inline-flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+        </span>
+        <span aria-describedby="presence-tooltip">{label}</span>
       </div>
+      {hover && (
+        <div
+          role="tooltip"
+          id="presence-tooltip"
+          className="absolute mt-1 right-0 z-[1105] whitespace-pre bg-gray-900 text-white text-xs border border-white/10 rounded px-2 py-1"
+        >
+          {tooltip}
+        </div>
+      )}
     </div>
   )
 } 

@@ -114,7 +114,7 @@ export async function logConnectionEvent(params: {
   session_id: string
   room_code: string
   client_id?: string | null
-  event_type: 'connect_start' | 'connected' | 'retry' | 'ice_failed' | 'ended'
+  event_type: 'connect_start' | 'connected' | 'retry' | 'ice_failed' | 'ended' | 'selected_candidate_pair' | 'audio_only_enabled' | 'audio_only_restored' | 'reconnected'
   detail?: Record<string, unknown>
 }): Promise<void> {
   const { session_id, room_code, client_id, event_type, detail } = params

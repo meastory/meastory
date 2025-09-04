@@ -110,64 +110,77 @@ Customize these choice pairs for your theme with **clear child language**:
 - **[DIRECT_CHOICE] vs. [CREATIVE_CHOICE]** ("The obvious way" vs. "Try something new")
 - **[SAFE_CHOICE] vs. [BRAVE_CHOICE]** ("The safe way" vs. "The adventurous way")
 
-## Enhanced JSON Data Structure Template
+## Unified JSON Authoring Spec
 
 ```json
 {
-  "id": "[THEME_NAME]-[UNIQUE_IDENTIFIER]",
-  "title": "[STORY_TITLE]",
+  "id": "[slug-unique]",
+  "title": "[Story Title]",
+  "description": "[One to two sentence blurb]",
   "ageRange": [[MIN_AGE], [MAX_AGE]],
-  "estimatedReadTime": "[X-Y] minutes",
-  "themes": ["[PRIMARY_THEME]", "[SECONDARY_THEME]", "[TERTIARY_THEME]"],
-  "learningObjectives": [
-    "[Specific skill/value child will practice]",
-    "[Specific understanding child will develop]",
-    "[Specific behavior child might try]"
-  ],
-  "discussionPrompts": [
-    "[Question for before story]",
-    "[Question for during story]", 
-    "[Question for after story]"
-  ],
+  "themes": ["[primary-theme]", "[secondary-theme]"],
+  "storyType": "personalized" | "original",
+  "personalization": {
+    "tokens": ["childName"],
+    "defaults": { "childName": "Alex" }
+  },
+  "interactive": true,
+  "access": {
+    "tier": "guest" | "free" | "paid" | "enterprise",
+    "releaseStatus": "draft" | "published" | "archived"
+  },
+  "media": {
+    "backgrounds": {
+      "[background-key]": {
+        "description": "[setting-description]",
+        "illustration_prompt": "[background-generation-prompt]"
+      }
+    },
+    "characters": {
+      "[character-key]": {
+        "description": "[character-description]",
+        "voice": "[voice-characteristics]",
+        "illustration_prompt": "[character-generation-prompt]"
+      }
+    }
+  },
+  "pedagogy": {
+    "estimatedReadTime": "[X–Y minutes]",
+    "learningObjectives": ["[objective-1]", "[objective-2]"],
+    "discussionPrompts": ["[before]", "[during]", "[after]"]
+  },
   "scenes": [
     {
-      "id": "opening-1",
-      "background": "[BACKGROUND_SVG_DESCRIPTION]",
-      "text": "{{childName}} [PROTAGONIST_INTRODUCTION]. [SETTING_ESTABLISHMENT]",
+      "id": "[scene-id]",
+      "title": "[Optional Scene Title]",
+      "background": "[background-key]",
+      "text": "[scene text with {{childName}}]",
       "choices": [
-        { 
-          "label": "[DP1_CHOICE_A_LABEL]", 
-          "nextSceneId": "branch-a-1",
-          "choiceType": "[PRIMARY_APPROACH_A]"
-        },
-        { 
-          "label": "[DP1_CHOICE_B_LABEL]", 
-          "nextSceneId": "branch-b-1",
-          "choiceType": "[PRIMARY_APPROACH_B]"
-        }
+        { "label": "[choice label]", "nextSceneId": "[scene-id]" }
       ],
-      "emotionalBeat": "[primary-emotion]",
-      "readAloudNotes": "[specific guidance for video call delivery]"
+      "meta": {
+        "emotionalBeat": "[beat]",
+        "readAloudNotes": "[notes]"
+      }
     }
   ],
   "pathways": {
     "1A2A": {
       "description": "[pathway-description]",
       "theme": "[ending-theme]",
-      "learningOutcome": "[what child learns from this path]",
+      "learningOutcome": "[what the child learns]",
       "scenes": ["[ordered-scene-ids]"],
       "totalScenes": [NUMBER],
-      "emotionalArc": "[how feelings progress through this path]"
+      "emotionalArc": "[arc description]"
     }
-  },
-  "videoCallOptimization": {
-    "pausePoints": ["[scene-ids-with-natural-discussion-breaks]"],
-    "interactionMoments": ["[scenes-where-child-can-participate-actively]"],
-    "voiceVariationCues": ["[guidance-for-character-voices]"],
-    "emotionalCheckIns": ["[moments-to-check-child's-feelings]"]
   }
 }
 ```
+
+- Use `storyType` and `personalization.tokens` to signal personalization; keep placeholders like `{{childName}}` in text with fallbacks in `personalization.defaults`.
+- Set `interactive=false` for linear stories (no choices). Scenes still supported.
+- Prefer `media.backgrounds` and `media.characters` for art prompts; keys referenced by scenes.
+- Use `access.tier` for audience tiering and `access.releaseStatus` for lifecycle state.
 
 ## Enhanced Writing Consistency Elements
 

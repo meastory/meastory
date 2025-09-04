@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schemas.tokens.studio/schemas/aliases.json",
+  "color": {
+    "primary": { "value": "#2C3E7A" },
+    "accent": { "value": "#FF6B6B" },
+    "ink": { "value": "#1B1E28" },
+    "slate": { "value": "#6B7280" },
+    "mist": { "value": "#E5E7EB" },
+    "cloud": { "value": "#F7F7FA" },
+    "white": { "value": "#FFFFFF" }
+  },
+  "font": {
+    "heading": { "family": { "value": "Fraunces" }, "weight": { "value": "700" } },
+    "body": { "family": { "value": "Nunito" }, "weight": { "value": "400" } }
+  },
+  "size": {
+    "radius": { "pill": { "value": "24px" } },
+    "space": {
+      "xs": { "value": "4px" },
+      "sm": { "value": "8px" },
+      "md": { "value": "12px" },
+      "lg": { "value": "16px" },
+      "xl": { "value": "20px" },
+      "2xl": { "value": "24px" }
+    }
+  },
+  "elevation": {
+    "overlay": {
+      "value": {
+        "color": "#000000",
+        "type": "dropShadow",
+        "x": 0,
+        "y": 6,
+        "blur": 16,
+        "spread": 0,
+        "opacity": 0.3
+      }
+    }
+  },
+  "custom": {
+    "storyTextScaleDefault": { "value": 1 },
+    "overlay": {
+      "gradient": { "value": "linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4))" },
+      "backdropBlur": { "value": "8px" }
+    }
+  }
+} 

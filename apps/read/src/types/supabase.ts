@@ -107,6 +107,8 @@ export type Database = {
           status: Database["public"]["Enums"]["room_status"] | null
           story_id: string | null
           updated_at: string
+          current_story_id?: string | null
+          current_scene_id?: string | null
         }
         Insert: {
           code?: string
@@ -120,6 +122,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["room_status"] | null
           story_id?: string | null
           updated_at?: string
+          current_story_id?: string | null
+          current_scene_id?: string | null
         }
         Update: {
           code?: string
@@ -133,6 +137,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["room_status"] | null
           story_id?: string | null
           updated_at?: string
+          current_story_id?: string | null
+          current_scene_id?: string | null
         }
         Relationships: [
           {
@@ -154,6 +160,14 @@ export type Database = {
           status: Database["public"]["Enums"]["story_status"] | null
           title: string
           updated_at: string
+          slug?: string | null
+          story_type?: string | null
+          access_tier?: string | null
+          content?: Json | null
+          age_min?: number | null
+          age_max?: number | null
+          themes?: string[] | null
+          personalization_tokens?: string[] | null
         }
         Insert: {
           author_id?: string | null
@@ -164,6 +178,14 @@ export type Database = {
           status?: Database["public"]["Enums"]["story_status"] | null
           title: string
           updated_at?: string
+          slug?: string | null
+          story_type?: string | null
+          access_tier?: string | null
+          content?: Json | null
+          age_min?: number | null
+          age_max?: number | null
+          themes?: string[] | null
+          personalization_tokens?: string[] | null
         }
         Update: {
           author_id?: string | null
@@ -174,6 +196,14 @@ export type Database = {
           status?: Database["public"]["Enums"]["story_status"] | null
           title?: string
           updated_at?: string
+          slug?: string | null
+          story_type?: string | null
+          access_tier?: string | null
+          content?: Json | null
+          age_min?: number | null
+          age_max?: number | null
+          themes?: string[] | null
+          personalization_tokens?: string[] | null
         }
         Relationships: []
       }

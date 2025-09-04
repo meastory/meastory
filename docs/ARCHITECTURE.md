@@ -1,70 +1,73 @@
 # Architecture & Repo Design Decisions
 
 ### Goals
-- Move fast for Phase 1 with minimal complexity
-- Set clean boundaries to evolve toward Phase 2–4 without rewrites
-- Support subdomain strategy and future provider plugins
+- Deliver a resilient guest storytelling flow quickly
+- Keep clean seams for future growth (accounts, subscriptions, analytics)
+- Prefer managed services over custom infra where possible
 
-### Monorepo vs Polyrepo
-- Decision: Start with a single repo housing multiple apps/packages as they emerge
-  - Rationale: Fast local dev, shared brand/design, easy CI/CD
-  - Tooling: Start simple (no workspace manager). Introduce PNPM workspaces/Turborepo only when needed in Phase 3+
-
-### Repository Layout (initial)
+### Repository Layout (current)
 ```
 meastory/
-  docs/                        # Product, architecture, policies, runbooks
   apps/
-    read/                      # Phase 1 MVP static site (Netlify)
-      public/                  # Static assets (images, icons)
-      src/                     # Vanilla JS/CSS/HTML
-      stories/                 # JSON story definitions
-      netlify.toml             # Build/deploy config
-  packages/                    # Reserved for shared libs later (e.g., story-engine)
-  .github/                     # CI configs later
-  README.md                    # Root overview
+    read/                  # React + TypeScript + Vite production app
+    mvp/read-old/          # Legacy static MVP (reference only)
+  supabase/
+    functions/             # Edge Functions (identify_device)
+    migrations/            # SQL schema, policies, RPCs
+  docs/
+    *.md
 ```
 
-### Phase 1 Tech Choices
-- Frontend: Vanilla HTML/CSS/JS (no framework)
-- Video: WebRTC (direct peer connection, STUN only initially)
-- State sync: Simple peer messaging channel (DataChannel) for story state
-- Hosting: Netlify static site + redirects
-- DNS: Namecheap → Netlify CNAME
-- No backend, no DB
+### Frontend
+- **Framework**: React 18 + TypeScript + Vite
+- **State**: Zustand stores (`authStore`, `roomStore`, `uiStore`, `webrtcStore`)
+- **Styling**: Tailwind CSS
+- **Routing**: React Router (`/start`, `/invite/:code`, `/join`, `/join/:code`, auth pages, app shell)
+- **PWA**: Manifest + install prompt, fullscreen controls, persistent text scale via CSS var
 
-### Evolution Path
-- Phase 2: Keep static hosting; add better story navigation, URL personalization
-- Phase 3: Introduce small Node.js service (Railway/Render) for AI image proxy/cache; start `packages/story-engine`
-- Phase 4: Add authentication and subscriptions; consider Supabase (Auth, Postgres, Storage) and/or Stripe webhook service
+### Signaling & Presence
+- **Provider**: Supabase Realtime
+- **Channel Naming**: `webrtc-<ROOM_CODE>`
+- **Presence**: Determines `host` vs `guest` (first presencer = host)
+- **Filtering**: Recipient-scoped messages (`offer`/`answer`/`candidate`) and self-ignore guards
+- **Fallbacks**: Story sync also broadcast via Realtime in addition to RTC data channel
 
-### Video Provider Plugin Architecture (forward-looking)
-- Keep an interface in `packages/video` (future) with adapters: `webrtc`, `zoom`, `daily`
-- Phase 1 implements only `webrtc` internals inside `apps/read/src` with an interface boundary to allow later extraction
+### WebRTC
+- **Negotiation**: Perfect negotiation, glare handling (polite/impolite roles)
+- **ICE**: Candidate queuing, phased TURN enable, reconnect/backoff on failure/disconnect
+- **Policy**: Optional relay detection → audio-only on TURN as configured
+- **Data Channel**: `story-sync` carries story choice, story change, child name updates
 
-### Data & Story Schema
-- JSON-based story definitions stored in `apps/read/stories`
-- Strict, documented schema with validation during build (JSON Schema in Phase 2)
+### Data Model (Supabase)
+- `rooms`: id, code, name, tier (`guest`), status, `current_story_id`, `current_scene_id`, `host_id?`, `max_participants`
+- `stories`: id, title, description, status
+- `story_scenes`: id, story_id, scene_order, title, content, choices (JSONB)
+- `room_participants`: id, room_id, user_id?, participant_name
+- `guest_sessions`: id, room_id, room_code, device_hash, ip_hash?, role, started_at, ended_at
+- `device_limits`: (ip_hash, device_hash, day) → session_count to enforce 3/day
+- `connection_events`: per-session events for connect_start/connected/retry/ice_failed/ended (+ detail JSON)
+
+### RPCs & Functions
+- `rpc_create_guest_room(name, story_id?)`: create guest room with 2 max participants
+- `guest_check_and_start_session(code, ip_hash, device_hash)`: validate capacity + daily limits; returns role + session
+- `rpc_log_connection_event(...)`: persist connection metrics
+- `rpc_end_guest_session(session_id)`: mark session ended
+- `rpc_heartbeat_guest_session(session_id, room_code)`: heartbeat (see migration)
+- `rpc_update_room_scene(room_id, story_id, scene_id)`: host-only, updates `current_*`
+- Edge Function `identify_device`: hashes IP and device/browser into `ip_hash`/`device_hash`
+
+### Flows
+- **Guest**: Start → create room (RPC) → share invite QR/link → Join → preflight device test → start session (RPC) → enter room (Realtime + WebRTC) → pick story → read and make choices (sync via data channel)
+- **Host Story Change**: Update `rooms.story_id` and broadcast; peers load new story without dropping RTC
+- **Scene Resume**: Host updates `current_*` via RPC; peers load matching scene
 
 ### Security & Privacy
-- No child data persisted; no accounts in Phase 1
-- Session links should be random and short-lived; initial MVP can simulate expiry client-side
-- COPPA-aware copy and flows
+- No A/V stored; peer-to-peer media
+- RLS on tables; RPCs are `SECURITY DEFINER` and scope anon access to guest flows
+- Minimal device/IP hashing only for limits/abuse prevention
 
-### Testing & Quality
-- Unit tests for story engine (when extracted) using Vitest/Jest in Phase 2
-- Manual cross-browser smoke tests for Phase 1
-
-### CI/CD
-- Netlify deploys from `apps/read`
-- Branch deploy previews for feature branches
-- Add GitHub Actions later for lint/typecheck/tests
-
-### Alternatives Considered
-- SPA frameworks (React/Vue): Overhead not justified for MVP timeline
-- Separate repos per subdomain now: Premature; increase coordination costs
-- Backend signaling service now: Skip; leverage public STUN and simple signaling via room URLs first, add proper signaling when multi-peer/recording required
-
-### Risks
-- WebRTC signaling without a server limits flexibility → acceptable for MVP; add lightweight signaling in Phase 2/3 if needed
-- Vanilla stack can accrue duplication → migrate to shared packages as soon as features repeat 
+### Evolution Path
+- Add richer connection health UI, error toasts, TURN credentials
+- Expand story catalog and authoring workflow
+- Add accounts/subscriptions (Stripe) and move guest → member flows
+- Extract story engine into a package; add tests and analytics dashboards 

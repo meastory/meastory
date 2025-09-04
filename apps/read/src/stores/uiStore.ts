@@ -6,15 +6,18 @@ interface UIState {
   isLoading: boolean
   error: string | null
   storyTextScale: number
+  notice?: string | null
 }
 
 interface UIActions {
   setMode: (mode: UIState['mode']) => void
   setMenuOpen: (open: boolean) => void
   setLoading: (loading: boolean) => void
-  setError: (error: string | null) => void
+
   setStoryTextScale: (scale: number) => void
   reset: () => void
+  setError?: (error: string | null) => void
+  setNotice?: (notice: string | null) => void
 }
 
 const initialState: UIState = {
@@ -23,6 +26,7 @@ const initialState: UIState = {
   isLoading: false,
   error: null,
   storyTextScale: 1,
+  notice: null,
 }
 
 export const useUIStore = create<UIState & UIActions>((set) => ({
@@ -35,6 +39,8 @@ export const useUIStore = create<UIState & UIActions>((set) => ({
   setLoading: (loading) => set({ isLoading: loading }),
 
   setError: (error) => set({ error }),
+
+  setNotice: (notice) => set({ notice }),
 
   setStoryTextScale: (scale) => {
     const clampedScale = Math.max(0.75, Math.min(1.75, scale))

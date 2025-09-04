@@ -2,6 +2,22 @@ import { create } from 'zustand'
 import { supabase } from './authStore'
 import type { Tables } from '../types/supabase'
 
+// JSON authoring content types for local parsing
+interface JsonChoice { label: string; nextSceneId: string }
+interface JsonScene {
+  id: string
+  title?: string
+  background?: string
+  text: string
+  choices?: JsonChoice[]
+  meta?: { emotionalBeat?: string; readAloudNotes?: string }
+}
+interface JsonStoryContent { scenes?: JsonScene[] }
+
+function isUuid(value: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
+}
+
 type Room = Tables<'rooms'>
 type Story = Tables<'stories'>
 type StoryScene = Tables<'story_scenes'>
@@ -67,27 +83,36 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
       set({ currentRoom: room })
 
-      // If no story is selected, choose the first published story to keep flow working
-      let storyIdToLoad = room.story_id as string | null
-      if (!storyIdToLoad) {
-        const { data: firstStory } = await supabase
-          .from('stories')
-          .select('id')
-          .eq('status', 'published')
-          .order('title', { ascending: true })
-          .limit(1)
-          .maybeSingle()
-        if (firstStory?.id) {
-          storyIdToLoad = firstStory.id
-          console.log('📚 No story on room; using default published story:', storyIdToLoad)
+      // Prefer resuming from current_* if present
+      if (room.current_story_id) {
+        console.log('📚 Resuming story from room state:', room.current_story_id, 'scene:', room.current_scene_id || 'first')
+        await get().loadStory(room.current_story_id)
+        if (room.current_scene_id) {
+          await get().loadScene(room.current_scene_id)
         }
-      }
-
-      if (storyIdToLoad) {
-        console.log('📚 Loading story:', storyIdToLoad)
-        await get().loadStory(storyIdToLoad)
       } else {
-        console.log('⚠️ No published stories available to load')
+        // If no story is selected, choose the first published story to keep flow working
+        let storyIdToLoad = room.story_id as string | null
+        if (!storyIdToLoad) {
+          const { data: firstStory } = await supabase
+            .from('stories')
+            .select('id')
+            .eq('status', 'published')
+            .order('title', { ascending: true })
+            .limit(1)
+            .maybeSingle()
+          if (firstStory?.id) {
+            storyIdToLoad = firstStory.id
+            console.log('📚 No story on room; using default published story:', storyIdToLoad)
+          }
+        }
+
+        if (storyIdToLoad) {
+          console.log('📚 Loading story:', storyIdToLoad)
+          await get().loadStory(storyIdToLoad)
+        } else {
+          console.log('⚠️ No published stories available to load')
+        }
       }
 
       // Load participants
@@ -127,7 +152,32 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       console.log('📖 Story loaded:', story.title, 'ID:', story.id)
       set({ currentStory: story })
 
-      // Load first scene if it exists
+      // Prefer JSONB content-based first scene
+      const content = (story as unknown as { content?: JsonStoryContent }).content
+      const scenes = Array.isArray(content?.scenes) ? (content!.scenes as JsonScene[]) : null
+      const firstSceneFromJson = scenes?.[0] ?? null
+
+      if (firstSceneFromJson) {
+        // Map JSON scene to StoryScene-like shape for UI compatibility
+        const mappedChoices = (firstSceneFromJson.choices || []).map(c => ({ label: c.label, next_scene_id: c.nextSceneId }))
+        const mapped: StoryScene = {
+          id: firstSceneFromJson.id,
+          story_id: storyId,
+          scene_order: 1,
+          title: firstSceneFromJson.title ?? null,
+          content: firstSceneFromJson.text ?? '',
+          choices: mappedChoices,
+          background_image_url: firstSceneFromJson.background ?? null,
+          audio_url: null,
+          created_at: story.created_at,
+          updated_at: story.updated_at,
+        } as unknown as StoryScene
+        console.log('🎬 First scene (JSON) loaded:', mapped.title || mapped.id)
+        set({ currentScene: mapped })
+        return
+      }
+
+      // Fallback: Load first scene from story_scenes
       const { data: firstScene } = await supabase
         .from('story_scenes')
         .select('*')
@@ -136,7 +186,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
         .single()
 
       if (firstScene) {
-        console.log('🎬 First scene loaded:', firstScene.title)
+        console.log('🎬 First scene (DB) loaded:', firstScene.title)
         set({ currentScene: firstScene })
       } else {
         console.log('⚠️ No first scene found for story')
@@ -153,6 +203,60 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
     console.log('🎬 Loading scene:', sceneId)
 
     try {
+      const currentStory = get().currentStory as unknown as { id: string; content?: JsonStoryContent } | null
+      const content = currentStory?.content
+      const scenes = Array.isArray(content?.scenes) ? (content!.scenes as JsonScene[]) : null
+
+      // If JSON content exists, resolve by scene id (string) or by index (number)
+      if (scenes && currentStory) {
+        let nextSceneObj: JsonScene | undefined
+        if (typeof sceneId === 'string') {
+          nextSceneObj = scenes.find(s => s.id === sceneId)
+        } else {
+          const index = Number(sceneId) - 1
+          nextSceneObj = scenes[index]
+        }
+
+        if (nextSceneObj) {
+          const mappedChoices = (nextSceneObj.choices || []).map(c => ({ label: c.label, next_scene_id: c.nextSceneId }))
+          const mapped: StoryScene = {
+            id: nextSceneObj.id,
+            story_id: currentStory.id,
+            scene_order: typeof sceneId === 'number' ? Number(sceneId) : (scenes.findIndex(s => s.id === nextSceneObj!.id) + 1),
+            title: nextSceneObj.title ?? null,
+            content: nextSceneObj.text ?? '',
+            choices: mappedChoices,
+            background_image_url: nextSceneObj.background ?? null,
+            audio_url: null,
+            created_at: get().currentScene?.created_at || new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          } as unknown as StoryScene
+
+          console.log('🎭 Scene (JSON) loaded:', mapped.title || mapped.id, 'Order:', mapped.scene_order)
+          set({ currentScene: mapped })
+
+          // If host and the scene id is a UUID (legacy), persist; otherwise skip RPC
+          try {
+            const room = get().currentRoom
+            if (room) {
+              const { useWebRTCStore } = await import('./webrtcStore')
+              if (useWebRTCStore.getState().role === 'host' && isUuid(mapped.id as unknown as string)) {
+                await supabase.rpc('rpc_update_room_scene' as unknown as never, {
+                  p_room_id: room.id,
+                  p_story_id: currentStory.id,
+                  p_scene_id: mapped.id as unknown as string,
+                } as unknown as never)
+              }
+            }
+          } catch (e) {
+            console.warn('rpc_update_room_scene (JSON) skipped/failed:', e)
+          }
+
+          return
+        }
+      }
+
+      // Fallback to relational scenes
       let query = supabase
         .from('story_scenes')
         .select('*')
@@ -160,7 +264,6 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       if (typeof sceneId === 'string') {
         query = query.eq('id', sceneId)
       } else {
-        const currentStory = get().currentStory
         if (currentStory) {
           query = query
             .eq('story_id', currentStory.id)
@@ -174,8 +277,24 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
       if (error) throw error
 
-      console.log('🎭 Scene loaded:', scene.title, 'Order:', scene.scene_order)
+      console.log('🎭 Scene (DB) loaded:', scene.title, 'Order:', scene.scene_order)
       set({ currentScene: scene })
+
+      try {
+        const currentRoom = get().currentRoom
+        if (currentRoom) {
+          const { useWebRTCStore } = await import('./webrtcStore')
+          if (useWebRTCStore.getState().role === 'host' && get().currentStory) {
+            await supabase.rpc('rpc_update_room_scene' as unknown as never, {
+              p_room_id: currentRoom.id,
+              p_story_id: get().currentStory!.id,
+              p_scene_id: scene.id,
+            } as unknown as never)
+          }
+        }
+      } catch (e) {
+        console.warn('rpc_update_room_scene failed (non-host or RLS):', e)
+      }
     } catch (error: unknown) {
       console.error('❌ Error loading scene:', error)
       const msg = (error as { message?: string })?.message || 'Unknown error'
@@ -219,6 +338,36 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       
       // Load the new story (this won't disconnect WebRTC)
       await get().loadStory(storyId)
+
+      // If story uses JSON content, skip legacy scene fetch and RPC
+      const loaded = get().currentStory as unknown as { id: string; content?: JsonStoryContent } | null
+      const hasJsonScenes = Array.isArray(loaded?.content?.scenes)
+      if (hasJsonScenes) {
+        console.log('🧩 JSON content detected; skipping legacy first-scene fetch/RPC')
+        console.log('✅ Story changed successfully without disconnecting WebRTC')
+        return
+      }
+
+      // If host, also reset current_scene_id via RPC to first scene (UUID only)
+      try {
+        const { data: firstScene } = await supabase
+          .from('story_scenes')
+          .select('id')
+          .eq('story_id', storyId)
+          .eq('scene_order', 1)
+          .single()
+        const sceneId = firstScene?.id || null
+        const { useWebRTCStore } = await import('./webrtcStore')
+        if (useWebRTCStore.getState().role === 'host' && sceneId) {
+          await supabase.rpc('rpc_update_room_scene' as unknown as never, {
+            p_room_id: currentRoom.id,
+            p_story_id: storyId,
+            p_scene_id: sceneId,
+          } as unknown as never)
+        }
+      } catch (e) {
+        console.warn('rpc_update_room_scene (story change) failed or skipped:', e)
+      }
       
       console.log('✅ Story changed successfully without disconnecting WebRTC')
     } catch (error: unknown) {

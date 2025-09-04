@@ -1,0 +1,413 @@
+{
+  "id": "jack-beanstalk-dr-seuss-interactive",
+  "title": "{{childName}} and the Magic Beanstalk",
+  "description": "Join {{childName}} on a magical adventure up an enchanted beanstalk where trust, thinking, and friendship create wonderful solutions to big problems.",
+  "ageRange": [7, 12],
+  "themes": ["decision-making", "friendship", "courage"],
+  "storyType": "personalized",
+  "personalization": {
+    "tokens": ["childName"],
+    "defaults": { "childName": "Alex" }
+  },
+  "interactive": true,
+  "access": {
+    "tier": "free",
+    "releaseStatus": "draft"
+  },
+  "media": {
+    "backgrounds": {
+      "wiggle-lane-cottage": {
+        "description": "Small, cozy cottage at the end of a winding country lane, with tiny garden patch, wooden fence, and rolling hills in background",
+        "illustration_prompt": "Small countryside cottage on Wiggle Lane, cozy wooden house with thatched roof, tiny garden with empty cupboard visible through window, rolling green hills in background, Dr. Seuss illustration style, whimsical architecture with slightly curved lines and bright colors, cheerful but modest setting, no characters present"
+      },
+      "country-road": {
+        "description": "Winding dirt path through countryside with wildflowers, small trees, and distant village buildings visible",
+        "illustration_prompt": "Whimsical country road winding through countryside, dirt path with wildflowers on sides, small curved trees, distant village buildings, Dr. Seuss illustration style with curved organic shapes and bright colors, inviting pathway leading to adventure, no characters present"
+      },
+      "beanstalk-garden": {
+        "description": "Garden patch behind cottage now dominated by enormous magical beanstalk reaching up through clouds",
+        "illustration_prompt": "Magical garden with enormous beanstalk reaching up through clouds, giant green stalk with large leaves as ladder rungs, tiny cottage visible at base, Dr. Seuss illustration style with exaggerated proportions and whimsical organic curves, bright greens and blues, sense of upward adventure and magic, no characters present"
+      },
+      "cloud-level": {
+        "description": "View from partway up beanstalk showing fluffy white clouds all around, with beanstalk continuing up through cloud layer",
+        "illustration_prompt": "View from magical beanstalk among fluffy white clouds, green stalk continuing up through cloud layer, bright blue sky above, tiny world visible far below, Dr. Seuss illustration style with soft cloud shapes and organic curves, dreamy and whimsical atmosphere, sense of magical journey, no characters present"
+      },
+      "giants-realm": {
+        "description": "Vast landscape above the clouds with everything oversized - enormous stones forming road, giant-sized flowers and trees, distant castle",
+        "illustration_prompt": "Giant's realm above clouds with oversized landscape, enormous stone road, giant flowers and curved trees, distant whimsical castle, Dr. Seuss illustration style with exaggerated scale and bright cheerful colors, everything giant-sized but friendly and welcoming, magical above-cloud setting, no characters present"
+      },
+      "giants-castle": {
+        "description": "Large, friendly-looking castle with curved towers and colorful details, giant-sized clothesline, garden, and walkways",
+        "illustration_prompt": "Whimsical giant's castle with curved colorful towers, friendly architecture, giant clothesline with large clothes, oversized garden elements, Dr. Seuss illustration style with curved lines and bright domestic colors, welcoming home feel rather than fortress, cheerful and lived-in appearance, no characters present"
+      },
+      "giants-kitchen": {
+        "description": "Enormous kitchen with oversized furniture, giant table and chairs, huge fireplace, cabinets reaching toward ceiling",
+        "illustration_prompt": "Giant-sized kitchen interior with enormous wooden table and chairs, huge stone fireplace, oversized cabinets and cooking utensils, Dr. Seuss illustration style with warm browns and cheerful colors, cozy domestic atmosphere despite large scale, homey and welcoming feel, no characters present"
+      }
+    },
+    "characters": {
+      "child-protagonist": {
+        "description": "Small child around 8-10 years old, average build, bright curious eyes, somewhat messy hair suggesting adventure-readiness",
+        "voice": "Enthusiastic, sometimes uncertain but growing bolder, asks lots of questions, shows determined helpfulness",
+        "illustration_prompt": "Child protagonist around 8-10 years old, bright curious eyes and slightly messy hair, simple rural clothing (tunic and comfortable pants), confident posture with open friendly expression, Dr. Seuss character style with slightly exaggerated features and bright colors, adventurous and kind personality visible in face and stance, suitable for children's book illustration"
+      },
+      "mother-maple": {
+        "description": "Caring middle-aged woman, gentle features with laugh lines, hair pulled back practically, modest dress",
+        "voice": "Gentle but firm, uses loving nicknames, speaks in caring rhythms, worried but ultimately supportive",
+        "illustration_prompt": "Caring mother figure in simple dress with apron, gentle middle-aged features with kind eyes and warm smile, practical hair pulled back, arms in welcoming maternal gesture, Dr. Seuss character style with soft curves and warm colors, loving and protective personality, suitable for children's book illustration"
+      },
+      "trader-twizzle": {
+        "description": "Mysterious but friendly older man, twinkling eyes, unusual patchwork coat with many pockets, whimsical hat",
+        "voice": "Rhyming, mysterious, playful with words, asks testing questions, patient wisdom with childlike enthusiasm",
+        "illustration_prompt": "Mysterious friendly trader with twinkling eyes, colorful patchwork coat with many pockets, whimsical pointed hat, carrying magical pouches and bags, Dr. Seuss character style with curved lines and bright colors, kind magical mentor appearance with twinkly mysterious expression, suitable for children's book illustration"
+      },
+      "mrs-bumblebottom": {
+        "description": "Large, gentle giant woman with kind maternal features, flour-dusted apron, soft movements despite size",
+        "voice": "Warm but nervous, speaks in whispers when husband is near, motherly, uses gentle exclamations",
+        "illustration_prompt": "Gentle giant woman with kind maternal features, large but soft appearance, flour-dusted apron over homey dress, warm caring eyes, protective maternal posture, Dr. Seuss character style with soft curves and warm colors, obviously caring and nurturing despite large size, suitable for children's book illustration"
+      },
+      "grumbleguts": {
+        "description": "Large giant man, wild but not scary hair, loud colorful clothing, more bumbling than threatening",
+        "voice": "Booming, repetitive phrases, rhyming complaints, snores dramatically, transitions from grumpy to gentle",
+        "illustration_prompt": "Large friendly giant man with wild hair and colorful oversized clothes, initially grumpy but kind expression, big boots and suspenders, Dr. Seuss character style with exaggerated but friendly features, more bumbling than threatening, capable of showing surprise and growing warmth, suitable for children's book illustration"
+      }
+    }
+  },
+  "pedagogy": {
+    "estimatedReadTime": "15–20 minutes",
+    "learningObjectives": [
+      "Practice making decisions by weighing different approaches to problems",
+      "Learn that both trusting feelings and thinking carefully are valuable skills",
+      "Discover how kindness and understanding can solve conflicts",
+      "Build confidence in personal problem-solving abilities"
+    ],
+    "discussionPrompts": [
+      "What do you think {{childName}} should do about helping their family?",
+      "How do you decide when to trust your feelings versus thinking things through?",
+      "What did {{childName}} learn about friendship and understanding others?"
+    ]
+  },
+  "scenes": [
+    {
+      "id": "opening-1",
+      "title": "The Problem at Wiggle Lane",
+      "background": "wiggle-lane-cottage",
+      "text": "In a house rather small at the end of Wiggle Lane,\nLived {{childName}} and Mother through sunshine and rain.\nTheir cupboards were empty, their pockets were light,\n\"Oh dear!\" sighed dear Mother, \"This isn't quite right!\"\n\nPoor Milky-white cow gave them milk every day,\nBut lately she'd moo in the saddest of ways.\n\"{{childName}}, my sweet pea,\" said Mother with care,\n\"We must find a way out—we've got nothing to spare!\"",
+      "choices": [
+        { "label": "Continue the story", "nextSceneId": "opening-2" }
+      ],
+      "meta": {
+        "emotionalBeat": "gentle concern",
+        "readAloudNotes": "Use warm, caring tone for Mother, emphasize the family's closeness despite their troubles"
+      }
+    },
+    {
+      "id": "opening-2",
+      "title": "Meeting Trader Twizzle",
+      "background": "country-road",
+      "text": "So {{childName}} took Milky-white's rope, nice and tight,\n\"I'll help us, dear Mother—we'll make it all right!\"\nBut they hadn't walked far down the road, don't you know,\nWhen along came a stranger with eyes all aglow!\n\n\"Good morning, {{childName}}!\" sang Twizzle with glee,\nHis coat full of patches as bright as can be.\n\"I see you have troubles, I see you have care,\nBut magical wonders are floating in air!\"",
+      "choices": [
+        { "label": "Listen to the stranger", "nextSceneId": "opening-3" }
+      ],
+      "meta": {
+        "emotionalBeat": "curiosity and mystery",
+        "readAloudNotes": "Make Trader Twizzle sound sing-song and magical, build anticipation"
+      }
+    },
+    {
+      "id": "opening-3",
+      "title": "The Magic Bean Offer",
+      "background": "country-road",
+      "text": "From his pocket so deep, Trader Twizzle pulled out\nSome beans that were sparkly, without any doubt.\nThey shimmered and danced in the morning sun bright,\n\"These beans,\" sang old Twizzle, \"are pure magic light!\"\n\n\"Plant them tonight when the stars start to glow,\nAnd morning will bring you the best things to know!\nSo what do you say there, dear {{childName}} so keen?\nThe strangest trade that you ever have seen!\"",
+      "choices": [
+        { "label": "I trust in the magic!", "nextSceneId": "branch-a-1" },
+        { "label": "Let me think about this!", "nextSceneId": "branch-b-1" }
+      ],
+      "meta": {
+        "emotionalBeat": "wonder and decision",
+        "readAloudNotes": "Build excitement around the magical beans, pause before presenting the big choice"
+      }
+    },
+    {
+      "id": "branch-a-1",
+      "title": "Trusting the Magic",
+      "background": "country-road",
+      "text": "\"These beans are magic!\" cried {{childName}} with glee,\n\"Sometimes you just trust what you're meant to see!\"\nSo {{childName}} grinned wide and held out the lead,\n\"I'll trade for the beans—they're just what we need!\"\n\nTrader Twizzle's eyes twinkled like stars in the night,\n\"Splendid! Tremendous! Your choice is just right!\nRemember, dear {{childName}}, when each bean you sow,\nThe most amazing adventures are ready to grow!\"",
+      "choices": [
+        { "label": "Go home with the beans", "nextSceneId": "branch-a-2" }
+      ],
+      "meta": {
+        "emotionalBeat": "trust and excitement",
+        "readAloudNotes": "Celebrate the child's brave choice, make Twizzle sound delighted and encouraging"
+      }
+    },
+    {
+      "id": "branch-b-1",
+      "title": "Thinking It Through",
+      "background": "country-road",
+      "text": "\"Wait just a minute!\" said {{childName}} with care,\n\"I need to know more before I would dare!\nWhat makes these beans so special and grand?\nHow do I know I can trust what you've planned?\"\n\nTrader Twizzle just nodded, his eyes twinkling bright,\n\"Smart questions, dear {{childName}}! You're thinking just right!\nCurious minds and hearts that are true\nFind magic in everything that they do!\"",
+      "choices": [
+        { "label": "Ask more questions", "nextSceneId": "branch-b-2" }
+      ],
+      "meta": {
+        "emotionalBeat": "thoughtful consideration",
+        "readAloudNotes": "Validate the child's careful thinking, make Twizzle sound patient and wise"
+      }
+    },
+    {
+      "id": "branch-a-2",
+      "title": "Mother's Reaction",
+      "background": "wiggle-lane-cottage",
+      "text": "Home went {{childName}} with beans in their pocket,\nMother saw no cow—she nearly did drop it!\n\"Oh my! Where's our cow? What sort of deal?\nMy sweet little {{childName}}, was this trade real?\"\n\n\"I traded for magic!\" {{childName}} grinned wide and true,\n\"These beans hold adventures for me and for you!\"\nBut Mother just sighed with a shake of her head,\n\"Magic beans, dear heart, won't buy us bread.\"",
+      "choices": [
+        { "label": "Plant the beans tonight", "nextSceneId": "branch-a-3" }
+      ],
+      "meta": {
+        "emotionalBeat": "disappointment but hope",
+        "readAloudNotes": "Show Mother's worry but also her love, let child's faith shine through"
+      }
+    },
+    {
+      "id": "branch-b-2",
+      "title": "Getting Answers",
+      "background": "country-road",
+      "text": "{{childName}} asked many questions that day,\nAbout magic and beans in a thoughtful way.\n\"If I plant them tonight, what will grow there?\nHow long will it take? Should I really dare?\"\n\nTrader Twizzle answered each question with cheer,\n\"When morning arrives, all will be clear!\nPatient young {{childName}}, so wise and so bright,\nThe answers will come with tomorrow's first light!\"",
+      "choices": [
+        { "label": "Decide to try the beans", "nextSceneId": "branch-b-3" }
+      ],
+      "meta": {
+        "emotionalBeat": "growing confidence",
+        "readAloudNotes": "Show the wisdom of asking questions, build anticipation for the magic"
+      }
+    },
+    {
+      "id": "branch-a-3",
+      "title": "The Magical Growth",
+      "background": "beanstalk-garden",
+      "text": "That night while {{childName}} slept cozy in bed,\nWith bean-trading dreams dancing 'round in their head,\nThe beans that were planted deep in the ground\nBegan growing up without making a sound!\n\nBy morning, a stalk reached way up to the sky!\n\"I knew it! I knew it!\" {{childName}} did cry.\n\"The magic was real! Oh my! Oh me!\nThe most amazing sight I ever did see!\"",
+      "choices": [
+        { "label": "Start climbing the beanstalk", "nextSceneId": "ascent-1" }
+      ],
+      "meta": {
+        "emotionalBeat": "wonder and vindication",
+        "readAloudNotes": "Build excitement with the overnight magic, celebrate the child's faith being rewarded"
+      }
+    },
+    {
+      "id": "branch-b-3",
+      "title": "Watching the Magic Happen",
+      "background": "beanstalk-garden",
+      "text": "{{childName}} watched through the night, oh so keen,\nThe most amazing growing they'd ever seen!\nEach hour that passed, the stalk grew up high,\nA ladder of green reaching up to the sky!\n\n\"My thinking was right!\" {{childName}} said with delight,\n\"I watched and I waited all through the night!\nWhen you think things through and you plan what to do,\nAmazing adventures come looking for you!\"",
+      "choices": [
+        { "label": "Climb up to explore", "nextSceneId": "ascent-1" }
+      ],
+      "meta": {
+        "emotionalBeat": "satisfaction and pride",
+        "readAloudNotes": "Celebrate the thoughtful approach, show how both paths lead to the same magical result"
+      }
+    },
+    {
+      "id": "ascent-1",
+      "title": "Climbing Through the Clouds",
+      "background": "cloud-level",
+      "text": "Up climbed {{childName}} on the stalk, oh so high,\nThrough fluffy white clouds floating by in the sky.\nHand over hand, up and up they would go,\n\"Amazing! Tremendous!\" they called down below.\n\n\"I'm climbing up high to incredible height!\nThis stalk is so strong and the day is so bright!\"\nEach leaf was like steps on a ladder of green,\nThe most wonderful climbing they'd ever seen!",
+      "choices": [
+        { "label": "Keep climbing to the top", "nextSceneId": "ascent-2" }
+      ],
+      "meta": {
+        "emotionalBeat": "adventure and exhilaration",
+        "readAloudNotes": "Make the climbing feel exciting and magical, emphasize the wonder of the journey"
+      }
+    },
+    {
+      "id": "ascent-2",
+      "title": "Reaching the Giant's Realm",
+      "background": "giants-realm",
+      "text": "At last {{childName}} reached the tippy-top peak,\nAnd climbed over clouds with a hop and a squeak!\nBefore them stretched land that was big, really BIG,\nWith everything giant-sized, every whatsit and thig!\n\nA road made of stones, each one huge as a house,\nLed straight to a castle (quite fit for a spouse).\nAnd there by the door, hanging wash on a line,\nWas a giant-sized lady who looked rather fine!\n\n\"Well here I am now!\" said {{childName}} with glee,\n\"I wonder if that giant lady likes me!\"",
+      "choices": [
+        { "label": "Decide how to approach", "nextSceneId": "dp2-choice" }
+      ],
+      "meta": {
+        "emotionalBeat": "awe and anticipation",
+        "readAloudNotes": "Build wonder at the giant world, introduce Mrs. Bumblebottom as friendly rather than scary"
+      }
+    },
+    {
+      "id": "dp2-choice",
+      "title": "Meeting Mrs. Bumblebottom",
+      "background": "giants-castle",
+      "text": "{{childName}} looked at the giant lady there,\nHanging enormous clothes with such care.\nShe seemed rather gentle, she seemed rather kind,\nBut what's the best approach for {{childName}} to find?\n\n\"Should I walk right up and say hello?\nOr watch and learn first, to see what I should know?\nBoth ways might work well, both ways might be right,\nWhich one feels best for {{childName}} tonight?\"",
+      "choices": [
+        { "label": "Walk up and introduce yourself!", "nextSceneId": "journey-direct" },
+        { "label": "Observe carefully first!", "nextSceneId": "journey-observe" }
+      ],
+      "meta": {
+        "emotionalBeat": "thoughtful decision-making",
+        "readAloudNotes": "Present both options as equally valid, encourage the child to choose their preferred approach"
+      }
+    },
+    {
+      "id": "journey-direct",
+      "title": "Direct Introduction",
+      "background": "giants-castle",
+      "text": "{{childName}} walked right up with a grin, oh so bright,\n\"Hello there! I'm {{childName}}, and what a sight!\nI climbed up a stalk that was magic and green,\nThe most amazing adventure I've ever seen!\"\n\nMrs. Bumblebottom's eyes opened up wide,\n\"Sweet stars up above! A dear child!\" she cried.\n\"Come in, come quickly, you brave little one!\nYour trusting heart shines bright as the sun!\"",
+      "choices": [
+        { "label": "Go inside with her", "nextSceneId": "inside-castle" }
+      ],
+      "meta": {
+        "emotionalBeat": "warm connection",
+        "readAloudNotes": "Show immediate friendship, make Mrs. Bumblebottom sound delighted and motherly"
+      }
+    },
+    {
+      "id": "journey-observe",
+      "title": "Careful Observation",
+      "background": "giants-castle",
+      "text": "{{childName}} hid by a tree, big and round,\nWatching the giant lady without making a sound.\n\"I'll learn about her before I say hi,\nTo see if she's friendly or if I should say goodbye!\"\n\nShe hummed as she worked, seemed gentle and sweet,\nWith a kind, caring face and big, gentle feet.\n\"She looks rather nice,\" thought {{childName}} with care,\n\"Maybe it's safe to go over there!\"",
+      "choices": [
+        { "label": "Approach her now", "nextSceneId": "careful-approach" }
+      ],
+      "meta": {
+        "emotionalBeat": "careful assessment",
+        "readAloudNotes": "Show the wisdom of observation, build confidence through careful watching"
+      }
+    },
+    {
+      "id": "inside-castle",
+      "title": "Inside the Giant's Home",
+      "background": "giants-kitchen",
+      "text": "Mrs. Bumblebottom led {{childName}} inside,\nWhere giant-sized wonders opened up wide!\nShe served little cookies (though giant-sized small)\nAnd tea in big teacups by the fireplace wall.\n\n\"My dear little visitor,\" she said with a sigh,\n\"My husband's so grumpy, and I'll tell you why.\nHe has piles of treasures but no friends to share,\nHe's forgotten that friendship shows people you care.\"\n\n\"But maybe,\" said {{childName}}, \"I could help him see\nThat friendship is better than treasures could be!\"",
+      "choices": [
+        { "label": "Wait to meet Grumbleguts", "nextSceneId": "grumbleguts-arrives" }
+      ],
+      "meta": {
+        "emotionalBeat": "growing understanding",
+        "readAloudNotes": "Create cozy atmosphere, explain Grumbleguts' problem with sympathy, show child's wisdom"
+      }
+    },
+    {
+      "id": "careful-approach",
+      "title": "Thoughtful Hello",
+      "background": "giants-castle",
+      "text": "{{childName}} came out with a thoughtful hello,\n\"I've been watching and learning—I hope that's okay, though!\nI wanted to understand this place way up here\nBefore making choices. Does that sound quite dear?\"\n\nMrs. Bumblebottom's tired eyes filled with surprise,\nThen warmth and delight began to arise.\n\"A thoughtful young child! What a wonderful treat!\nIf my husband could learn to be half as sweet!\"\n\nShe told {{childName}} about Grumbleguts' ways,\nHow he'd been quite lonely for so many days.",
+      "choices": [
+        { "label": "Offer to help", "nextSceneId": "plan-together" }
+      ],
+      "meta": {
+        "emotionalBeat": "respectful connection",
+        "readAloudNotes": "Show how thoughtfulness wins respect, build understanding of the problem"
+      }
+    },
+    {
+      "id": "plan-together",
+      "title": "Making a Plan",
+      "background": "giants-kitchen",
+      "text": "\"I have an idea!\" said {{childName}} so bright,\n\"What if we worked together to make things right?\nYour husband needs friendship, that much is clear,\nAnd I have a plan that might bring him good cheer!\"\n\nMrs. Bumblebottom smiled with hope in her eyes,\n\"A plan made with kindness is certainly wise!\nWhen thinking and caring work hand-in-hand,\nThe most wonderful magic can spread through the land!\"\n\nJust then—STOMP! STOMP! STOMP!—came sounds from outside,\nBig Grumbleguts coming from his daily stride!",
+      "choices": [
+        { "label": "Get ready to meet him", "nextSceneId": "grumbleguts-arrives" }
+      ],
+      "meta": {
+        "emotionalBeat": "collaborative excitement",
+        "readAloudNotes": "Build anticipation for the meeting, show the power of working together"
+      }
+    },
+    {
+      "id": "grumbleguts-arrives",
+      "title": "Meeting Grumbleguts",
+      "background": "giants-kitchen",
+      "text": "STOMP-STOMP-STOMP! through the door came the sound,\nGrumbleguts' footsteps shaking the ground!\nBut {{childName}} felt ready with friendship so true,\n\"I know in my heart just what I should do!\"\n\n\"Oh, Grumbleguts!\" called {{childName}}, standing up tall,\n\"I'm {{childName}}, and I want to be friends with you all!\"\nThe giant stopped stomping and looked down with surprise,\nGreat wonder and questions filled his giant-sized eyes.\n\n\"A wee little child? Way up here with me?\nHow curious! How strange! However can this be?\"",
+      "choices": [
+        { "label": "Explain about loneliness and friendship", "nextSceneId": "friendship-ending" },
+        { "label": "Share your plan to help everyone", "nextSceneId": "helping-ending" }
+      ],
+      "meta": {
+        "emotionalBeat": "brave confrontation",
+        "readAloudNotes": "Make Grumbleguts sound surprised rather than angry, show child's courage"
+      }
+    },
+    {
+      "id": "friendship-ending",
+      "title": "The Power of Friendship",
+      "background": "giants-kitchen",
+      "text": "{{childName}} looked up at Grumbleguts, so tall,\n\"I know you feel lonely here above it all!\nYour treasures are pretty, that much is true,\nBut friendship is better—and I'll prove it to you!\"\n\nGrumbleguts sat down with a great giant THUMP,\n\"You're right, little {{childName}}. I'll give up my grump.\nI gathered these treasures to fill up the space\nWhere friendship should live in my heart's lonely place.\"\n\n\"But you climbed way up here just to be my friend!\nMaybe my loneliness finally can end!\"\nFrom that day forward they'd visit and play,\nAnd Grumbleguts shared in the kindest way!",
+      "choices": [
+        { "label": "Go home with treasures and friendship", "nextSceneId": "conclusion-1" }
+      ],
+      "meta": {
+        "emotionalBeat": "heart-warming transformation",
+        "readAloudNotes": "Make the emotional transformation feel genuine and touching, emphasize friendship over treasures"
+      }
+    },
+    {
+      "id": "helping-ending",
+      "title": "Helping Everyone Win",
+      "background": "giants-kitchen",
+      "text": "{{childName}} had planned every word, every part,\n\"Dear Grumbleguts, listen! I'll share what's quite smart!\nYour magic is strong, and your power is great—\nYou could help many people! Now wouldn't that be fate!\"\n\n\"Your hen lays gold eggs—give some families a few!\nYour harp plays sweet music for sad people too!\nInstead of just taking, you could be the one\nWho makes sure that everyone's having great fun!\"\n\nGrumbleguts pondered this logical plan,\n\"You know, little {{childName}}, I think that I can!\nHelping feels better than hoarding alone,\nLet's make this whole land a much happier home!\"",
+      "choices": [
+        { "label": "Return home as a hero", "nextSceneId": "conclusion-1" }
+      ],
+      "meta": {
+        "emotionalBeat": "strategic satisfaction",
+        "readAloudNotes": "Show how logical thinking can solve everyone's problems, celebrate community improvement"
+      }
+    },
+    {
+      "id": "conclusion-1",
+      "title": "Home Again",
+      "background": "wiggle-lane-cottage",
+      "text": "Down climbed {{childName}} with treasures to share,\nAnd stories of friendship beyond all compare!\nMother Maple danced when she heard the good news,\n\"Oh {{childName}}, my sweet pea, you've chased all our blues!\"\n\n\"I'm proud of the choices you made way up there,\nYou showed that a child can be brave, wise, and fair!\nOur troubles are over, our future's bright,\nThanks to your courage and doing what's right!\"",
+      "choices": [
+        { "label": "Reflect on the adventure", "nextSceneId": "conclusion-2" }
+      ],
+      "meta": {
+        "emotionalBeat": "celebration and pride",
+        "readAloudNotes": "Make Mother's pride and joy feel genuine, celebrate the child's growth and success"
+      }
+    },
+    {
+      "id": "conclusion-2",
+      "title": "Lessons Learned",
+      "background": "wiggle-lane-cottage",
+      "text": "As {{childName}} snuggled down cozy that night,\nThey thought of their day with pure delight.\n\"I learned that adventures can teach you to grow,\nAnd there's so much more than you already know!\"\n\n\"Whether you trust-feel your way straight through,\nOr think-plan the best thing that you should do,\nThe most important thing I learned today:\nBeing brave-kind always shows the best way!\"\n\nAnd with that wise thought, {{childName}} fell fast asleep,\nWith magical memories forever to keep!",
+      "choices": [],
+      "meta": {
+        "emotionalBeat": "peaceful wisdom",
+        "readAloudNotes": "End on a gentle, wise note that summarizes the learning, make it feel complete and satisfying"
+      }
+    }
+  ],
+  "pathways": {
+    "trust-direct": {
+      "description": "Trust the magic, then approach others directly with an open heart",
+      "theme": "The Power of Trust and Friendship",
+      "learningOutcome": "Leading with trust and openness can create wonderful friendships and solve problems through connection",
+      "scenes": ["opening-1", "opening-2", "opening-3", "branch-a-1", "branch-a-2", "branch-a-3", "ascent-1", "ascent-2", "dp2-choice", "journey-direct", "inside-castle", "grumbleguts-arrives", "friendship-ending", "conclusion-1", "conclusion-2"],
+      "totalScenes": 15,
+      "emotionalArc": "Initial uncertainty grows into confident trust, leading to immediate friendship and heart-based problem solving"
+    },
+    "trust-observe": {
+      "description": "Trust the magic, but then observe carefully before acting",
+      "theme": "Balanced Wisdom - Trust Plus Thoughtfulness", 
+      "learningOutcome": "Combining trust with careful observation creates wise decision-making and effective problem-solving",
+      "scenes": ["opening-1", "opening-2", "opening-3", "branch-a-1", "branch-a-2", "branch-a-3", "ascent-1", "ascent-2", "dp2-choice", "journey-observe", "careful-approach", "plan-together", "grumbleguts-arrives", "helping-ending", "conclusion-1", "conclusion-2"],
+      "totalScenes": 16,
+      "emotionalArc": "Begins with trust, develops thoughtful observation skills, creates balanced approach to problem-solving"
+    },
+    "think-direct": {
+      "description": "Think through the magic decision, then approach others directly",
+      "theme": "Thoughtful Confidence",
+      "learningOutcome": "Careful thinking builds confidence to act decisively and connect with others",
+      "scenes": ["opening-1", "opening-2", "opening-3", "branch-b-1", "branch-b-2", "branch-b-3", "ascent-1", "ascent-2", "dp2-choice", "journey-direct", "inside-castle", "grumbleguts-arrives", "friendship-ending", "conclusion-1", "conclusion-2"],
+      "totalScenes": 15,
+      "emotionalArc": "Methodical thinking leads to confident action and heart-based connection"
+    },
+    "think-observe": {
+      "description": "Think through the magic decision, then continue with systematic observation",
+      "theme": "Strategic Problem-Solving",
+      "learningOutcome": "Systematic thinking and careful planning can solve complex problems and help entire communities",
+      "scenes": ["opening-1", "opening-2", "opening-3", "branch-b-1", "branch-b-2", "branch-b-3", "ascent-1", "ascent-2", "dp2-choice", "journey-observe", "careful-approach", "plan-together", "grumbleguts-arrives", "helping-ending", "conclusion-1", "conclusion-2"],
+      "totalScenes": 16,
+      "emotionalArc": "Consistent analytical approach leads to comprehensive community-benefiting solution"
+    }
+  }
+}

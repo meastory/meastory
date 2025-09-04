@@ -13,36 +13,19 @@ export default function StoryPlayer() {
     console.log('🎯 Making choice, next scene ref:', nextSceneRef)
 
     try {
-      const isUuid = typeof nextSceneRef === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(nextSceneRef)
-
-      let query = supabase
-        .from('story_scenes')
-        .select('*')
-
-      if (isUuid) {
-        query = query.eq('id', nextSceneRef as string)
-      } else {
-        const sceneOrder = typeof nextSceneRef === 'number' ? nextSceneRef : Number(nextSceneRef)
-        query = query
-          .eq('story_id', currentStory.id)
-          .eq('scene_order', sceneOrder)
-      }
-
-      const { data: nextScene, error } = await query.single()
-
-      if (error) throw error
-
-      console.log('🎬 Next scene resolved:', nextScene.title, 'id:', nextScene.id, 'order:', nextScene.scene_order)
-      useRoomStore.setState({ currentScene: nextScene })
+      await loadScene(nextSceneRef)
 
       try {
         const { webrtcManager } = await import('../services/webrtcManager')
-        webrtcManager.syncStoryChoice(nextScene.id)
+        const sceneAfter = useRoomStore.getState().currentScene
+        if (sceneAfter?.id) {
+          webrtcManager.syncStoryChoice(sceneAfter.id)
+        }
       } catch (webrtcError) {
         console.warn('WebRTC sync failed:', webrtcError)
       }
     } catch (error) {
-      console.error('❌ Error loading next scene (by id or order):', error)
+      console.error('❌ Error loading next scene:', error)
     } finally {
       setIsTransitioning(false)
     }

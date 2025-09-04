@@ -522,100 +522,80 @@ Each prompt should be complete and specific enough to generate consistent, high-
 
 ### Prompt 12A: Final JSON Compilation
 ```
-Compile all refined content into the final, properly structured JSON file following our established format.
+Compile all refined content into the final, properly structured JSON file following our unified authoring format.
 
 **JSON Structure Requirements**:
 
 ```json
 {
-  "id": "[story-theme]-[unique-identifier]",
+  "id": "[slug-unique]",
   "title": "[Final Story Title]",
+  "description": "[one to two sentence blurb]",
   "ageRange": [[MIN_AGE], [MAX_AGE]],
-  "themes": ["[primary-theme]", "[secondary-theme]", "[tertiary-theme]"],
-  "author_style": "[AUTHOR_NAME]",
-  "source_story": "[ORIGINAL_STORY_TITLE]",
+  "themes": ["[primary-theme]", "[secondary-theme]"],
+  "storyType": "personalized" | "original",
+  "personalization": {
+    "tokens": ["childName"],
+    "defaults": { "childName": "Alex" }
+  },
+  "interactive": true,
+  "access": {
+    "tier": "guest" | "free" | "paid" | "enterprise",
+    "releaseStatus": "draft" | "published" | "archived"
+  },
+  "media": {
+    "backgrounds": {
+      "[background-key]": {
+        "description": "[setting-description]",
+        "illustration_prompt": "[background-generation-prompt]"
+      }
+    },
+    "characters": {
+      "[character-key]": {
+        "description": "[character-description]",
+        "voice": "[voice-characteristics]",
+        "illustration_prompt": "[character-generation-prompt]"
+      }
+    }
+  },
+  "pedagogy": {
+    "estimatedReadTime": "[X–Y minutes]",
+    "learningObjectives": ["[objective-1]", "[objective-2]"],
+    "discussionPrompts": ["[before]", "[during]", "[after]"]
+  },
   "scenes": [
     {
       "id": "[scene-id]",
-      "background": "[background-description-for-illustration]",
+      "title": "[Optional Scene Title]",
+      "background": "[background-key]",
       "text": "[final-refined-scene-text-with-{{childName}}]",
       "choices": [
-        {
-          "label": "[choice-label]",
-          "nextSceneId": "[target-scene-id]"
-        }
+        { "label": "[choice-label]", "nextSceneId": "[target-scene-id]" }
       ],
-      "characters": ["[character-names-in-scene]"],
-      "pathway": ["[pathway-codes-that-use-this-scene]"]
+      "meta": {
+        "emotionalBeat": "[primary-emotion]",
+        "readAloudNotes": "[guidance for video call delivery]"
+      }
     }
   ],
   "pathways": {
     "1A2A": {
       "description": "[pathway-description]",
       "theme": "[ending-theme]",
-      "scenes": ["[ordered-scene-ids]"]
-    },
-    "1A2B": {
-      "description": "[pathway-description]",
-      "theme": "[ending-theme]", 
-      "scenes": ["[ordered-scene-ids]"]
-    },
-    "1B2A": {
-      "description": "[pathway-description]",
-      "theme": "[ending-theme]",
-      "scenes": ["[ordered-scene-ids]"]
-    },
-    "1B2B": {
-      "description": "[pathway-description]",
-      "theme": "[ending-theme]",
-      "scenes": ["[ordered-scene-ids]"]
-    }
-  },
-  "characters": {
-    "[character-name]": {
-      "description": "[character-description]",
-      "voice": "[voice-characteristics]",
-      "illustration_prompt": "[character-generation-prompt]"
-    }
-  },
-  "backgrounds": {
-    "[background-name]": {
-      "description": "[setting-description]",
-      "illustration_prompt": "[background-generation-prompt]"
+      "learningOutcome": "[what the child learns]",
+      "scenes": ["[ordered-scene-ids]"],
+      "totalScenes": [NUMBER],
+      "emotionalArc": "[arc description]"
     }
   }
 }
+Note: the only scenes that should have zero choices are the endings. All scenes that continue on to another scene must have at least one choice along with the appropriate nextSceneId.
 ```
 
 **Compilation Process**:
-
-1. **Content Integration**
-   - All refined scene text with proper {{childName}} implementation
-   - All decision points with accurate choice labels and connections
-   - Complete pathway mapping with scene ID sequences
-   - Character and background information integration
-
-2. **Technical Validation**
-   - All scene IDs properly referenced and connected
-   - All pathways lead to appropriate endings
-   - All choices connect to existing scenes
-   - JSON syntax validation and formatting
-
-3. **Quality Assurance**
-   - Final review for consistency across all pathways
-   - Verification of [AUTHOR_NAME] style implementation
-   - Confirmation of age-appropriate content throughout
-   - Validation of educational objectives integration
-
-4. **Metadata Completion**
-   - Accurate story identification and categorization
-   - Complete theme and age range specification
-   - Proper author style and source story attribution
-   - Comprehensive illustration prompt integration
-
-**Final Output**: Complete, validated JSON file ready for implementation in the storytelling platform.
-
-**Format**: Properly structured JSON file with all content, metadata, and technical specifications integrated.
+- Fill `storyType`, `personalization`, `access`, and `media` blocks.
+- Validate all `nextSceneId` references and pathway scene lists.
+- Set `interactive=false` for linear stories (no choices).
 ```
 
 ---

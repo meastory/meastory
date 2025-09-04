@@ -31,6 +31,7 @@ interface WebRTCActions {
   initializeLocalStream: () => Promise<void>
   toggleMic: () => void
   toggleVideo: () => void
+  setVideoEnabled: (enabled: boolean) => void
   sendSignalingMessage: (type: string, payload?: unknown) => Promise<void>
   addParticipant: (id: string, name?: string, deviceLabel?: string) => void
   removeParticipant: (id: string) => void
@@ -346,16 +347,20 @@ export const useWebRTCStore = create<WebRTCState & WebRTCActions>((set, get) => 
     }
   },
 
-  toggleVideo: () => {
-    const { localStream, isVideoOff } = get()
-    
+  setVideoEnabled: (enabled: boolean) => {
+    const { localStream } = get()
     if (localStream) {
       const videoTracks = localStream.getVideoTracks()
       videoTracks.forEach(track => {
-        track.enabled = isVideoOff
+        track.enabled = enabled
       })
-      set({ isVideoOff: !isVideoOff })
+      set({ isVideoOff: !enabled })
     }
+  },
+
+  toggleVideo: () => {
+    const { isVideoOff, setVideoEnabled } = get()
+    setVideoEnabled(isVideoOff)
   },
 
   sendSignalingMessage: async (type: string, payload?: unknown) => {

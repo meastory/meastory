@@ -1,5 +1,14 @@
 # WebRTC Signaling Architecture for Production
 
+**Implementation Update (Sprint 2–3)**
+- Implemented Supabase Realtime signaling in `apps/read` with presence-based host/guest roles
+- Recipient-filtered broadcasts for `offer`/`answer`/`candidate`; self-ignore guards
+- RTC DataChannel `story-sync` carries story choice/change and child name; Realtime fallback events mirror these
+- ICE robustness: phased TURN enable, queued candidates, reconnect/backoff; optional audio-only on relay
+- Metrics: `rpc_log_connection_event`, session heartbeats, and `rpc_end_guest_session`
+
+---
+
 **Status**: Planning Document  
 **Phase**: Pre-Production Infrastructure  
 **Priority**: Required before public launch
