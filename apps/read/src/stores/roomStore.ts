@@ -235,21 +235,21 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
           console.log('🎭 Scene (JSON) loaded:', mapped.title || mapped.id, 'Order:', mapped.scene_order)
           set({ currentScene: mapped })
 
-          // If host, persist current scene via RPC (guard non-UUID)
+          // If host and the scene id is a UUID (legacy), persist; otherwise skip RPC
           try {
             const room = get().currentRoom
             if (room) {
               const { useWebRTCStore } = await import('./webrtcStore')
-              if (useWebRTCStore.getState().role === 'host') {
+              if (useWebRTCStore.getState().role === 'host' && isUuid(mapped.id as unknown as string)) {
                 await supabase.rpc('rpc_update_room_scene' as unknown as never, {
                   p_room_id: room.id,
                   p_story_id: currentStory.id,
-                  p_scene_id: isUuid(mapped.id) ? (mapped.id as unknown as string) : null,
+                  p_scene_id: mapped.id as unknown as string,
                 } as unknown as never)
               }
             }
           } catch (e) {
-            console.warn('rpc_update_room_scene (JSON) failed or skipped:', e)
+            console.warn('rpc_update_room_scene (JSON) skipped/failed:', e)
           }
 
           return
@@ -339,6 +339,15 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       // Load the new story (this won't disconnect WebRTC)
       await get().loadStory(storyId)
 
+      // If story uses JSON content, skip legacy scene fetch and RPC
+      const loaded = get().currentStory as unknown as { id: string; content?: JsonStoryContent } | null
+      const hasJsonScenes = Array.isArray(loaded?.content?.scenes)
+      if (hasJsonScenes) {
+        console.log('🧩 JSON content detected; skipping legacy first-scene fetch/RPC')
+        console.log('✅ Story changed successfully without disconnecting WebRTC')
+        return
+      }
+
       // If host, also reset current_scene_id via RPC to first scene (UUID only)
       try {
         const { data: firstScene } = await supabase
@@ -349,7 +358,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
           .single()
         const sceneId = firstScene?.id || null
         const { useWebRTCStore } = await import('./webrtcStore')
-        if (useWebRTCStore.getState().role === 'host') {
+        if (useWebRTCStore.getState().role === 'host' && sceneId) {
           await supabase.rpc('rpc_update_room_scene' as unknown as never, {
             p_room_id: currentRoom.id,
             p_story_id: storyId,
