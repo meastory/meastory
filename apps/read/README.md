@@ -23,7 +23,6 @@ The production version of Read Me A Story, built with React, TypeScript, and Sup
 ## Environment Variables (.env)
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
-- `VITE_FEATURE_GUEST_FLOW` = `true` to enable `/start`, `/invite`, `/join`
 - Optional TURN and ICE policy:
   - `VITE_TURN_SERVERS` (JSON array) or `VITE_TURN_URL`/`VITE_TURN_USERNAME`/`VITE_TURN_CREDENTIAL`
   - `VITE_ICE_TURN_DELAY_MS`

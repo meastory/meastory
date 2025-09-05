@@ -3,6 +3,7 @@ import { useRoomStore } from '../stores/roomStore'
 import { useAuthStore } from '../stores/authStore'
 import { supabase } from '../stores/authStore'
 import type { Tables } from '../types/supabase'
+// import { useTierPolicy } from '../hooks/useTierPolicy'
 
 type Story = Tables<'stories'>
 
@@ -13,6 +14,7 @@ interface StoryLibraryProps {
 export default function StoryLibrary({ onClose }: StoryLibraryProps) {
   const { currentRoom, enterRoom, changeStory } = useRoomStore()
   const { user } = useAuthStore()
+  // const { getPolicyForTier } = useTierPolicy()
   const [stories, setStories] = useState<Story[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedStory, setSelectedStory] = useState<Story | null>(null)
@@ -41,6 +43,13 @@ export default function StoryLibrary({ onClose }: StoryLibraryProps) {
   }
 
   const handleStorySelect = async (story: Story) => {
+    const effTier = useRoomStore.getState().effectiveRoomTier || 'guest'
+    const canAccess = (() => {
+      const map: Record<'guest' | 'free' | 'paid' | 'enterprise', number> = { guest: 0, free: 1, paid: 2, enterprise: 3 }
+      const storyTier = (story as unknown as { access_tier?: 'guest' | 'free' | 'paid' | 'enterprise' }).access_tier || 'guest'
+      return map[storyTier] <= map[effTier]
+    })()
+    if (!canAccess) return
     if (currentRoom) {
       // We're in a room, change the story for all participants
       console.log('🔄 Changing room story to:', story.title)
@@ -148,21 +157,28 @@ export default function StoryLibrary({ onClose }: StoryLibraryProps) {
         )}
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {stories.map((story) => (
-            <div 
-              key={story.id}
-              className="bg-gray-900 rounded-lg p-6 hover:bg-gray-800 transition-colors cursor-pointer border-2 border-transparent hover:border-blue-500/50"
-              onClick={() => handleStorySelect(story)}
-            >
-              <h3 className="text-xl font-bold mb-2">{story.title}</h3>
-              <p className="text-gray-300 text-sm mb-4 line-clamp-3">
-                {story.description || 'No description available'}
-              </p>
-              <div className="text-xs text-gray-400">
-                {currentRoom ? 'Click to change story' : 'Click to create room'}
+          {stories.map((story) => {
+            const effTier = useRoomStore.getState().effectiveRoomTier || 'guest'
+            const rank: Record<'guest' | 'free' | 'paid' | 'enterprise', number> = { guest: 0, free: 1, paid: 2, enterprise: 3 }
+            const storyTier = (story as unknown as { access_tier?: 'guest' | 'free' | 'paid' | 'enterprise' }).access_tier || 'guest'
+            const locked = rank[storyTier] > rank[effTier]
+            return (
+              <div 
+                key={story.id}
+                className={`rounded-lg p-6 transition-colors border-2 ${locked ? 'bg-gray-900/60 border-gray-700 cursor-not-allowed' : 'bg-gray-900 hover:bg-gray-800 cursor-pointer hover:border-blue-500/50 border-transparent'}`}
+                onClick={() => !locked && handleStorySelect(story)}
+              >
+                <h3 className={`text-xl font-bold mb-2 ${locked ? 'text-gray-500' : ''}`}>{story.title}</h3>
+                <p className={`text-sm mb-4 line-clamp-3 ${locked ? 'text-gray-500' : 'text-gray-300'}`}>
+                  {story.description || 'No description available'}
+                </p>
+                <div className="text-xs text-gray-400 flex items-center justify-between">
+                  <span>{currentRoom ? 'Click to change story' : 'Click to create room'}</span>
+                  {locked && <span className="text-yellow-500">Locked</span>}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         {stories.length === 0 && (

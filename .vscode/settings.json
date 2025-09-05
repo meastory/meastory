@@ -25,6 +25,7 @@
     "apikey",
     "Boynton",
     "Carle",
+    "dotenv",
     "fkey",
     "fluffled",
     "Fraunces",
@@ -44,6 +45,7 @@
     "Noto",
     "ntvs",
     "Nunito",
+    "pers",
     "PGRST",
     "plpgsql",
     "Postgrest",
@@ -57,6 +59,7 @@
     "titlebar",
     "trunc",
     "trycloudflare",
+    "Upserted",
     "VITE",
     "webrtc",
     "XVCJ"

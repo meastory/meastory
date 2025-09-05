@@ -1,0 +1,313 @@
+{
+  "id": "friendship-three-bears-boynton-v2",
+  "title": "The Three Bears and {{childName}}'s Forest Adventure",
+  "ageRange": [3, 8],
+  "themes": ["friendship", "respect", "curiosity", "social_skills", "kindness"],
+  "author_style": "Sandra Boynton",
+  "source_story": "The Three Bears (Traditional Tale)",
+  "scenes": [
+    {
+      "id": "opening-1",
+      "background": "forest-path",
+      "text": "Skip, skip, skip! What a splendid day!\n{{childName}} is out to explore and play!\nDown the path, over the brook.\n\n\"What's this?\" says {{childName}} with glee.\n\"A little house! How perfect for me!\"\n\nSmoke goes puff-puff in curly swirls,\nFlowers dance like twirly girls.\n\"I like this place!\" says {{childName}} with glee!",
+      "choices": [
+        {
+          "label": "Continue exploring",
+          "nextSceneId": "opening-2"
+        }
+      ],
+      "characters": ["childName"],
+      "pathway": ["all"],
+      "emotionalBeat": "wonder-discovery",
+      "readAloudNotes": "Emphasize the bouncy rhythm and encourage child participation with 'skip, skip, skip'"
+    },
+    {
+      "id": "opening-2",
+      "background": "cottage-exterior",
+      "text": "Tip-toe, tip-toe, up so close,\n{{childName}} whispers, soft as most.\n\nThe cottage hums with morning cheer,\nFrom inside come the sweetest sounds:\nClink-clink! The dishes dance around.\n\"Pass the honey!\" (voice so low)\n\"Just a little!\" (sweet, you know)\n\"More, more, MORE!\" (a tiny shout!)\n\n{{childName}} giggles, eyes so wide,\n\"A family sounds inside!\"\n\nNow what should {{childName}} do?\nSo many choices! Which are you?",
+      "choices": [
+        {
+          "label": "Knock politely",
+          "nextSceneId": "knocker-path-1"
+        },
+        {
+          "label": "Peek curiously",
+          "nextSceneId": "peeker-path-1"
+        }
+      ],
+      "characters": ["childName", "papa-bear", "mama-bear", "baby-bear"],
+      "pathway": ["all"],
+      "emotionalBeat": "anticipation-choice-readiness",
+      "readAloudNotes": "Use three different voice sizes for the bear family inside: big, medium, tiny"
+    },
+    {
+      "id": "knocker-path-1",
+      "background": "cottage-exterior",
+      "text": "Knock, knock, knock! goes {{childName}}'s hand,\nSo polite and neat, just as planned.\n\n\"Ooh! What's that happy sound?\"\nComes a voice, so warm and round.\n\nThe door swings wide, and standing there—\nA big and fluffy Papa Bear!\n\"Well now!\" rumbles Papa Bear with a wink,\n\"Let me think, let me think...\n\nYou knocked so sweetly at my door—\nI like you already, that's for sure!\nCome inside, my little friend!\nLet's see what fun we can spend!\"",
+      "choices": [
+        {
+          "label": "Meet the family",
+          "nextSceneId": "knocker-path-2"
+        }
+      ],
+      "characters": ["childName", "papa-bear"],
+      "pathway": ["knocker"],
+      "emotionalBeat": "warm-welcome-validation",
+      "readAloudNotes": "Use Papa Bear's deep, gentle voice throughout"
+    },
+    {
+      "id": "knocker-path-2",
+      "background": "cottage-interior-kitchen",
+      "text": "Inside it's cozy, warm and bright,\nThree of everything—what a sight!\n\n\"This is Mama Bear!\" Papa says,\nShe waves and smiles in her dress.\n\"Oh sweetie!\" Mama Bear sings out,\n\"Welcome here! Come sit about!\"\n\n\"And here's our Baby Bear!\" they say,\nHe hop-hops, wants to play.\n\"Hi! Hi! Can {{childName}} eat with us?\nPlease? That would be fabulous!\"\n\n\"Well now, we love to share!\" rumbles Papa Bear,\n\"Pull up that little wooden chair!\"",
+      "choices": [
+        {
+          "label": "Yes, please!",
+          "nextSceneId": "knocker-breakfast"
+        },
+        {
+          "label": "Are you sure?",
+          "nextSceneId": "knocker-thoughtful"
+        }
+      ],
+      "characters": ["childName", "papa-bear", "mama-bear", "baby-bear"],
+      "pathway": ["knocker"],
+      "emotionalBeat": "joyful-family-welcome",
+      "readAloudNotes": "Use three distinct voices: Papa (deep), Mama (musical), Baby (squeaky)"
+    },
+    {
+      "id": "peeker-path-1",
+      "background": "cottage-exterior",
+      "text": "Tip-toe, tip-toe, quiet as can be,\n{{childName}} peeks up carefully.\n\nPeek-a-boo through window bright,\n\"What a sight! What a sight!\"\n\nInside sits a family three:\nPapa Bear as big as he can be,\nMama Bear so sweet and kind,\nBaby Bear with joy in mind.\n\nBaby Bear turns toward the glass,\n\"Something's there...\" (but lets it pass).\n\"Papa, Mama, do you see?\nSomething jiggly by the tree!\"",
+      "choices": [
+        {
+          "label": "Keep watching quietly",
+          "nextSceneId": "peeker-path-2"
+        }
+      ],
+      "characters": ["childName", "papa-bear", "mama-bear", "baby-bear"],
+      "pathway": ["peeker"],
+      "emotionalBeat": "wonder-gentle-discovery",
+      "readAloudNotes": "Whisper the peeking parts, build suspense when Baby Bear almost notices"
+    },
+    {
+      "id": "peeker-path-2",
+      "background": "cottage-exterior",
+      "text": "Papa Bear looks all around,\n\"Well now, hello there! Hello!\nWe see someone watching near—\nLittle watchers welcome here!\"\n\nMama Bear waves toward the trees,\n\"Sweetie, come out if you please!\nWe love when children come to play!\"\n\nBaby Bear presses his tiny nose,\n\"I love new friends!\" (and it shows!)\n\"Come and see! Come and see!\nCome and visit you and me!\"",
+      "choices": [
+        {
+          "label": "Say hello cheerfully!",
+          "nextSceneId": "peeker-enthusiastic"
+        },
+        {
+          "label": "Walk over thoughtfully",
+          "nextSceneId": "peeker-gentle"
+        }
+      ],
+      "characters": ["childName", "papa-bear", "mama-bear", "baby-bear"],
+      "pathway": ["peeker"],
+      "emotionalBeat": "mutual-delight-understanding",
+      "readAloudNotes": "Show the bears' excitement and welcoming nature"
+    },
+    {
+      "id": "knocker-breakfast",
+      "background": "cottage-interior-kitchen",
+      "text": "\"Thank you, thank you! Yes, I will!\"\n{{childName}} sits down with jiggly thrill.\n\nMama Bear brings a bowl so neat,\n\"Perfect size for you to eat!\nWith honey swirls and berries bright!\"\n\n\"Try all three!\" Mama trills with glee,\nPapa’s bowl — too hot, oh my!\nMama’s — too cold, give it a try!\nBaby’s — just right, perfect bite!\n\n\"Yippee! Hooray!\" squeaks Baby Bear,\n\"Same as me! We like to share!\nSlurp and munch! Mmm-mmm-mmm!\"\n\nAfter breakfast, feeling fine,\n\"That was good!\" says {{childName}}.\nBaby Bear hop-hops with glee,\n\"What shall we do? What shall we see?\"",
+      "choices": [
+        {
+          "label": "Plan adventures!",
+          "nextSceneId": "ending-leader"
+        }
+      ],
+      "characters": ["childName", "papa-bear", "mama-bear", "baby-bear"],
+      "pathway": ["knocker-confident"],
+      "emotionalBeat": "confident-joy-leadership",
+      "readAloudNotes": "Make the breakfast testing fun with sound effects and emphasize the slurping sounds"
+    },
+    {
+      "id": "knocker-thoughtful",
+      "background": "cottage-interior-kitchen",
+      "text": "\"Are you sure? Are you sure?\nI don't want to be a bother.\"\n\nThe three bears look at each other,\nWith love just like for sister, brother!\n\n\"Oh, sweet {{childName}}!\" Mama sings,\n\"You think of others—what joy that brings!\nThat's what good friends always do!\"\n\nPapa Bear rumbles, warm and low,\n\"Well now, sharing helps friendship grow!\nNot a bother—you bring cheer!\"\n\n{{childName}} smiles from ear to ear,\n\"Thank you for being so kind!\"\n\nThey eat together, heart and mind,\n\"When we share, we all feel good,\"\nMama Bear's voice, honey-sweet.\n\nBaby Bear claps, \"Sharing is neat!\"",
+      "choices": [
+        {
+          "label": "Help Baby Bear learn!",
+          "nextSceneId": "ending-wise"
+        }
+      ],
+      "characters": ["childName", "papa-bear", "mama-bear", "baby-bear"],
+      "pathway": ["knocker-thoughtful"],
+      "emotionalBeat": "thoughtful-connection-wisdom",
+      "readAloudNotes": "Emphasize the bears' delight at {{childName}}'s consideration"
+    },
+    {
+      "id": "peeker-enthusiastic",
+      "background": "cottage-interior-kitchen",
+      "text": "{{childName}} takes a tiny step,\nThen another (courage kept!).\n\"I watched you through the window there,\nYour breakfast looked so good to share!\"\n\nPapa Bear's eyes begin to twinkle,\n\"Well now, how splendid! Not a wrinkle\nOf worry on your bright face!\nWhat a brave and friendly choice!\"\n\n\"I like you bears, one and all!\nYou're so kind and warm and tall!\"\n\nThey share the breakfast, warm and yummy:\nPapa's hot: \"Whew! So good!\"\nMama's cool: \"Super-duper!\"\nBaby's perfect: \"Just for me!\nWarm and yummy as can be!\"\n\n\"From peeking quiet to talking loud,\"\nMama Bear sings, \"Sweetie, we're proud!\"",
+      "choices": [
+        {
+          "label": "Share the joy!",
+          "nextSceneId": "ending-bridge"
+        }
+      ],
+      "characters": ["childName", "papa-bear", "mama-bear", "baby-bear"],
+      "pathway": ["peeker-enthusiastic"],
+      "emotionalBeat": "enthusiastic-connection-earned-confidence",
+      "readAloudNotes": "Show {{childName}}'s transformation from shy to confident with breakfast testing fun"
+    },
+    {
+      "id": "peeker-gentle",
+      "background": "cottage-interior-kitchen",
+      "text": "{{childName}} walks up so politely,\nStands by the door, stepping lightly.\n\n\"I watched you eating,\" {{childName}} shares,\n\"You three are such wonderful bears!\nI'd love to learn more, if I may.\"\n\nPapa Bear moves gentle and slow,\nMama Bear's voice is sweet and low,\nBaby Bear wiggle-wiggles with delight.\n\n\"Well now, you really see us all,\" whispers Mama Bear,\n\"You notice things that show you care.\nSweetie, that makes friendship grow!\"\n\nAt breakfast, {{childName}} sees some more:\n\"You're each special to the core!\"\n\n\"What a thoughtful friend,\" Papa Bear rumbles low.",
+      "choices": [
+        {
+          "label": "Get a special hug!",
+          "nextSceneId": "ending-heart"
+        }
+      ],
+      "characters": ["childName", "papa-bear", "mama-bear", "baby-bear"],
+      "pathway": ["peeker-gentle"],
+      "emotionalBeat": "deep-appreciation-understanding",
+      "readAloudNotes": "Use gentle, thoughtful tones throughout"
+    },
+    {
+      "id": "ending-leader",
+      "background": "cottage-interior-kitchen",
+      "text": "\"Tomorrow,\" {{childName}} says with glee,\n\"Let's have adventures, all of we!\nWe'll explore the sunny meadow,\nPlay hide-and-seek 'til evening shadow!\nBuild a fort or climb a tree—\nSo much fun for you and me!\"\n\n\"Yippee! Hooray!\" squeaks Baby Bear,\n\"Can we really? Can we share?\"\n\nPapa Bear chuckles, rumbly-low,\n\"Well now, your bouncy heart helps fun to grow!\"\n\n\"I'll bring snacks!\" calls {{childName}} with cheer,\n\"See you bright and early here!\"\n\nRun, run, run through forest green,\n{{childName}} goes, happy as can be seen.\n\"Tomorrow! Tomorrow!\" call the three,\n\"We love adventures, can't you see?\"\n\nWhat fun tomorrow's sure to bring—\nWith planning friends, try everything!",
+      "choices": [],
+      "characters": ["childName", "papa-bear", "mama-bear", "baby-bear"],
+      "pathway": ["knocker-confident"],
+      "emotionalBeat": "excited-planning-leadership",
+      "readAloudNotes": "Build to a joyful, celebratory conclusion"
+    },
+    {
+      "id": "ending-wise",
+      "background": "cottage-interior-parlor",
+      "text": "{{childName}} and the bears sit close,\nSharing what they love the most.\n\nPapa Bear gives a rumbly hug,\n\"Well now, keep this warm and snug.\nEvery time you think of others,\nYou'll make friends like sisters, brothers.\"\n\nBaby Bear hop-hops with glee,\n\"Teach me to think carefully!\"\n\n\"We'll learn together!\" {{childName}} agrees,\n\"About sharing, saying please!\"\n\nMama Bear wraps them in her arms,\nCozy-warm with learning charms.\n\n\"I know so much now!\" {{childName}} glows,\nWalking slowly as day goes.\nThinking friends who understand\nMake the most terrific band!",
+      "choices": [],
+      "characters": ["childName", "papa-bear", "mama-bear", "baby-bear"],
+      "pathway": ["knocker-thoughtful"],
+      "emotionalBeat": "learning-wisdom-teaching",
+      "readAloudNotes": "Use gentle, warm tones, emphasizing the gift exchange"
+    },
+    {
+      "id": "ending-bridge",
+      "background": "cottage-interior-kitchen",
+      "text": "\"You know what's great?\" {{childName}} says,\n\"We're all different in fun ways!\nBut we made friends, and that's the key!\nI was shy, then I was brave!\"\n\nBaby Bear hop-hops around,\n\"Let's share giggles all around!\"\n\nPaws and hands in circle round,\n\"Friendship magic can be found!\"\n\nMama Bear sings the sweetest song,\n\"All together, we belong!\"\n\nDance, dance, dance with evening stars,\nTwinkling bright from near and far.\n{{childName}} spins with arms spread wide,\n\"Friends are the best!\" calls out with pride.\n\nOpen hearts and happy minds—\nThat's where best friendship shines!",
+      "choices": [],
+      "characters": ["childName", "papa-bear", "mama-bear", "baby-bear"],
+      "pathway": ["peeker-enthusiastic"],
+      "emotionalBeat": "celebration-community-joy",
+      "readAloudNotes": "Build to an inspiring, community-focused conclusion"
+    },
+    {
+      "id": "ending-heart",
+      "background": "cottage-interior-parlor",
+      "text": "{{childName}} sits in the cozy place,\nBig smiles glowing on sweet face.\n\nMama Bear hums her gentle song,\n\"Well now, you really see us strong.\nSweetie, that's a special gift!\"\n\nBaby Bear curls up teeny-small,\n\"Teach me to notice one and all!\nShow me how to watch and see!\"\n\n\"Of course!\" says {{childName}} with glee,\n\"We'll learn together, you and me!\nWatch the way the sunlight dances,\nSee how Papa Bear glances\nAt his family with such love!\"\n\nBaby Bear hop-hops with delight,\n\"I see it! I see it! You're so right!\"\n\nTime to go with hearts so dear,\nEach bear gives gifts to {{childName}} here:\nPapa's warm and rumbly bear-hug,\nMama's gentle song so snug,\nBaby's giggles bright to keep.\n\nWalk, walk, walk through evening light,\n{{childName}} holds the gifts so tight.\nThe kindest hearts that really see\nMake the very best friends-to-be.",
+      "choices": [],
+      "characters": ["childName", "papa-bear", "mama-bear", "baby-bear"],
+      "pathway": ["peeker-gentle"],
+      "emotionalBeat": "gentle-appreciation-gifts",
+      "readAloudNotes": "Use gentle, warm tones throughout"
+    }
+  ],
+  "pathways": {
+    "knocker-confident": {
+      "description": "Polite approach leading to confident leadership",
+      "theme": "The Confident Leader",
+      "scenes": ["opening-1", "opening-2", "knocker-path-1", "knocker-path-2", "knocker-breakfast", "ending-leader"],
+      "learningOutcome": "Politeness opens doors to friendship and fun adventures"
+    },
+    "knocker-thoughtful": {
+      "description": "Polite approach leading to thoughtful wisdom",
+      "theme": "The Thoughtful Friend",
+      "scenes": ["opening-1", "opening-2", "knocker-path-1", "knocker-path-2", "knocker-thoughtful", "ending-wise"],
+      "learningOutcome": "Being considerate creates special friendships"
+    },
+    "peeker-enthusiastic": {
+      "description": "Observant approach leading to enthusiastic friendship",
+      "theme": "The Bridge Builder",
+      "scenes": ["opening-1", "opening-2", "peeker-path-1", "peeker-path-2", "peeker-enthusiastic", "ending-bridge"],
+      "learningOutcome": "Watching first, then being brave makes wonderful friendships"
+    },
+    "peeker-gentle": {
+      "description": "Observant approach leading to deep understanding",
+      "theme": "The Understanding Heart",
+      "scenes": ["opening-1", "opening-2", "peeker-path-1", "peeker-path-2", "peeker-gentle", "ending-heart"],
+      "learningOutcome": "Really seeing others creates the deepest connections"
+    }
+  },
+  "videoCallOptimization": {
+    "pausePoints": ["opening-2", "knocker-path-2", "peeker-path-2", "knocker-breakfast"],
+    "interactionMoments": ["All choice points", "Breakfast testing scene", "Character voice moments"],
+    "voiceVariationCues": ["Papa Bear: deep, gentle", "Mama Bear: musical, sweet", "Baby Bear: high, bouncy"],
+    "emotionalCheckIns": ["After each choice", "At pathway conclusions"]
+  },
+  "technicalSpecs": {
+    "totalScenes": 17,
+    "averagePathwayLength": 6,
+    "estimatedReadTime": "5-7 minutes",
+    "interactiveElements": "2 decision points creating 4 distinct pathways",
+    "replayValue": "High - 4 genuinely different outcomes"
+  },
+  "interactive": true,
+  "storyType": "personalized",
+  "personalization": {
+    "tokens": ["childName"],
+    "defaults": { "childName": "Alex" }
+  },
+  "access": {
+    "tier": "guest",
+    "releaseStatus": "published"
+  },
+  "description": "Skip, skip, skip! What a wonderful day! {{childName}} is out to explore and play! Down the path, over the brook—an unexpected cottage brings new friends and lessons in kindness.",
+  "media": {
+    "backgrounds": {
+      "forest-path": {
+        "description": "Magical forest path with dappled sunlight, wildflowers, babbling brook, and whimsical mushrooms",
+        "illustration_prompt": "Whimsical forest path scene in Sandra Boynton illustration style, winding dirt path through friendly oak trees, dappled golden sunlight, colorful wildflowers, small babbling brook with stepping stones, clusters of red-spotted mushrooms, bright cheerful colors, child-friendly cartoon style"
+      },
+      "cottage-exterior": {
+        "description": "Cozy storybook cottage with blue door, yellow curtains, flower garden, and clothesline",
+        "illustration_prompt": "Cozy storybook cottage in Sandra Boynton style, bright blue front door with brass bear paw door knocker, cheerful yellow curtains, neat flower garden, clothesline with different sized clothes, white smoke from chimney, warm inviting colors"
+      },
+      "cottage-interior-kitchen": {
+        "description": "Warm cottage kitchen with wooden table, three chairs, and cozy details",
+        "illustration_prompt": "Cozy cottage kitchen in Sandra Boynton style, wooden dining table, three chairs of different sizes, kitchen area with shelves, stone fireplace, warm wooden beams, cheerful bright colors"
+      },
+      "cottage-interior-parlor": {
+        "description": "Comfortable living area with armchairs, bookshelf, and warm lighting",
+        "illustration_prompt": "Cozy cottage parlor in Sandra Boynton style, three comfortable armchairs around stone fireplace, wooden bookshelf, patterned rug, warm lamp lighting, family photos, peaceful colors"
+      }
+    },
+    "characters": {
+      "childName": {
+        "description": "The curious child protagonist who grows in confidence and friendship skills",
+        "voice": "Age-appropriate enthusiasm that grows more confident, naturally curious and kind",
+        "illustration_prompt": "Child character in Sandra Boynton style, generic appearance, friendly round face, bright curious eyes, simple casual clothing, open friendly posture, approachable design"
+      },
+      "papa-bear": {
+        "description": "Large, gentle bear who serves as wise mentor",
+        "voice": "Deep, warm, patient voice with gentle wisdom. Uses phrases like 'Well now...' and speaks thoughtfully",
+        "illustration_prompt": "Papa Bear in Sandra Boynton style, large fluffy brown bear with kind eyes, gentle expression, cozy red vest, warm welcoming posture, friendly father figure"
+      },
+      "mama-bear": {
+        "description": "Medium-sized bear with nurturing, musical personality",
+        "voice": "Musical, honey-sweet voice that uses caring terms, naturally loving and melodic",
+        "illustration_prompt": "Mama Bear in Sandra Boynton style, medium brown bear with soft features, caring expression, colorful flowery apron, graceful nurturing posture, loving mother figure"
+      },
+      "baby-bear": {
+        "description": "Small, energetic bear cub who serves as peer friend",
+        "voice": "High, excited, bouncy voice with enthusiasm and sound effects",
+        "illustration_prompt": "Baby Bear in Sandra Boynton style, small cuddly bear cub with bright sparkly eyes, bouncy energetic expression, simple colorful clothing, always-in-motion posture"
+      }
+    }
+  },
+  "pedagogy": {
+    "estimatedReadTime": "5-7 minutes",
+    "learningObjectives": [
+      "Experience different ways to meet new friends",
+      "Discover that friendship happens in many ways",
+      "Enjoy stories about kindness and curiosity",
+      "Build confidence through positive social experiences"
+    ]
+  }
+}

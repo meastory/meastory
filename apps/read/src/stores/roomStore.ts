@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { supabase } from './authStore'
+import { supabase, useAuthStore } from './authStore'
 import type { Tables } from '../types/supabase'
 
 // JSON authoring content types for local parsing
@@ -31,6 +31,7 @@ interface RoomState {
   isLoading: boolean
   error: string | null
   childName: string
+  effectiveRoomTier?: 'guest' | 'free' | 'paid' | 'enterprise'
 }
 
 interface RoomActions {
@@ -43,6 +44,7 @@ interface RoomActions {
   setError: (error: string | null) => void
   setLoading: (loading: boolean) => void
   setChildName: (name: string) => void
+  recomputeEffectiveTier: () => void
 }
 const initialState: RoomState = {
   currentRoom: null,
@@ -52,10 +54,22 @@ const initialState: RoomState = {
   isLoading: false,
   error: null,
   childName: localStorage.getItem('childName') || 'Alex',
+  effectiveRoomTier: 'guest',
 }
 
 export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
   ...initialState,
+  recomputeEffectiveTier: () => {
+    const userTier: 'guest' | 'free' | 'paid' | 'enterprise' = useAuthStore.getState().userTier
+    const participants = get().participants || []
+    let highest: 'guest' | 'free' | 'paid' | 'enterprise' = userTier || 'guest'
+    const rank: Record<'guest' | 'free' | 'paid' | 'enterprise', number> = { guest: 0, free: 1, paid: 2, enterprise: 3 }
+    for (const p of participants as Array<{ user_tier?: 'guest' | 'free' | 'paid' | 'enterprise' }>) {
+      const tier = p.user_tier || 'guest'
+      if (rank[tier] > rank[highest]) highest = tier
+    }
+    set({ effectiveRoomTier: highest })
+  },
 
   setChildName: (name: string) => {
     set({ childName: name })
@@ -109,7 +123,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
         if (storyIdToLoad) {
           console.log('📚 Loading story:', storyIdToLoad)
-          await get().loadStory(storyIdToLoad)
+          await get().loadStory(storyIdToLoad as string)
         } else {
           console.log('⚠️ No published stories available to load')
         }
@@ -123,7 +137,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       try {
         const webrtcModule = await import('./webrtcStore')
         const webrtcStore = webrtcModule.useWebRTCStore
-        await webrtcStore.getState().connect(roomId, room.code)
+        await webrtcStore.getState().connect(roomId, room.code || '')
         console.log('✅ WebRTC connected successfully')
       } catch (webrtcError) {
         console.error('❌ WebRTC connection failed:', webrtcError)
@@ -144,7 +158,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       const { data: story, error } = await supabase
         .from('stories')
         .select('*')
-        .eq('id', storyId)
+        .eq('id', String(storyId))
         .single()
 
       if (error) throw error
@@ -181,7 +195,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       const { data: firstScene } = await supabase
         .from('story_scenes')
         .select('*')
-        .eq('story_id', storyId)
+        .eq('story_id', String(storyId))
         .eq('scene_order', 1)
         .single()
 
@@ -306,11 +320,17 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
     try {
       const { data: participants, error } = await supabase
         .from('room_participants')
-        .select('*')
+        .select('*, user_profiles(tier)')
         .eq('room_id', roomId)
 
       if (error) throw error
-      set({ participants: participants || [] })
+      type RowWithUserTier = RoomParticipant & { user_profiles?: { tier?: 'guest' | 'free' | 'paid' | 'enterprise' } }
+      const mapped = ((participants || []) as RowWithUserTier[]).map((p) => ({
+        ...p,
+        user_tier: p.user_profiles?.tier || 'guest',
+      }))
+      set({ participants: mapped })
+      get().recomputeEffectiveTier()
     } catch (error: unknown) {
       console.error('❌ Error loading participants:', error)
     }
@@ -397,4 +417,5 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       participants: [],
       error: null,
     })
-  },}))
+  },
+}))

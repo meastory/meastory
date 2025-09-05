@@ -1,28 +1,25 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useUIStore } from './stores/uiStore'
 import { useAuthStore } from './stores/authStore'
 import { useRoomStore } from './stores/roomStore'
 import { useFullscreenContext } from './contexts/useFullscreenContext'
 import VideoContainer from './components/VideoContainer'
-import StoryOverlay from './components/StoryOverlay'
+import UnifiedStoryOverlay from './components/UnifiedStoryOverlay'
 import MenuPanel from './components/MenuPanel'
 import LoadingSpinner from './components/LoadingSpinner'
 import ErrorMessage from './components/ErrorMessage'
 import Auth from './components/Auth'
-import StoryPlayer from './components/StoryPlayer'
 import StoryLibrary from './components/StoryLibrary'
 import FullscreenButton from './components/FullscreenButton'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import InRoomStoryPicker from './components/InRoomStoryPicker'
+import { useLocation, useNavigate } from 'react-router-dom'
 import InfoBanner from './components/InfoBanner'
 
 function App() {
-  const { isLoading, error, storyTextScale, setStoryTextScale, notice, setNotice } = useUIStore()
+  const { isLoading, error, storyTextScale, setStoryTextScale, notice, setNotice, isLibraryOpen, openLibrary, closeLibrary } = useUIStore()
   const { session, initialized, initialize } = useAuthStore()
   const { currentRoom, currentStory } = useRoomStore()
   const { isFullscreen } = useFullscreenContext()
-  const [showLibrary, setShowLibrary] = useState(false)
-  const [showPicker, setShowPicker] = useState(false)
+  // Library is controlled globally via UI store
   const appRef = useRef<HTMLDivElement>(null)
   const location = useLocation()
   const navigate = useNavigate()
@@ -32,23 +29,15 @@ function App() {
   }
 
   const path = location.pathname || ''
-  const guestFlag = import.meta.env.VITE_FEATURE_GUEST_FLOW === 'true'
   const isGuestRoute = path === '/start' || path === '/join' || path.startsWith('/join/') || path.startsWith('/invite/')
   const isAuthRoute = path === '/login' || path === '/register'
-  const shouldRedirectToStart = !session && guestFlag && !isGuestRoute && !isAuthRoute
   const shouldShowAuth = !session && !isGuestRoute && !isAuthRoute
 
   useEffect(() => {
     initialize()
   }, [initialize])
 
-  useEffect(() => {
-    const roomStore = useRoomStore.getState()
-    const withLibrary = roomStore as typeof roomStore & { showLibrary?: () => void }
-    withLibrary.showLibrary = () => {
-      setShowLibrary(true)
-    }
-  }, [])
+  // No-op: openLibrary is available via UI store
 
   useEffect(() => {
     const savedScale = localStorage.getItem('storyTextScale')
@@ -63,7 +52,7 @@ function App() {
   useEffect(() => {
     const shouldShowLibrary = localStorage.getItem('showLibraryAfterLeave')
     if (shouldShowLibrary === 'true' && !currentRoom && session) {
-      setShowLibrary(true)
+      openLibrary?.()
       localStorage.removeItem('showLibraryAfterLeave')
     }
   }, [currentRoom, session])
@@ -74,17 +63,15 @@ function App() {
 
   useEffect(() => {
     if (currentRoom && !currentStory) {
-      setShowPicker(true)
+      openLibrary?.()
     }
   }, [currentRoom, currentStory])
 
   const handleCloseLibrary = () => {
-    setShowLibrary(false)
+    closeLibrary?.()
   }
 
-  if (shouldRedirectToStart) {
-    return <Navigate to="/start" replace />
-  }
+  // Public routes are always available; no redirect to /start needed
 
   if (!initialized) {
     return <LoadingSpinner />
@@ -100,15 +87,16 @@ function App() {
         )}
         <Auth onAuthSuccess={handleAuthSuccess} />
         <FullscreenButton 
-          className="fixed top-4 right-4 z-50" 
+          className="fixed bottom-4 right-4 z-[1030]" 
           targetElement={appRef.current}
           variant="floating"
+          showOnDesktop={true}
         />
       </div>
     )
   }
 
-  if (showLibrary) {
+  if (isLibraryOpen) {
     return (
       <div ref={appRef} className="video-first min-h-screen bg-black text-white">
         {notice && (
@@ -130,9 +118,10 @@ function App() {
           </button>
           
           <FullscreenButton 
-            className="fixed top-4 right-4 z-50" 
+            className="fixed bottom-4 right-4 z-[1030]" 
             targetElement={appRef.current}
             variant="floating"
+            showOnDesktop={true}
           />
           
           <StoryLibrary onClose={handleCloseLibrary} />
@@ -142,6 +131,11 @@ function App() {
   }
 
   if (currentRoom) {
+    const replaceChildName = (text: string) => {
+      const childName = useRoomStore.getState().childName
+      return text.replace(/\{\{childName\}\}/g, childName || 'Alex')
+    }
+
     return (
       <div ref={appRef} className="video-first min-h-screen bg-black text-white">
         {notice && (
@@ -150,35 +144,33 @@ function App() {
           </div>
         )}
         {error && <ErrorMessage message={error} />}
+        
+        {/* Story Title - Top Left */}
+        {currentStory && (
+          <div className="absolute top-4 left-4 z-10">
+            <h1 className="text-white font-bold text-lg" style={{ fontFamily: 'Fraunces, serif', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
+              {replaceChildName(currentStory.title)}
+            </h1>
+          </div>
+        )}
+        
         {isLoading ? (
           <LoadingSpinner />
         ) : (
           <>
             <VideoContainer />
-            <StoryOverlay />
-            <StoryPlayer />
+            <UnifiedStoryOverlay />
             <MenuPanel />
             
-            <button
-              onClick={() => setShowPicker(true)}
-              className={`
-                fixed top-6 left-6 z-[100] px-3 py-2 rounded bg-green-600 
-                hover:bg-green-700 text-white pointer-events-auto
-                transition-all duration-200
-              `}
-            >
-              📚
-            </button>
-            
+            {/* Fullscreen Button - Bottom Right, Always On Top */}
             <FullscreenButton 
-              className="fixed top-6 right-6 z-[100]" 
+              className="fixed bottom-4 right-4 z-[1030]" 
               targetElement={appRef.current}
               variant="floating"
+              showOnDesktop={true}
             />
             
-            {showPicker && (
-              <InRoomStoryPicker onClose={() => setShowPicker(false)} />
-            )}
+            {/* Library modal controlled globally; nothing to render here */}
           </>
         )}
       </div>
@@ -194,9 +186,10 @@ function App() {
       )}
       <MenuPanel />
       <FullscreenButton 
-        className="fixed top-4 right-4 z-50" 
+        className="fixed bottom-4 right-4 z-[1030]" 
         targetElement={appRef.current}
         variant="floating"
+        showOnDesktop={true}
       />
     </div>
   )

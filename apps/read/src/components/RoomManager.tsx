@@ -52,9 +52,9 @@ export default function RoomManager() {
       if (participantError) throw participantError
 
       // Combine and deduplicate rooms
-      const allRooms = [
-        ...(hostedRooms || []),
-        ...(participantRooms?.map(p => p.rooms).filter(Boolean) || [])
+      const allRooms: Room[] = [
+        ...((hostedRooms || []) as Room[]),
+        ...(((participantRooms || []).map(p => p.rooms).filter(Boolean) as Room[]) || [])
       ]
 
       // Remove duplicates based on room ID

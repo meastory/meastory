@@ -1,0 +1,213 @@
+{
+  "id": "ginny-and-the-friendship-tree",
+  "title": "{{childName}} and the Friendship Tree",
+  "description": "When {{childName}} discovers a magical kitchen where gingerbread comes to life, they learn the sweetest recipe of all: friendship that includes everyone.",
+  "ageRange": [7, 12],
+  "themes": ["inclusive-friendship", "kindness", "community-building"],
+  "storyType": "personalized",
+  "personalization": {
+    "tokens": ["childName"],
+    "defaults": { "childName": "Alex" }
+  },
+  "interactive": true,
+  "access": {
+    "tier": "free",
+    "releaseStatus": "draft"
+  },
+  "media": {
+    "backgrounds": {
+      "magical-kitchen": {
+        "description": "A warm, whimsical kitchen with floating sparkles, curved shelves full of colorful jars, and a glowing brick oven. Seussian shapes and warm golden light.",
+        "illustration_prompt": "Dr. Seuss style magical kitchen, curved shelves with colorful ingredient jars, floating golden sparkles, warm brick oven with gentle glow, whimsical rounded shapes, checkered curtains, cozy and inviting, warm yellows and browns, no characters present"
+      },
+      "garden-path": {
+        "description": "A winding path through a garden with oversized flowers, spiral trees, and friendly garden creatures. Bright, welcoming Seussian landscape.",
+        "illustration_prompt": "Dr. Seuss style garden, winding cobblestone path, oversized flowers with friendly faces, spiral-shaped trees, bright blue sky with puffy clouds, vibrant colors, whimsical and welcoming, no characters present"
+      },
+      "friendship-tree": {
+        "description": "A magnificent oak tree with a broad canopy, rope swings, and wooden platforms. A perfect gathering place with dappled sunlight.",
+        "illustration_prompt": "Dr. Seuss style oak tree, thick twisted trunk, broad leafy canopy, rope swings, wooden platforms, dappled sunlight, warm and inviting gathering place, safe and magical, no characters present"
+      }
+    },
+    "characters": {
+      "chef-carmen": {
+        "description": "Warm, motherly baker with flour-dusted apron, twinkling eyes, and gentle smile.",
+        "voice": "Warm, wise, uses baking metaphors, encouraging and nurturing",
+        "illustration_prompt": "Dr. Seuss style kind baker, flour-dusted apron, gray hair in bun, warm smile, wooden spoon, motherly and welcoming, full body view, plain white background"
+      },
+      "ginny": {
+        "description": "Gingerbread girl with sparkling caraway-seed eyes, raisin smile, and sugary white hat.",
+        "voice": "Enthusiastic, curious, asks questions, bouncy and excited",
+        "illustration_prompt": "Dr. Seuss style gingerbread character, golden-brown cookie body, caraway seed eyes, raisin smile, white icing hat, walking upright, cheerful and animated, full body view, plain white background"
+      },
+      "snuggly-cat": {
+        "description": "Fluffy, wise cat with sleepy eyes and peaceful expression, often stretching.",
+        "voice": "Sleepy, wise, speaks slowly with yawns, offers gentle guidance",
+        "illustration_prompt": "Dr. Seuss style sleepy cat, fluffy gray and white fur, half-closed wise eyes, peaceful expression, often stretching, gentle and wise, full body view, plain white background"
+      },
+      "bounce": {
+        "description": "Energetic golden dog with constantly wagging tail and big friendly smile.",
+        "voice": "Excited, enthusiastic, speaks in action words, loyal and playful",
+        "illustration_prompt": "Dr. Seuss style energetic dog, golden fur, wagging tail, bright eyes, big smile, athletic build, always in motion, friendly and playful, full body view, plain white background"
+      },
+      "swing": {
+        "description": "Acrobatic monkey with long arms, mischievous but kind eyes, wearing small colorful vest.",
+        "voice": "Quick, acrobatic speech, playful but sometimes lonely, loves showing off tricks",
+        "illustration_prompt": "Dr. Seuss style monkey, long arms, brown fur, bright eyes, small colorful vest, acrobatic pose, playful expression, full body view, plain white background"
+      }
+    }
+  },
+  "pedagogy": {
+    "estimatedReadTime": "8–12 minutes",
+    "learningObjectives": [
+      "Practice inclusive friendship and kindness to all",
+      "Learn that everyone has special talents to contribute",
+      "Understand that the best solutions include everyone"
+    ],
+    "discussionPrompts": [
+      "What makes {{childName}} a good friend in this story?",
+      "How did the friends help each other feel included?",
+      "What's your favorite way to make new friends feel welcome?"
+    ]
+  },
+  "scenes": [
+    {
+      "id": "opening-magic",
+      "title": "The Magic Kitchen",
+      "background": "magical-kitchen",
+      "text": "{{childName}} was walking one sunny-bright day,\nWhen a sparkle-sweet smell came floating their way.\nThrough a window they peeked—what a sight to see!\nA kitchen with magic as magic can be!\n\n\"Oh my stars!\" said a voice, warm as fresh-baked bread,\n\"A helper has come!\" Chef Carmen said.\n\"I'm baking today something special and new—\nA friend made of gingerbread, just for you!\"\n\nWith a POOF! and a POP! and a flash of bright light,\nOut jumped a cookie—what a wonderful sight!\n\"I'm Ginny!\" she giggled with eyes all aglow,\n\"And {{childName}}, my friend, I'm ready to go!\"",
+      "choices": [
+        { "label": "Let's explore together, Ginny!", "nextSceneId": "first-choice" }
+      ],
+      "meta": {
+        "emotionalBeat": "wonder-and-friendship-birth",
+        "readAloudNotes": "Build wonder with Chef Carmen's warm voice, then excitement as Ginny comes to life. Emphasize the magical elements."
+      }
+    },
+    {
+      "id": "first-choice",
+      "title": "The Garden Path",
+      "background": "garden-path",
+      "text": "Through the kitchen door to a garden so green,\nWent {{childName}} and Ginny to see what they'd seen.\nBut there on the path lay Snuggly-Cat, sleeping away,\nRight in the middle of where they wanted to play.\n\n\"Oh dear,\" whispered Ginny, \"she's blocking our way!\nBut she looks so peaceful there in the hay.\"\n{{childName}} looked down at the cat with care,\nTwo choices were floating right there in the air.\n\nShould they wake her up with a loud, happy call?\nOr find a quiet way around her, after all?",
+      "choices": [
+        { "label": "Wake her gently with a friendly hello!", "nextSceneId": "bold-friendship" },
+        { "label": "Tiptoe quietly around her to let her sleep", "nextSceneId": "gentle-friendship" }
+      ],
+      "meta": {
+        "emotionalBeat": "thoughtful-decision-about-others",
+        "readAloudNotes": "Present both choices as caring options. Pause to let child think about what feels right."
+      }
+    },
+    {
+      "id": "bold-friendship",
+      "title": "A Friendly Wake-Up",
+      "background": "garden-path",
+      "text": "\"Good morning, Snuggly-Cat!\" {{childName}} said bright,\n\"We're off on adventure in morning sunlight!\"\nSnuggly stretched long with a yawn and a purr,\n\"Well hello there, dear ones, with hearts that are sure!\n\nI like how you woke me—so friendly and true,\nBold kindness is something that I like in you!\nNow follow this path to the old Friendship Tree,\nWhere Bounce and friend Swing are waiting to see!\"\n\nSo down the path skipped both {{childName}} and Gin,\nWith Snuggly behind them, her wise, sleepy grin.\nBut ahead came a sound that was loud as could be—\nTwo friends having trouble beneath the big tree!",
+      "choices": [
+        { "label": "See what's happening at the tree", "nextSceneId": "tree-challenge" }
+      ],
+      "meta": {
+        "emotionalBeat": "friendship-success-and-new-challenge-appearing",
+        "readAloudNotes": "Show Snuggly-Cat's approval of the bold kindness. Build anticipation for the next challenge."
+      }
+    },
+    {
+      "id": "gentle-friendship",
+      "title": "A Quiet Path",
+      "background": "garden-path",
+      "text": "So {{childName}} and Ginny tiptoed around,\nThrough flowers and grass without making a sound.\nBut Snuggly-Cat heard them and opened one eye,\n\"Such gentle young hearts walking quietly by!\n\nI like how you let me sleep peaceful and deep,\nThat's wisdom worth having—this old cat will keep!\nNow follow this path to the old Friendship Tree,\nWhere Bounce and friend Swing are waiting to see!\"\n\nSo down the path walked both {{childName}} and Gin,\nWith Snuggly beside them, her wise, gentle grin.\nBut ahead came a sound that was loud as could be—\nTwo friends having trouble beneath the big tree!",
+      "choices": [
+        { "label": "See what's happening at the tree", "nextSceneId": "tree-challenge" }
+      ],
+      "meta": {
+        "emotionalBeat": "gentle-wisdom-success-and-new-challenge-appearing",
+        "readAloudNotes": "Show Snuggly-Cat's approval of the gentle consideration. Build same anticipation as bold path."
+      }
+    },
+    {
+      "id": "tree-challenge",
+      "title": "Trouble at the Tree",
+      "background": "friendship-tree",
+      "text": "At the big Friendship Tree stood a dog and a monkey,\nBounce was quite sad and Swing was quite funky.\n\"I want to play fetch!\" said Bounce with a frown,\n\"But Swing only wants to swing up and down!\"\n\n\"And I want to swing!\" said Swing with a pout,\n\"But Bounce only wants to run about!\nWe can't agree on what we should do,\nOh {{childName}} and Ginny, can you help us two?\"\n\nSnuggly-Cat yawned, \"This happens each day,\nThey both want to have fun but in different way.\"\n{{childName}} looked at each sad little face,\nHow could all friends have fun in this place?",
+      "choices": [
+        { "label": "Find a game that combines swinging AND fetching!", "nextSceneId": "creative-solution" },
+        { "label": "Take turns—swing first, then fetch!", "nextSceneId": "sharing-solution" }
+      ],
+      "meta": {
+        "emotionalBeat": "friendship-conflict-needing-creative-solution",
+        "readAloudNotes": "Show both friends' frustration clearly. Make both solutions sound appealing and fair."
+      }
+    },
+    {
+      "id": "creative-solution",
+      "title": "The Best Game Ever",
+      "background": "friendship-tree",
+      "text": "\"What if,\" said {{childName}} with a smile so bright,\n\"We make a new game that feels just right?\nSwing can throw sticks down from way up high,\nAnd Bounce can catch them as they fly by!\"\n\n\"OH YES!\" barked Bounce, his tail all a-wag,\n\"I'll catch every stick and put them in a bag!\"\n\"And I'll swing through the branches!\" cried Swing with glee,\n\"Throwing down sticks from the top of the tree!\"\n\nSo up went the monkey and down went the sticks,\nWhile Bounce caught them all with his wonderful tricks!\nGinny clapped cookie-hands, \"What a fun game!\n{{childName}} helped them—they're not sad the same!\"\n\nSnuggly-Cat purred, \"Now that's friendship true,\nWhen everyone's happy with what they can do!\"",
+      "choices": [
+        { "label": "Celebrate with all the friends!", "nextSceneId": "celebration-ending" }
+      ],
+      "meta": {
+        "emotionalBeat": "creative-joy-and-inclusive-success",
+        "readAloudNotes": "Build excitement as the game works perfectly. Show everyone's delight at the creative solution."
+      }
+    },
+    {
+      "id": "sharing-solution",
+      "title": "Taking Turns Together",
+      "background": "friendship-tree",
+      "text": "\"Let's take turns!\" said {{childName}} with a plan so neat,\n\"First swinging time, then fetching treat!\nWe'll swing for a while in the morning sun,\nThen fetch in the afternoon—double the fun!\"\n\n\"That's fair!\" said Bounce, his tail wagging high,\n\"I'll swing first, then fetch by and by!\"\n\"And I'll teach you to swing!\" said Swing with a grin,\n\"Then you can teach me to fetch and win!\"\n\nSo they swung through the branches, all four as one,\nThen fetched sticks together when swinging was done!\nGinny giggled with glee, \"This sharing's so nice!\n{{childName}} helped them think about it twice!\"\n\nSnuggly-Cat smiled, \"Now that's friendship true,\nWhen everyone gets what they want to do!\"",
+      "choices": [
+        { "label": "Celebrate with all the friends!", "nextSceneId": "celebration-ending" }
+      ],
+      "meta": {
+        "emotionalBeat": "sharing-wisdom-and-turn-taking-success",
+        "readAloudNotes": "Show the fairness working beautifully. Emphasize how taking turns lets everyone enjoy both activities."
+      }
+    },
+    {
+      "id": "celebration-ending",
+      "title": "The Friendship Tree Party",
+      "background": "friendship-tree",
+      "text": "Chef Carmen came out with a tray full of treats,\n\"Fresh-baked friendship cookies for everyone's eats!\nI watched from my window—you've done something grand,\n{{childName}} helped everyone understand!\n\nThat friendship's not just about having your way,\nIt's finding sweet ways for all friends to play!\nWhen we include everyone, magic happens here,\nAt our special tree throughout the whole year!\"\n\nSo they munched and they laughed as the sun settled down,\nThe happiest friends in the happiest town.\n{{childName}} and Ginny, Bounce, Swing, and Snuggly-Cat too,\nAll learned that the best adventures include me and you!\n\nAnd whenever you visit Chef Carmen's sweet place,\nYou'll find the Friendship Tree full of smiling face!\nFor that's where the magic of friendship grows true—\nWhen everyone's welcome, including me and you!",
+      "choices": [],
+      "meta": {
+        "emotionalBeat": "joyful-celebration-and-wisdom-completion",
+        "readAloudNotes": "Build to a warm, satisfying conclusion. Emphasize the lesson about inclusion and community. End with invitation for child to visit this magical place."
+      }
+    }
+  ],
+  "pathways": {
+    "bold-creative": {
+      "description": "Bold friendship approach leading to creative problem-solving",
+      "theme": "Confident Inclusion",
+      "learningOutcome": "Being friendly and thinking creatively can solve problems for everyone",
+      "scenes": ["opening-magic", "first-choice", "bold-friendship", "tree-challenge", "creative-solution", "celebration-ending"],
+      "totalScenes": 6,
+      "emotionalArc": "Wonder → Bold Kindness → Creative Problem-Solving → Joyful Community"
+    },
+    "bold-sharing": {
+      "description": "Bold friendship approach leading to turn-taking wisdom",
+      "theme": "Confident Fairness",
+      "learningOutcome": "Being friendly and fair helps everyone get what they want",
+      "scenes": ["opening-magic", "first-choice", "bold-friendship", "tree-challenge", "sharing-solution", "celebration-ending"],
+      "totalScenes": 6,
+      "emotionalArc": "Wonder → Bold Kindness → Sharing Wisdom → Joyful Community"
+    },
+    "gentle-creative": {
+      "description": "Gentle friendship approach leading to creative problem-solving",
+      "theme": "Thoughtful Innovation",
+      "learningOutcome": "Being considerate and creative helps everyone feel included",
+      "scenes": ["opening-magic", "first-choice", "gentle-friendship", "tree-challenge", "creative-solution", "celebration-ending"],
+      "totalScenes": 6,
+      "emotionalArc": "Wonder → Gentle Wisdom → Creative Problem-Solving → Joyful Community"
+    },
+    "gentle-sharing": {
+      "description": "Gentle friendship approach leading to turn-taking wisdom",
+      "theme": "Thoughtful Fairness",
+      "learningOutcome": "Being considerate and fair creates harmony for everyone",
+      "scenes": ["opening-magic", "first-choice", "gentle-friendship", "tree-challenge", "sharing-solution", "celebration-ending"],
+      "totalScenes": 6,
+      "emotionalArc": "Wonder → Gentle Wisdom → Sharing Wisdom → Joyful Community"
+    }
+  }
+}

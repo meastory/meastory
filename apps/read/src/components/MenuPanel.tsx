@@ -1,20 +1,28 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useAuthStore } from '../stores/authStore'
+import { useUIStore } from '../stores/uiStore'
 import { useRoomStore } from '../stores/roomStore'
-import RoomManager from './RoomManager'
-import StoryLibrary from './StoryLibrary'
-import InRoomStoryPicker from './InRoomStoryPicker'
+import { useWebRTCStore } from '../stores/webrtcStore'
+import PresenceBadge from './PresenceBadge'
+import InviteContent from './InviteContent'
+import { useTierPolicy } from '../hooks/useTierPolicy'
 
 export default function MenuPanel() {
   const [isOpen, setIsOpen] = useState(false)
-  const [showRoomManager, setShowRoomManager] = useState(false)
-  const [showStoryLibrary, setShowStoryLibrary] = useState(false)
-  const [showInRoomPicker, setShowInRoomPicker] = useState(false)
+  const [showInvite, setShowInvite] = useState(false)
+  // Timer display is sourced from UI store's sessionRemainingMs
+  const menuRef = useRef<HTMLDivElement>(null)
+  const inviteRef = useRef<HTMLDivElement>(null)
   const { user, signOut } = useAuthStore()
+  const { openLibrary, sessionRemainingMs } = useUIStore()
   const { currentRoom, leaveRoom } = useRoomStore()
+  const { toggleMic, toggleVideo, isMicMuted, isVideoOff } = useWebRTCStore()
+  const { getPolicyForTier } = useTierPolicy()
 
-  const toggleMenu = () => setIsOpen(!isOpen)
-  
+  const handleMenuItemClick = () => {
+    setIsOpen(false)
+  }
+
   const handleSignOut = async () => {
     await signOut()
     setIsOpen(false)
@@ -25,153 +33,222 @@ export default function MenuPanel() {
     setIsOpen(false)
   }
 
-  if (showRoomManager) {
-    return (
-      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm">
-        <div className="relative">
-          <button
-            onClick={() => setShowRoomManager(false)}
-            className="absolute top-4 right-4 z-20 p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors"
-            aria-label="Close room manager"
-          >
-            ✕
-          </button>
-          <RoomManager />
-        </div>
-      </div>
-    )
+  const handleOpenLibrary = () => {
+    console.log('📚 Opening library from menu')
+    try {
+      openLibrary?.()
+    } catch (error) {
+      console.warn('Could not open library:', error)
+    }
+    handleMenuItemClick()
   }
 
-  if (showStoryLibrary) {
-    return (
-      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm">
-        <div className="relative">
-          <button
-            onClick={() => setShowStoryLibrary(false)}
-            className="absolute top-4 right-4 z-20 p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors"
-            aria-label="Close story library"
-          >
-            ✕
-          </button>
-          <StoryLibrary onClose={() => setShowStoryLibrary(false)} />
-        </div>
-      </div>
-    )
+  const handleToggleMic = () => {
+    toggleMic()
+    handleMenuItemClick()
   }
 
-  if (showInRoomPicker) {
-    return (
-      <InRoomStoryPicker onClose={() => setShowInRoomPicker(false)} />
-    )
+  const handleToggleVideo = () => {
+    toggleVideo()
+    handleMenuItemClick()
   }
+
+  const handleShowInvite = () => {
+    setShowInvite(true)
+    handleMenuItemClick()
+  }
+
+  const handleCloseInvite = () => {
+    setShowInvite(false)
+  }
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+      if (inviteRef.current && !inviteRef.current.contains(event.target as Node)) {
+        setShowInvite(false)
+      }
+    }
+
+    if (isOpen || showInvite) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen, showInvite])
 
   return (
     <>
-      {/* Menu Button - positioned in top-right corner */}
-      <button onClick={toggleMenu} className="menu-btn" aria-label="Open menu">
+      {/* Menu Button - Top Right */}
+      <button 
+        onClick={() => setIsOpen(!isOpen)} 
+        className="menu-btn"
+        aria-label="Open menu"
+      >
         ☰
       </button>
 
-      {isOpen && (
-        <div className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full text-gray-900">
-            <h2 className="text-2xl font-bold mb-4">Menu</h2>
-            
-            <div className="space-y-3">
-              {currentRoom ? (
-                // In-room menu options
-                <>
-                  <div className="border-b pb-3 mb-3">
-                    <p className="text-sm text-gray-600 mb-2">
-                      Current Room: <span className="font-semibold">{currentRoom.name}</span>
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      Code: {currentRoom.code}
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={handleLeaveRoom}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
-                  >
-                    🚪 Leave Room
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setShowInRoomPicker(true)
-                      setIsOpen(false)
-                    }}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
-                  >
-                    📚 Pick a Story
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setShowStoryLibrary(true)
-                      setIsOpen(false)
-                    }}
-                    className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
-                  >
-                    Library
-                  </button>
-                </>
-              ) : (
-                // Room manager menu options
-                <>
-                  <button
-                    onClick={() => {
-                      setShowRoomManager(true)
-                      setIsOpen(false)
-                    }}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
-                  >
-                    🎭 Manage Rooms
-                  </button>
-                  
-                  <button
-                    onClick={() => {
-                      setShowStoryLibrary(true)
-                      setIsOpen(false)
-                    }}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
-                  >
-                    📚 Browse Stories
-                  </button>
-                  
-                  <button
-                    onClick={() => {
-                      setIsOpen(false)
-                    }}
-                    className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-medium transition-colors"
-                  >
-                    Settings
-                  </button>
-                </>
-              )}
-              
-              {user && (
-                <div className="border-t pt-3 mt-4">
-                  <p className="text-sm text-gray-600 mb-2">
-                    Logged in as: {user.display_name || 'User'}
-                  </p>
-                  <button
-                    onClick={handleSignOut}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              )}
+      {/* Time Remaining Warning (tier-based) */}
+      {(() => {
+        const effTier = useRoomStore.getState().effectiveRoomTier || 'guest'
+        const policy = getPolicyForTier(effTier)
+        if (!policy.show_timer_in_menu) return null
+        if (sessionRemainingMs == null) return null
+        const warn = policy.inroom_warning_threshold_minutes ?? 0
+        const remainingMinutes = Math.floor(sessionRemainingMs / 60000)
+        if (warn > 0 && remainingMinutes <= warn) {
+          return (
+            <div className="absolute top-16 right-4 z-10 bg-red-600 text-white px-2 py-1 rounded text-sm font-mono">
+              {String(remainingMinutes).padStart(2, '0')}:00
             </div>
+          )
+        }
+        return null
+      })()}
+
+      {/* Presence Badge - Top Right Below Menu (only when room active) */}
+      {currentRoom && (
+        <div className="absolute top-16 right-4 z-10">
+          <PresenceBadge />
+        </div>
+      )}
+
+      {/* Menu Panel */}
+      {isOpen && (
+        <div 
+          ref={menuRef}
+          className="absolute top-4 right-16 z-[1002] bg-gray-800 text-white rounded-lg shadow-lg p-4 min-w-48"
+        >
+          <div className="space-y-3">
+            {currentRoom ? (
+              <>
+                {/* Room Info */}
+                <div className="border-b border-gray-600 pb-3 mb-3">
+                  <p className="text-sm text-gray-300 mb-1">
+                    Room: <span className="font-semibold text-white">{currentRoom.name}</span>
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    Code: {currentRoom.code}
+                  </p>
+                </div>
+
+                {/* Library & Communication */}
+                <button 
+                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  onClick={handleOpenLibrary}
+                >
+                  📚 Open Library
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  onClick={handleShowInvite}
+                >
+                  📧 Send Invite
+                </button>
+                
+                <hr className="border-gray-600" />
+                
+                {/* Media Controls */}
+                <button 
+                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  onClick={handleToggleMic}
+                >
+                  {isMicMuted ? '🔇' : '🎤'} {isMicMuted ? 'Unmute' : 'Mute'} Microphone
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  onClick={handleToggleVideo}
+                >
+                  {isVideoOff ? '📷' : '📹'} {isVideoOff ? 'Turn On' : 'Turn Off'} Camera
+                </button>
+                
+                <hr className="border-gray-600" />
+                
+                {/* Presence and Time (tier-based) */}
+                {(() => {
+                  const effTier = useRoomStore.getState().effectiveRoomTier || 'guest'
+                  const policy = getPolicyForTier(effTier)
+                  if (!policy.show_timer_in_menu) return null
+                  return (
+                    <div className="px-3 py-2 text-sm text-gray-300">
+                      <div className="flex items-center justify-between">
+                        <span>
+                          ⏰ Time: {sessionRemainingMs == null ? '—' : `${String(Math.floor(sessionRemainingMs / 60000)).padStart(2,'0')}:${String(Math.floor((sessionRemainingMs % 60000) / 1000)).padStart(2,'0')}`} remaining
+                        </span>
+                        <span>
+                          <PresenceBadge />
+                        </span>
+                      </div>
+                    </div>
+                  )
+                })()}
+                
+                <hr className="border-gray-600" />
+                
+                {/* Leave Room */}
+                <button 
+                  className="w-full text-left px-3 py-2 hover:bg-red-700 bg-red-600 rounded flex items-center gap-2"
+                  onClick={handleLeaveRoom}
+                >
+                  👋 Leave Room
+                </button>
+              </>
+            ) : (
+              <>
+                {/* Lobby Menu Options */}
+                <button 
+                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  onClick={handleOpenLibrary}
+                >
+                  📚 Browse Stories
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  onClick={handleMenuItemClick}
+                >
+                  🎭 Manage Rooms
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  onClick={handleMenuItemClick}
+                >
+                  ⚙️ Settings
+                </button>
+              </>
+            )}
             
-            <button 
-              onClick={toggleMenu} 
-              className="w-full bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium mt-6 transition-colors"
-            >
-              Close
-            </button>
+            {user && (
+              <>
+                <hr className="border-gray-600" />
+                <div className="px-3 py-2 text-sm text-gray-300">
+                  User: {user.display_name || 'Logged In'}
+                </div>
+                <button 
+                  className="w-full text-left px-3 py-2 hover:bg-red-700 rounded flex items-center gap-2"
+                  onClick={handleSignOut}
+                >
+                  🚪 Sign Out
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Invite Popup */}
+      {showInvite && currentRoom && (
+        <div className="fixed inset-0 z-[1050] bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div ref={inviteRef}>
+            <InviteContent 
+              code={currentRoom.code || ''} 
+              onClose={handleCloseInvite}
+              isPopup={true}
+            />
           </div>
         </div>
       )}
