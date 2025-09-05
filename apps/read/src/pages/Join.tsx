@@ -10,6 +10,8 @@ import { getRoomByCode, identifyDevice, logConnectionEvent, startRoomSession, he
 import PresenceBadge from '../components/PresenceBadge'
 import { useFullscreen } from '../hooks/useFullscreen'
 import { useTierPolicy } from '../hooks/useTierPolicy'
+import { useAuthStore } from '../stores/authStore'
+import FullscreenButton from '../components/FullscreenButton'
 
 interface DeviceOption {
   deviceId: string
@@ -52,6 +54,7 @@ export default function Join() {
   const [remainingMs, setRemainingMs] = useState<number | null>(null)
   const { setSessionRemainingMs } = useUIStore()
   const { getPolicyForTier } = useTierPolicy()
+  const { session } = useAuthStore()
 
   useEffect(() => {
     if (!sessionEndsAtRef.current) return
@@ -385,22 +388,18 @@ export default function Join() {
   if (phase === 'preflight') {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative">
-        {/* Optional Login CTA */}
-        <div className="absolute top-4 left-4 z-[1102]">
-          <button
-            onClick={() => navigate(`/login?redirect=${encodeURIComponent(`/join/${normalized}`)}`)}
-            className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white text-sm"
-          >
-            Login (optional)
-          </button>
-        </div>
+        {!session && (
+          <div className="absolute top-4 left-4 z-[1102]">
+            <button
+              onClick={() => navigate(`/login?redirect=${encodeURIComponent(`/join/${normalized}`)}`)}
+              className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white text-sm"
+            >
+              Login (optional)
+            </button>
+          </div>
+        )}
         <div className="absolute bottom-4 right-4 z-[1101]">
-          <button
-            onClick={() => toggleFullscreen()}
-            className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
-          >
-            ⤢
-          </button>
+          <FullscreenButton showOnDesktop variant="minimal" size="sm" />
         </div>
         <div className="w-full max-w-2xl bg-gray-900 p-6 rounded-lg shadow space-y-6">
           <h1 className="text-3xl font-bold text-center">Get Ready</h1>
@@ -473,27 +472,23 @@ export default function Join() {
     const showPrompt = policy.show_timer_in_waiting && remainingMs != null && warnMs > 0 && remainingMs <= warnMs
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative">
-        {/* Optional Login CTA */}
-        <div className="absolute top-4 left-4 z-[1102]">
-          <button
-            onClick={() => navigate(`/login?redirect=${encodeURIComponent(`/join/${normalized}`)}`)}
-            className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white text-sm"
-          >
-            Login (optional)
-          </button>
-        </div>
+        {!session && (
+          <div className="absolute top-4 left-4 z-[1102]">
+            <button
+              onClick={() => navigate(`/login?redirect=${encodeURIComponent(`/join/${normalized}`)}`)}
+              className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white text-sm"
+            >
+              Login (optional)
+            </button>
+          </div>
+        )}
         {policy.show_timer_in_waiting && (
           <div className="absolute top-4 right-4 z-[1102] text-sm bg-white/10 border border-white/20 rounded px-2 py-1">
             {remainingMs != null ? `Time left: ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}` : '—'}
           </div>
         )}
         <div className="absolute bottom-4 right-4 z-[1101]">
-          <button
-            onClick={() => toggleFullscreen()}
-            className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
-          >
-            ⛶
-          </button>
+          <FullscreenButton showOnDesktop variant="minimal" size="sm" />
         </div>
         <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow space-y-4 text-center">
           <h1 className="text-3xl font-bold">Waiting…</h1>
@@ -511,13 +506,9 @@ export default function Join() {
     <div className="min-h-screen bg-black text-white">
       <div className="w-full max-w-6xl h-[70vh] mx-auto relative">
         <PresenceBadge className="absolute top-4 right-4 z-[1105]" />
-        <button
-          onClick={() => toggleFullscreen()}
-          className="absolute bottom-4 right-4 z-[1101] px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
-          aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-        >
-          {isFullscreen ? '⛶' : '⛶'}
-        </button>
+        <div className="absolute bottom-4 right-4 z-[1101]">
+          <FullscreenButton showOnDesktop variant="minimal" size="sm" />
+        </div>
         <VideoGrid />
       </div>
       <StoryOverlay />
