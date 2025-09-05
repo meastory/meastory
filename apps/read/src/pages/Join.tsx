@@ -254,7 +254,7 @@ export default function Join() {
       }
 
       // Start unified room session (tier-agnostic)
-      const started = await startRoomSession({ room_code: normalized, user_id: null, ip_hash: idResp.ip_hash, device_hash: idResp.device_hash })
+      const started = await startRoomSession({ room_code: normalized, user_id: session?.user?.id || null, ip_hash: idResp.ip_hash, device_hash: idResp.device_hash })
       if ('error' in started) {
         if (started.error.includes('room_full')) setError('Room is full. Upgrade to add more participants.')
         else if (started.error.includes('daily_limit_exceeded')) setError('Daily limit reached for this device. Please try again tomorrow.')
@@ -291,7 +291,8 @@ export default function Join() {
       setPhase('waiting')
 
       await enterRoom(started.room_id)
-      // enterRoom will initiate the Realtime connect using room.code
+      // After entering the room, use the unified App shell for room UI
+      navigate('/')
     } catch (e) {
       console.error('Failed to enter room', e)
       setError('Failed to enter room')
