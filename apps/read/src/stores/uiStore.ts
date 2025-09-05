@@ -9,6 +9,7 @@ interface UIState {
   notice?: string | null
   isLibraryOpen?: boolean
   sessionRemainingMs?: number | null
+  sessionEndsAtMs?: number | null
 }
 
 interface UIActions {
@@ -23,6 +24,7 @@ interface UIActions {
   openLibrary?: () => void
   closeLibrary?: () => void
   setSessionRemainingMs?: (ms: number | null) => void
+  setSessionEndsAtMs?: (ms: number | null) => void
 }
 
 const initialState: UIState = {
@@ -34,6 +36,7 @@ const initialState: UIState = {
   notice: null,
   isLibraryOpen: false,
   sessionRemainingMs: null,
+  sessionEndsAtMs: null,
 }
 
 export const useUIStore = create<UIState & UIActions>((set) => ({
@@ -52,6 +55,7 @@ export const useUIStore = create<UIState & UIActions>((set) => ({
   openLibrary: () => set({ isLibraryOpen: true }),
   closeLibrary: () => set({ isLibraryOpen: false }),
   setSessionRemainingMs: (ms) => set({ sessionRemainingMs: ms }),
+  setSessionEndsAtMs: (ms) => set({ sessionEndsAtMs: ms }),
 
   setStoryTextScale: (scale) => {
     const clampedScale = Math.max(0.75, Math.min(1.75, scale))

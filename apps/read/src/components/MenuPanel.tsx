@@ -111,13 +111,6 @@ export default function MenuPanel() {
         return null
       })()}
 
-      {/* Presence Badge - Top Right Below Menu (only when room active) */}
-      {currentRoom && (
-        <div className="absolute top-16 right-4 z-10">
-          <PresenceBadge />
-        </div>
-      )}
-
       {/* Menu Panel */}
       {isOpen && (
         <div 
@@ -127,6 +120,13 @@ export default function MenuPanel() {
           <div className="space-y-3">
             {currentRoom ? (
               <>
+                {/* User at top */}
+                {user && (
+                  <div className="pb-2">
+                    <p className="text-sm text-gray-300">User: {user.display_name || 'Logged In'}</p>
+                  </div>
+                )}
+
                 {/* Room Info */}
                 <div className="border-b border-gray-600 pb-3 mb-3">
                   <p className="text-sm text-gray-300 mb-1">
@@ -169,20 +169,18 @@ export default function MenuPanel() {
                 
                 <hr className="border-gray-600" />
                 
-                {/* Presence and Time (tier-based) */}
+                {/* Time (live) and Presence (separate line) */}
                 {(() => {
                   const effTier = useRoomStore.getState().effectiveRoomTier || 'guest'
                   const policy = getPolicyForTier(effTier)
                   if (!policy.show_timer_in_menu) return null
                   return (
                     <div className="px-3 py-2 text-sm text-gray-300">
-                      <div className="flex items-center justify-between">
-                        <span>
-                          ⏰ Time: {sessionRemainingMs == null ? '—' : `${String(Math.floor(sessionRemainingMs / 60000)).padStart(2,'0')}:${String(Math.floor((sessionRemainingMs % 60000) / 1000)).padStart(2,'0')}`} remaining
-                        </span>
-                        <span>
-                          <PresenceBadge />
-                        </span>
+                      <div className="mb-2">
+                        ⏰ Time: {sessionRemainingMs == null ? '—' : `${String(Math.floor(sessionRemainingMs / 60000)).padStart(2,'0')}:${String(Math.floor((sessionRemainingMs % 60000) / 1000)).padStart(2,'0')}`} remaining
+                      </div>
+                      <div>
+                        <PresenceBadge />
                       </div>
                     </div>
                   )
@@ -225,9 +223,6 @@ export default function MenuPanel() {
             {user && (
               <>
                 <hr className="border-gray-600" />
-                <div className="px-3 py-2 text-sm text-gray-300">
-                  User: {user.display_name || 'Logged In'}
-                </div>
                 <button 
                   className="w-full text-left px-3 py-2 hover:bg-red-700 rounded flex items-center gap-2"
                   onClick={handleSignOut}

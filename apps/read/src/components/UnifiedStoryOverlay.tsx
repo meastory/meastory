@@ -250,7 +250,7 @@ export default function UnifiedStoryOverlay() {
       {!storyVisible && currentStory && (
         <div className="fixed bottom-4 left-20 z-[1020]">
           <button 
-            className="px-4 py-3 bg-gray-800 bg-opacity-90 text-white rounded-lg font-medium transition-all hover:bg-gray-700 backdrop-blur-sm shadow-lg"
+            className="text-control-btn"
             onClick={() => setStoryVisible(true)}
             title="Show story text"
           >

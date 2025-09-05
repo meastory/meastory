@@ -7,7 +7,6 @@ import { useUIStore } from '../stores/uiStore'
 import StoryLibrary from '../components/StoryLibrary'
 import { useRoomStore } from '../stores/roomStore'
 import { getRoomByCode, identifyDevice, logConnectionEvent, startRoomSession, heartbeatRoomSession, endRoomSession } from '../lib/supabase'
-import PresenceBadge from '../components/PresenceBadge'
 import { useTierPolicy } from '../hooks/useTierPolicy'
 import { useAuthStore } from '../stores/authStore'
 import FullscreenButton from '../components/FullscreenButton'
@@ -50,7 +49,7 @@ export default function Join() {
   const sessionTimerRef = useRef<number | null>(null)
   const sessionEndsAtRef = useRef<number | null>(null)
   const [remainingMs, setRemainingMs] = useState<number | null>(null)
-  const { setSessionRemainingMs } = useUIStore()
+  const { setSessionRemainingMs, setSessionEndsAtMs } = useUIStore()
   const { getPolicyForTier } = useTierPolicy()
   const { session } = useAuthStore()
 
@@ -210,6 +209,7 @@ export default function Join() {
     const startedAt = startedAtIso ? new Date(startedAtIso).getTime() : Date.now()
     const endsAt = startedAt + duration
     sessionEndsAtRef.current = endsAt
+    setSessionEndsAtMs?.(endsAt)
     if (sessionTimerRef.current) window.clearTimeout(sessionTimerRef.current)
     const delay = Math.max(0, endsAt - Date.now())
     sessionTimerRef.current = window.setTimeout(async () => {
@@ -504,7 +504,6 @@ export default function Join() {
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="w-full max-w-6xl h-[70vh] mx-auto relative">
-        <PresenceBadge className="absolute top-4 right-4 z-[1105]" />
         <div className="absolute bottom-4 right-4 z-[1101]">
           <FullscreenButton showOnDesktop variant="minimal" size="sm" />
         </div>
