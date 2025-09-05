@@ -1,4 +1,5 @@
 import { personalizeContent } from '../../data/testStoryContent';
+import type { CSSProperties } from 'react'
 
 interface TestFrameProps {
   scenario: string;
@@ -18,13 +19,17 @@ export default function TestFrame({ scenario, scene, childName, textScale }: Tes
   const personalizedTitle = personalizeContent(scene.title, childName);
   const personalizedText = personalizeContent(scene.text, childName);
   
+  const containerStyle: CSSProperties & Record<string, string> = {
+    '--story-text-scale': String(textScale),
+  }
+
   return (
     <div className={`
       ${isMobile ? 'w-[375px] h-[812px]' : 'w-[1024px] h-[768px]'}
       mx-auto border-2 border-gray-600 rounded-lg overflow-hidden
       video-first-layout
     `}
-    style={{ '--story-text-scale': textScale } as any}
+    style={containerStyle}
     >
       
       {/* Use your ACTUAL video container class */}

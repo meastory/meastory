@@ -55,7 +55,7 @@ export default function LayoutTest() {
             <option value="mobile-choices">Mobile Choices</option>
             <option value="desktop-reading">Desktop Reading</option>
           </select>
-          <select value={contentType} onChange={(e) => setContentType(e.target.value as any)} className="bg-gray-700 p-1 rounded">
+          <select value={contentType} onChange={(e) => setContentType(e.target.value as keyof typeof SAMPLE_SCENES)} className="bg-gray-700 p-1 rounded">
             <option value="short">Short</option>
             <option value="medium">Medium</option>
             <option value="long">Long</option>
@@ -72,10 +72,10 @@ export default function LayoutTest() {
         test-frame-container
       `}
       style={{
-        '--test-mobile-text-base': isMobile ? '18px' : '22px',
-        '--test-mobile-line-height': isMobile ? '1.6' : '1.7',
-        '--story-text-scale': textScale.toString()
-      } as any}
+        ['--test-mobile-text-base' as string]: isMobile ? '18px' : '22px',
+        ['--test-mobile-line-height' as string]: isMobile ? '1.6' : '1.7',
+        ['--story-text-scale' as string]: textScale.toString()
+      }}
       >
         
         {/* Story Title - Top Left Outside Overlay */}
