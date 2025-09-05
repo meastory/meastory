@@ -8,7 +8,6 @@ import StoryLibrary from '../components/StoryLibrary'
 import { useRoomStore } from '../stores/roomStore'
 import { getRoomByCode, identifyDevice, logConnectionEvent, startRoomSession, heartbeatRoomSession, endRoomSession } from '../lib/supabase'
 import PresenceBadge from '../components/PresenceBadge'
-import { useFullscreen } from '../hooks/useFullscreen'
 import { useTierPolicy } from '../hooks/useTierPolicy'
 import { useAuthStore } from '../stores/authStore'
 import FullscreenButton from '../components/FullscreenButton'
@@ -45,7 +44,6 @@ export default function Join() {
   const autoPickerRef = useRef(false)
 
   const inviteUrl = useMemo(() => `${location.origin}/join/${normalized}`, [normalized])
-  const { isFullscreen, toggleFullscreen } = useFullscreen()
 
   // Session
   const sessionIdRef = useRef<string | null>(null)
