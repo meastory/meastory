@@ -192,6 +192,18 @@ export default function UnifiedStoryOverlay() {
             )}
 
           </div>
+
+          {/* Illustration Space - Only shows on landscape/desktop */}
+          <div className="story-illustration">
+            {/* Placeholder for illustration - you can replace this with actual story illustrations */}
+            {currentScene?.illustration_url && (
+              <img 
+                src={currentScene.illustration_url} 
+                alt="Story illustration"
+                style={{ opacity: 0.8 }}
+              />
+            )}
+          </div>
         </div>
       )}
 

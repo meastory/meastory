@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles/index.css'
-import App from './App.tsx'
+// Room handles /room/*; lobby/auth rendered directly in routes
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import FullscreenProvider from './contexts/FullscreenContext.tsx'
 import Start from './pages/Start.tsx'
@@ -13,6 +13,7 @@ import Register from './pages/Register.tsx'
 import LayoutTest from './pages/LayoutTest.tsx'
 import { useEffect } from 'react'
 import { useAuthStore } from './stores/authStore'
+import Room from './pages/Room'
 
 export function AuthInit() {
   const { initialized, initialize } = useAuthStore()
@@ -32,7 +33,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/" element={<Start />} />
           <Route path="/start" element={<Start />} />
           {/* App shell (room experience) */}
-          <Route path="/room/*" element={<App />} />
+          <Route path="/room/*" element={<Room />} />
           <Route path="/invite/:code" element={<Invite />} />
           <Route path="/join" element={<JoinCode />} />
           <Route path="/join/:code" element={<Join />} />

@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useWebRTCStore } from '../stores/webrtcStore'
-import VideoGrid from '../components/VideoGrid'
-import StoryOverlay from '../components/UnifiedStoryOverlay'
+// Unified room UI lives under /room now
 import { useUIStore } from '../stores/uiStore'
-import StoryLibrary from '../components/StoryLibrary'
+// Library not used here anymore
 import { useRoomStore } from '../stores/roomStore'
 import { getRoomByCode, identifyDevice, logConnectionEvent, startRoomSession, heartbeatRoomSession, endRoomSession } from '../lib/supabase'
 import { useTierPolicy } from '../hooks/useTierPolicy'
@@ -68,6 +67,13 @@ export default function Join() {
   useEffect(() => {
     if (isConnected) setPhase('connected')
   }, [isConnected])
+
+  // When connection is established, always use the unified App shell
+  useEffect(() => {
+    if (phase === 'connected' || phase === 'connecting') {
+      navigate('/room')
+    }
+  }, [phase])
 
   // Allow StoryPlayer's "Open Library" button to open the in-room picker in guest context
   useEffect(() => {
@@ -515,49 +521,6 @@ export default function Join() {
     )
   }
 
-  return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="w-full max-w-6xl h-[70vh] mx-auto relative">
-        <div className="absolute bottom-4 right-4 z-[1101]">
-          <FullscreenButton showOnDesktop variant="minimal" size="sm" />
-        </div>
-        <VideoGrid />
-      </div>
-      <StoryOverlay />
-      <button
-        onClick={() => { autoPickerRef.current = false; openLibrary?.() }}
-        className="fixed top-6 left-20 z-[100] px-3 py-2 rounded bg-green-600 hover:bg-green-700 text-white"
-      >
-        📚
-      </button>
-      {/* Countdown timer next to library button */}
-      {(() => {
-        const effTier = useRoomStore.getState().effectiveRoomTier || 'guest'
-        const policy = getPolicyForTier(effTier)
-        if (!policy.show_timer_in_menu) return null
-        return (
-          <div className="fixed top-6 left-40 z:[101] text-sm">
-            {remainingMs != null && (
-              <div className="px-2 py-1 rounded bg-white/10 border border-white/20">
-                {`${String(Math.floor(remainingMs / 60000)).padStart(2,'0')}:${String(Math.floor((remainingMs % 60000) / 1000)).padStart(2,'0')}`}
-              </div>
-            )}
-          </div>
-        )
-      })()}
-      {isLibraryOpen && (
-        <div className="fixed inset-0 z-[2000] bg-black/70 backdrop-blur-sm flex items-center justify-center p-6">
-          <div className="relative w-full max-w-5xl">
-            <button
-              onClick={() => closeLibrary?.()}
-              className="absolute -top-3 -right-3 z-[2001] w-10 h-10 rounded-full bg-gray-800 text-white hover:bg-gray-700"
-            >
-              ✕
-            </button>
-            <StoryLibrary onClose={() => closeLibrary?.()} />
-          </div>
-        </div>
-      )}
-    </div>
-  )
+  // While navigating to unified shell, render nothing
+  return null
 } 
