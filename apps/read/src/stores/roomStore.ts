@@ -105,27 +105,12 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
           await get().loadScene(room.current_scene_id)
         }
       } else {
-        // If no story is selected, choose the first published story to keep flow working
-        let storyIdToLoad = room.story_id as string | null
-        if (!storyIdToLoad) {
-          const { data: firstStory } = await supabase
-            .from('stories')
-            .select('id')
-            .eq('status', 'published')
-            .order('title', { ascending: true })
-            .limit(1)
-            .maybeSingle()
-          if (firstStory?.id) {
-            storyIdToLoad = firstStory.id
-            console.log('📚 No story on room; using default published story:', storyIdToLoad)
-          }
-        }
-
-        if (storyIdToLoad) {
-          console.log('📚 Loading story:', storyIdToLoad)
-          await get().loadStory(storyIdToLoad as string)
+        // If the room was created with a story, load it; otherwise wait for user to pick from library
+        if (room.story_id) {
+          console.log('📚 Room has initial story configured; loading:', room.story_id)
+          await get().loadStory(room.story_id)
         } else {
-          console.log('⚠️ No published stories available to load')
+          console.log('ℹ️ No story selected for room; awaiting user selection from library')
         }
       }
 
@@ -320,14 +305,33 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
     try {
       const { data: participants, error } = await supabase
         .from('room_participants')
-        .select('*, user_profiles(tier)')
+        .select('*')
         .eq('room_id', roomId)
 
       if (error) throw error
-      type RowWithUserTier = RoomParticipant & { user_profiles?: { tier?: 'guest' | 'free' | 'paid' | 'enterprise' } }
-      const mapped = ((participants || []) as RowWithUserTier[]).map((p) => ({
+
+      const rows = (participants || []) as RoomParticipant[]
+      const userIds = Array.from(new Set(rows.map(r => r.user_id).filter(Boolean) as string[]))
+
+      // eslint-disable-next-line prefer-const
+      let tiersByUserId: Record<string, 'guest' | 'free' | 'paid' | 'enterprise'> = {}
+      if (userIds.length > 0) {
+        const { data: profiles, error: pErr } = await supabase
+          .from('user_profiles')
+          .select('id, tier')
+          .in('id', userIds)
+
+        if (!pErr && profiles) {
+          for (const p of profiles as Array<{ id: string; tier: string | null }>) {
+            const t = (p.tier as 'guest' | 'free' | 'paid' | 'enterprise') || 'guest'
+            tiersByUserId[p.id] = t
+          }
+        }
+      }
+
+      const mapped = rows.map((p) => ({
         ...p,
-        user_tier: p.user_profiles?.tier || 'guest',
+        user_tier: (p.user_id && tiersByUserId[p.user_id]) ? tiersByUserId[p.user_id] : 'guest',
       }))
       set({ participants: mapped })
       get().recomputeEffectiveTier()
@@ -342,7 +346,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
     try {
       const currentRoom = get().currentRoom
       if (!currentRoom) {
-        // Guest/roomless context: update local state only
+        // Guest context: update local state only
         console.log('ℹ️ No current room (guest flow); applying story locally')
         await get().loadStory(storyId)
         return
@@ -417,5 +421,13 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       participants: [],
       error: null,
     })
+
+    // Clear any session timers in UI store
+    try {
+      const { useUIStore } = await import('./uiStore')
+      useUIStore.getState().setSessionEndsAtMs?.(null)
+    } catch {
+      // noop
+    }
   },
 }))

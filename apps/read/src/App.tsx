@@ -31,7 +31,8 @@ function App() {
   const path = location.pathname || ''
   const isGuestRoute = path === '/start' || path === '/join' || path.startsWith('/join/') || path.startsWith('/invite/')
   const isAuthRoute = path === '/login' || path === '/register'
-  const shouldShowAuth = !session && !isGuestRoute && !isAuthRoute
+  // Never force auth while actively in a room (guests should remain in-room on /room)
+  const shouldShowAuth = !session && !isGuestRoute && !isAuthRoute && !currentRoom
 
   useEffect(() => {
     initialize()
@@ -61,11 +62,7 @@ function App() {
     document.documentElement.style.setProperty('--story-text-scale', String(storyTextScale))
   }, [storyTextScale])
 
-  useEffect(() => {
-    if (currentRoom && !currentStory) {
-      openLibrary?.()
-    }
-  }, [currentRoom, currentStory])
+  // Do not auto-open library; user can open it from UI
 
   const handleCloseLibrary = () => {
     closeLibrary?.()
@@ -105,6 +102,10 @@ function App() {
           </div>
         )}
         <div className="relative">
+          {/* Menu visible even when library is open */}
+          <div className="absolute top-4 right-4 z-[1035]">
+            <MenuPanel />
+          </div>
           <button
             onClick={handleCloseLibrary}
             className={`

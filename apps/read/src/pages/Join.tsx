@@ -291,8 +291,8 @@ export default function Join() {
       setPhase('waiting')
 
       await enterRoom(started.room_id)
-      // After entering the room, use the unified App shell for room UI
-      navigate('/')
+      // After entering the room, navigate to the room app shell
+      navigate('/room')
     } catch (e) {
       console.error('Failed to enter room', e)
       setError('Failed to enter room')
@@ -318,13 +318,7 @@ export default function Join() {
     return () => { if (t) window.clearTimeout(t) }
   }, [participants.size, phase, isConnected])
 
-  // Auto-open library when we first enter the room without a story
-  useEffect(() => {
-    if ((phase === 'connected' || phase === 'connecting') && !currentStory) {
-      autoPickerRef.current = true
-      openLibrary?.()
-    }
-  }, [phase, currentStory])
+  // Do not auto-open library; user will open it manually
 
   // Auto-close only if library was auto-opened and a story becomes available
   useEffect(() => {

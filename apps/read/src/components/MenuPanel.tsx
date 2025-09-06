@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 import { useUIStore } from '../stores/uiStore'
 import { useRoomStore } from '../stores/roomStore'
@@ -15,8 +16,9 @@ export default function MenuPanel() {
   const menuRef = useRef<HTMLDivElement>(null)
   const inviteRef = useRef<HTMLDivElement>(null)
   const { user, signOut } = useAuthStore()
-  const { openLibrary, sessionRemainingMs } = useUIStore()
+  const { openLibrary, sessionRemainingMs, setSessionEndsAtMs } = useUIStore()
   const { currentRoom, leaveRoom } = useRoomStore()
+  const navigate = useNavigate()
   const { toggleMic, toggleVideo, isMicMuted, isVideoOff } = useWebRTCStore()
   const { getPolicyForTier } = useTierPolicy()
 
@@ -31,6 +33,8 @@ export default function MenuPanel() {
 
   const handleLeaveRoom = () => {
     leaveRoom()
+    setSessionEndsAtMs?.(null)
+    navigate('/start')
     setIsOpen(false)
   }
 

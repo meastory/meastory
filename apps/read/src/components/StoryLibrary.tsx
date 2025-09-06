@@ -12,7 +12,7 @@ interface StoryLibraryProps {
 }
 
 export default function StoryLibrary({ onClose }: StoryLibraryProps) {
-  const { currentRoom, enterRoom, changeStory } = useRoomStore()
+  const { currentRoom, changeStory } = useRoomStore()
   const { user } = useAuthStore()
   // const { getPolicyForTier } = useTierPolicy()
   const [stories, setStories] = useState<Story[]>([])
@@ -82,33 +82,39 @@ export default function StoryLibrary({ onClose }: StoryLibraryProps) {
   }
 
   const handleCreateRoomWithStory = async () => {
-    if (!selectedStory || !user) return
+    if (!selectedStory) return
 
     setMessage('Creating room...')
 
     try {
-      console.log('🏗️ Creating room with story:', selectedStory.title)
+      // If not logged in, create a guest room via existing flow
+      if (!user) {
+        const { createGuestRoom } = await import('../lib/supabase')
+        const { data, error } = await createGuestRoom('Story Time', selectedStory.id)
+        if (error) throw error
+        const room = Array.isArray(data) ? data[0] : data
+        const code = String(room.code || '').toUpperCase()
+        if (!code || code.length !== 6) throw new Error('Invalid room code')
+        // Navigate to invite/preflight path to run unified session logic
+        location.href = `/invite/${code}`
+        return
+      }
 
-      // Create room with selected story
+      // Authenticated: create room, then navigate to invite/preflight
       const { data, error } = await supabase
         .from('rooms')
         .insert({
           name: `${selectedStory.title} Room`,
           host_id: user.id,
           story_id: selectedStory.id,
-          max_participants: 10
         })
-        .select('id, name, code, created_at, status')
+        .select('id, code')
         .single()
 
       if (error) throw error
-
-      console.log('✅ Room created successfully:', data)
-      setMessage(`Room created! Code: ${data.code}`)
-
-      // Enter the room and close library
-      await enterRoom(data.id)
-      onClose?.()
+      const code = String(data.code || '').toUpperCase()
+      if (!code || code.length !== 6) throw new Error('Invalid room code')
+      location.href = `/invite/${code}`
     } catch (error: unknown) {
       console.error('❌ Room creation error:', error)
       const msg = (error as { message?: string })?.message || 'Unknown error'
@@ -190,15 +196,16 @@ export default function StoryLibrary({ onClose }: StoryLibraryProps) {
         {/* Story Preview Modal - Only for out-of-room selection */}
         {selectedStory && !currentRoom && (
           <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-gray-900 rounded-lg p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-              <div className="flex justify-between items-start mb-6">
+            <div className="bg-gray-900 rounded-lg p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto relative">
+              <button
+                onClick={() => setSelectedStory(null)}
+                className="absolute -top-3 -right-3 z-[2001] w-10 h-10 rounded-full bg-gray-800 text-white hover:bg-gray-700"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+              <div className="mb-6">
                 <h2 className="text-2xl font-bold">{selectedStory.title}</h2>
-                <button
-                  onClick={() => setSelectedStory(null)}
-                  className="text-gray-400 hover:text-white text-2xl"
-                >
-                  ✕
-                </button>
               </div>
               
               <div className="space-y-4">

@@ -1,4 +1,5 @@
 import Auth from '../components/Auth'
+import MenuPanel from '../components/MenuPanel'
 import { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
@@ -17,5 +18,12 @@ export default function Login() {
     }
   }, [session, redirect])
 
-  return <Auth onAuthSuccess={() => navigate(redirect, { replace: true })} mode="login" showToggle={false} />
+  return (
+    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="absolute top-4 right-4 z-[1101]">
+        <MenuPanel />
+      </div>
+      <Auth onAuthSuccess={() => navigate(redirect, { replace: true })} mode="login" showToggle={false} />
+    </div>
+  )
 }
