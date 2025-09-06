@@ -16,7 +16,7 @@ export default function MenuPanel() {
   const menuRef = useRef<HTMLDivElement>(null)
   const inviteRef = useRef<HTMLDivElement>(null)
   const { user, signOut } = useAuthStore()
-  const { openLibrary, sessionRemainingMs, setSessionEndsAtMs } = useUIStore()
+  const { openLibrary, sessionRemainingMs, setSessionEndsAtMs, storyTextScale, setStoryTextScale } = useUIStore()
   const { currentRoom, leaveRoom } = useRoomStore()
   const navigate = useNavigate()
   const { toggleMic, toggleVideo, isMicMuted, isVideoOff } = useWebRTCStore()
@@ -65,6 +65,16 @@ export default function MenuPanel() {
 
   const handleCloseInvite = () => {
     setShowInvite(false)
+  }
+
+  const increaseTextSize = () => {
+    const newScale = Math.min(1.75, storyTextScale + 0.1)
+    setStoryTextScale(newScale)
+  }
+
+  const decreaseTextSize = () => {
+    const newScale = Math.max(0.75, storyTextScale - 0.1)
+    setStoryTextScale(newScale)
   }
 
   // Close menu when clicking outside
@@ -166,6 +176,32 @@ export default function MenuPanel() {
                 >
                   {isVideoOff ? '📷' : '📹'} {isVideoOff ? 'Turn On' : 'Turn Off'} Camera
                 </button>
+                
+                <hr className="border-gray-600" />
+                
+                {/* Text Size Controls */}
+                <div className="px-2 py-2">
+                  <div className="text-sm text-gray-300 mb-2">Text Size</div>
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={decreaseTextSize}
+                      className="flex-1 text-center py-2 hover:bg-gray-700 rounded flex items-center justify-center gap-1 text-sm"
+                      title="Decrease text size"
+                    >
+                      A-
+                    </button>
+                    <div className="text-sm text-gray-400 px-2 font-mono">
+                      {storyTextScale.toFixed(1)}x
+                    </div>
+                    <button 
+                      onClick={increaseTextSize}
+                      className="flex-1 text-center py-2 hover:bg-gray-700 rounded flex items-center justify-center gap-1 text-sm"
+                      title="Increase text size"
+                    >
+                      A+
+                    </button>
+                  </div>
+                </div>
                 
                 <hr className="border-gray-600" />
                 

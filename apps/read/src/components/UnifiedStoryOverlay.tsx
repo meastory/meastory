@@ -4,20 +4,10 @@ import { useRoomStore } from '../stores/roomStore'
 import { supabase } from '../stores/authStore'
 
 export default function UnifiedStoryOverlay() {
-  const { storyTextScale, setStoryTextScale } = useUIStore()
+  const { storyTextScale } = useUIStore()
   const { currentScene, currentStory, loadScene, childName } = useRoomStore()
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [storyVisible, setStoryVisible] = useState(true)
-
-  const increaseTextSize = () => {
-    const newScale = Math.min(1.75, storyTextScale + 0.1)
-    setStoryTextScale(newScale)
-  }
-
-  const decreaseTextSize = () => {
-    const newScale = Math.max(0.75, storyTextScale - 0.1)
-    setStoryTextScale(newScale)
-  }
 
   const handleChoice = async (nextSceneRef: string | number) => {
     if (isTransitioning || !currentStory) return
@@ -110,29 +100,12 @@ export default function UnifiedStoryOverlay() {
             Start or join a room to begin your storytelling adventure!
           </p>
 
-          <div className="story-choices mt-6">
+          <div className="text-controls">
             <button
               onClick={handleOpenLibrary}
               className="story-choice"
             >
               📚 Choose a Story
-            </button>
-          </div>
-
-          <div className="text-controls">
-            <button
-              onClick={decreaseTextSize}
-              className="text-control-btn"
-              title="Decrease text size"
-            >
-              −
-            </button>
-            <button
-              onClick={increaseTextSize}
-              className="text-control-btn"
-              title="Increase text size"
-            >
-              +
             </button>
           </div>
         </div>
@@ -172,7 +145,7 @@ export default function UnifiedStoryOverlay() {
             )}
 
             {/* Scene Content */}
-            <div className="story-text">
+            <div className="story-text" style={{ whiteSpace: 'pre-wrap' }}>
               {replaceChildName(currentScene.content)}
             </div>
 
@@ -218,39 +191,28 @@ export default function UnifiedStoryOverlay() {
               </div>
             )}
 
-            {/* Controls */}
-            <div className="text-controls">
-              <button
-                onClick={() => setStoryVisible(false)}
-                className="text-control-btn"
-                title="Hide story text"
-              >
-                ▼
-              </button>
-              <button
-                onClick={decreaseTextSize}
-                className="text-control-btn"
-                title="Decrease text size"
-              >
-                −
-              </button>
-              <button
-                onClick={increaseTextSize}
-                className="text-control-btn"
-                title="Increase text size"
-              >
-                +
-              </button>
-            </div>
           </div>
         </div>
       )}
 
-      {/* Show Story Button (when story is hidden) - positioned outside overlay */}
-      {!storyVisible && currentStory && (
-        <div className="fixed bottom-4 left-20 z-[1020]">
+      {/* Fixed Hide Story Button - Always in bottom-left corner when story is visible */}
+      {storyVisible && currentStory && (
+        <div className="fixed bottom-4 left-4 z-[1030]">
           <button 
-            className="text-control-btn"
+            className="w-12 h-12 rounded-full border-2 border-white/30 bg-black/50 text-white flex items-center justify-center cursor-pointer transition-all duration-200 text-xl font-bold hover:bg-black/70 hover:border-white/50 hover:scale-105 shadow-lg backdrop-blur-lg"
+            onClick={() => setStoryVisible(false)}
+            title="Hide story text"
+          >
+            ▼
+          </button>
+        </div>
+      )}
+
+      {/* Fixed Show Story Button - Always in bottom-left corner when story is hidden */}
+      {!storyVisible && currentStory && (
+        <div className="fixed bottom-4 left-4 z-[1030]">
+          <button 
+            className="w-12 h-12 rounded-full border-2 border-white/30 bg-black/50 text-white flex items-center justify-center cursor-pointer transition-all duration-200 text-xl font-bold hover:bg-black/70 hover:border-white/50 hover:scale-105 shadow-lg backdrop-blur-lg"
             onClick={() => setStoryVisible(true)}
             title="Show story text"
           >

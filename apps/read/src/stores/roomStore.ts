@@ -105,10 +105,20 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
           await get().loadScene(room.current_scene_id)
         }
       } else {
-        // If the room was created with a story, load it; otherwise wait for user to pick from library
+        // If the room was created with a story, load it, and try to restore last scene from localStorage;
+        // otherwise wait for user to pick from library
         if (room.story_id) {
           console.log('📚 Room has initial story configured; loading:', room.story_id)
           await get().loadStory(room.story_id)
+          try {
+            const savedSceneId = localStorage.getItem(`room:${room.id}:sceneId`)
+            if (savedSceneId) {
+              console.log('🔁 Restoring saved scene for room:', savedSceneId)
+              await get().loadScene(savedSceneId)
+            }
+          } catch (e) {
+            console.warn('restore saved scene failed', e)
+          }
         } else {
           console.log('ℹ️ No story selected for room; awaiting user selection from library')
         }
@@ -180,6 +190,15 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
         } as unknown as StoryScene
         console.log('🎬 First scene (JSON) loaded:', mapped.title || mapped.id)
         set({ currentScene: mapped })
+        try {
+          const room = get().currentRoom
+          if (room) {
+            localStorage.setItem(`room:${room.id}:sceneId`, String(mapped.id))
+            localStorage.setItem(`room:${room.id}:storyId`, String(storyId))
+          }
+        } catch (e) {
+          console.warn('persist scene failed', e)
+        }
         return
       }
 
@@ -194,6 +213,15 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       if (firstScene) {
         console.log('🎬 First scene (DB) loaded:', firstScene.title)
         set({ currentScene: firstScene })
+        try {
+          const room = get().currentRoom
+          if (room) {
+            localStorage.setItem(`room:${room.id}:sceneId`, String(firstScene.id))
+            localStorage.setItem(`room:${room.id}:storyId`, String(storyId))
+          }
+        } catch (e) {
+          console.warn('persist scene failed', e)
+        }
       } else {
         console.log('⚠️ No first scene found for story')
         set({ currentScene: null })

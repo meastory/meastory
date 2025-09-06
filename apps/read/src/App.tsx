@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useUIStore } from './stores/uiStore'
 import { useAuthStore } from './stores/authStore'
 import { useRoomStore } from './stores/roomStore'
@@ -15,7 +15,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import InfoBanner from './components/InfoBanner'
 
 function App() {
-  const { isLoading, error, storyTextScale, setStoryTextScale, notice, setNotice, isLibraryOpen, openLibrary, closeLibrary } = useUIStore()
+  const { isLoading, error, storyTextScale, setStoryTextScale, notice, setNotice, isLibraryOpen, openLibrary, closeLibrary, setSessionEndsAtMs } = useUIStore()
   const { session, initialized, initialize } = useAuthStore()
   const { currentRoom, currentStory } = useRoomStore()
   const { isFullscreen } = useFullscreenContext()
@@ -23,6 +23,7 @@ function App() {
   const appRef = useRef<HTMLDivElement>(null)
   const location = useLocation()
   const navigate = useNavigate()
+  const [restoring, setRestoring] = useState(false)
 
   const handleAuthSuccess = () => {
     navigate('/')
@@ -42,8 +43,14 @@ function App() {
       const pathNow = window.location.pathname || ''
       if (pathNow.startsWith('/room')) {
         const activeRoomId = localStorage.getItem('activeRoomId')
+        const endsAtStr = localStorage.getItem('activeEndsAtMs')
+        if (endsAtStr) {
+          const endsAt = parseInt(endsAtStr, 10)
+          if (!Number.isNaN(endsAt)) setSessionEndsAtMs?.(endsAt)
+        }
         if (activeRoomId && !useRoomStore.getState().currentRoom) {
           // Re-enter room without navigating away
+          setRestoring(true)
           useRoomStore.getState().enterRoom(activeRoomId)
         }
       }
@@ -51,6 +58,13 @@ function App() {
       console.warn('restore room on refresh failed', e)
     }
   }, [initialize])
+
+  // When room is restored (or if none), stop the restoring spinner
+  useEffect(() => {
+    if (restoring && currentRoom) {
+      setRestoring(false)
+    }
+  }, [restoring, currentRoom])
 
   // No-op: openLibrary is available via UI store
 
@@ -84,7 +98,7 @@ function App() {
 
   // Public routes are always available; no redirect to /start needed
 
-  if (!initialized) {
+  if (!initialized || restoring) {
     return <LoadingSpinner />
   }
 
