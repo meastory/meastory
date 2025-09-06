@@ -33,11 +33,14 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
 
 type User = Tables<'user_profiles'>
 
+type TierKey = 'guest' | 'free' | 'paid' | 'enterprise'
+
 interface AuthState {
   user: User | null
   session: Session | null
   loading: boolean
   initialized: boolean
+  userTier: TierKey
 }
 
 interface AuthActions {
@@ -55,13 +58,14 @@ const initialState: AuthState = {
   session: null,
   loading: true,
   initialized: false,
+  userTier: 'guest',
 }
 
 export const useAuthStore = create<AuthState & AuthActions>((set) => ({
   ...initialState,
 
   signIn: async (email: string, password: string) => {
-    console.log('�� Attempting sign in for:', email)
+    console.log(' Attempting sign in for:', email)
     set({ loading: true })
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -125,8 +129,8 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
     }
   },
 
-  setUser: (user) => set({ user }),
-  setSession: (session) => set({ session }),
+  setUser: (user) => set((prev) => ({ user, userTier: user?.tier as TierKey || (prev.session ? 'free' : 'guest') })),
+  setSession: (session) => set((prev) => ({ session, userTier: session ? (prev.user?.tier as TierKey || 'free') : 'guest' })),
   setLoading: (loading) => set({ loading }),
 
   initialize: async () => {
@@ -159,7 +163,8 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
           session,
           user: profile || null,
           loading: false,
-          initialized: true
+          initialized: true,
+          userTier: (profile?.tier as TierKey) || 'free',
         })
       } else {
         console.log('📋 No existing session found')
@@ -167,7 +172,8 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
           session: null,
           user: null,
           loading: false,
-          initialized: true
+          initialized: true,
+          userTier: 'guest',
         })
       }
 
@@ -195,13 +201,15 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
           set({
             session,
             user: profile || null,
-            loading: false
+            loading: false,
+            userTier: (profile?.tier as TierKey) || 'free',
           })
         } else {
           set({
             session: null,
             user: null,
-            loading: false
+            loading: false,
+            userTier: 'guest',
           })
         }
       })
@@ -211,7 +219,8 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
         session: null,
         user: null,
         loading: false,
-        initialized: true
+        initialized: true,
+        userTier: 'guest',
       })
     }
   },

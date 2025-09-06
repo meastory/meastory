@@ -26,7 +26,6 @@ npm run dev
 Set these in `apps/read/.env` or Netlify environment:
 - `VITE_SUPABASE_URL`: Supabase project URL
 - `VITE_SUPABASE_ANON_KEY`: Supabase anon key (JWT)
-- `VITE_FEATURE_GUEST_FLOW`: `'true'` to enable Start/Invite/Join routes
 - `VITE_TURN_SERVERS`: Optional JSON array of ICE servers. Example:
   `[ {"urls":"turn:TURN_HOST:3478","username":"user","credential":"pass"} ]`
 - `VITE_TURN_URL`, `VITE_TURN_USERNAME`, `VITE_TURN_CREDENTIAL`: Alternative single TURN config
@@ -39,9 +38,9 @@ Set these in `apps/read/.env` or Netlify environment:
 - Supabase Realtime signaling channel per room code with presence-based host/guest role
 - WebRTC Manager with perfect negotiation, queued ICE, reconnect/backoff, relay-aware bitrate policy
 - DataChannel story sync for choices, story changes, and child name updates (with Realtime fallback)
-- Guest session limits and metrics via RPCs and views:
-  - `guest_check_and_start_session` (enforces room capacity and daily device limits)
-  - `rpc_log_connection_event`, `rpc_end_guest_session`, heartbeats
+- Tier-driven room sessions:
+  - Unified `start_room_session` (enforces capacity and daily limits by tier)
+  - `heartbeat_room_session`, `end_room_session`, and `rpc_log_connection_event`
   - Edge Function `identify_device` returns `ip_hash` and `device_hash`
 - Minimal scene resume support (`rooms.current_story_id`/`current_scene_id`, host-only `rpc_update_room_scene`)
 - Story library to select/change stories without dropping connections

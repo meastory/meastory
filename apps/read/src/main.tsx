@@ -10,26 +10,39 @@ import Join from './pages/Join.tsx'
 import JoinCode from './pages/JoinCode.tsx'
 import Login from './pages/Login.tsx'
 import Register from './pages/Register.tsx'
+import LayoutTest from './pages/LayoutTest.tsx'
+import { useEffect } from 'react'
+import { useAuthStore } from './stores/authStore'
+
+export function AuthInit() {
+  const { initialized, initialize } = useAuthStore()
+  useEffect(() => {
+    if (!initialized) initialize()
+  }, [initialized, initialize])
+  return null
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <FullscreenProvider>
       <BrowserRouter>
+        <AuthInit />
         <Routes>
-          {/* Guest flow routes (public) */}
-          {import.meta.env.VITE_FEATURE_GUEST_FLOW === 'true' && (
-            <>
-              <Route path="/start" element={<Start />} />
-              <Route path="/invite/:code" element={<Invite />} />
-              <Route path="/join" element={<JoinCode />} />
-              <Route path="/join/:code" element={<Join />} />
-            </>
-          )}
+          {/* Public routes */}
+          <Route path="/" element={<Start />} />
+          <Route path="/start" element={<Start />} />
+          {/* App shell (room experience) */}
+          <Route path="/room/*" element={<App />} />
+          <Route path="/invite/:code" element={<Invite />} />
+          <Route path="/join" element={<JoinCode />} />
+          <Route path="/join/:code" element={<Join />} />
           {/* Auth routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* Default app route (authenticated areas unchanged) */}
-          <Route path="/*" element={<App />} />
+          {/* Testing route - REMOVE AFTER LAYOUT WORK */}
+          <Route path="/layout-test" element={<LayoutTest />} />
+          {/* Fallback to Start for unknown routes */}
+          <Route path="/*" element={<Start />} />
         </Routes>
       </BrowserRouter>
     </FullscreenProvider>

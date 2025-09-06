@@ -625,3 +625,7 @@ Note: the only scenes that should have zero choices are the endings. All scenes 
 - [ ] All required metadata is included and accurate
 
 This comprehensive framework provides a systematic, reusable process for transforming public domain stories into high-quality interactive content in specific author styles. Each step builds on the previous ones, ensuring consistency and quality throughout the development process.
+
+
+### Upload to supabase
+python3 generative/tools/publish_story.py PATH/TO/story.json --slug my-custom-slug

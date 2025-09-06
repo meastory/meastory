@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { supabase } from './authStore'
+import { supabase, useAuthStore } from './authStore'
 import type { Tables } from '../types/supabase'
 
 // JSON authoring content types for local parsing
@@ -31,6 +31,7 @@ interface RoomState {
   isLoading: boolean
   error: string | null
   childName: string
+  effectiveRoomTier?: 'guest' | 'free' | 'paid' | 'enterprise'
 }
 
 interface RoomActions {
@@ -43,6 +44,7 @@ interface RoomActions {
   setError: (error: string | null) => void
   setLoading: (loading: boolean) => void
   setChildName: (name: string) => void
+  recomputeEffectiveTier: () => void
 }
 const initialState: RoomState = {
   currentRoom: null,
@@ -52,10 +54,22 @@ const initialState: RoomState = {
   isLoading: false,
   error: null,
   childName: localStorage.getItem('childName') || 'Alex',
+  effectiveRoomTier: 'guest',
 }
 
 export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
   ...initialState,
+  recomputeEffectiveTier: () => {
+    const userTier: 'guest' | 'free' | 'paid' | 'enterprise' = useAuthStore.getState().userTier
+    const participants = get().participants || []
+    let highest: 'guest' | 'free' | 'paid' | 'enterprise' = userTier || 'guest'
+    const rank: Record<'guest' | 'free' | 'paid' | 'enterprise', number> = { guest: 0, free: 1, paid: 2, enterprise: 3 }
+    for (const p of participants as Array<{ user_tier?: 'guest' | 'free' | 'paid' | 'enterprise' }>) {
+      const tier = p.user_tier || 'guest'
+      if (rank[tier] > rank[highest]) highest = tier
+    }
+    set({ effectiveRoomTier: highest })
+  },
 
   setChildName: (name: string) => {
     set({ childName: name })
@@ -91,27 +105,12 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
           await get().loadScene(room.current_scene_id)
         }
       } else {
-        // If no story is selected, choose the first published story to keep flow working
-        let storyIdToLoad = room.story_id as string | null
-        if (!storyIdToLoad) {
-          const { data: firstStory } = await supabase
-            .from('stories')
-            .select('id')
-            .eq('status', 'published')
-            .order('title', { ascending: true })
-            .limit(1)
-            .maybeSingle()
-          if (firstStory?.id) {
-            storyIdToLoad = firstStory.id
-            console.log('📚 No story on room; using default published story:', storyIdToLoad)
-          }
-        }
-
-        if (storyIdToLoad) {
-          console.log('📚 Loading story:', storyIdToLoad)
-          await get().loadStory(storyIdToLoad)
+        // If the room was created with a story, load it; otherwise wait for user to pick from library
+        if (room.story_id) {
+          console.log('📚 Room has initial story configured; loading:', room.story_id)
+          await get().loadStory(room.story_id)
         } else {
-          console.log('⚠️ No published stories available to load')
+          console.log('ℹ️ No story selected for room; awaiting user selection from library')
         }
       }
 
@@ -123,7 +122,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       try {
         const webrtcModule = await import('./webrtcStore')
         const webrtcStore = webrtcModule.useWebRTCStore
-        await webrtcStore.getState().connect(roomId, room.code)
+        await webrtcStore.getState().connect(roomId, room.code || '')
         console.log('✅ WebRTC connected successfully')
       } catch (webrtcError) {
         console.error('❌ WebRTC connection failed:', webrtcError)
@@ -144,7 +143,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       const { data: story, error } = await supabase
         .from('stories')
         .select('*')
-        .eq('id', storyId)
+        .eq('id', String(storyId))
         .single()
 
       if (error) throw error
@@ -181,7 +180,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       const { data: firstScene } = await supabase
         .from('story_scenes')
         .select('*')
-        .eq('story_id', storyId)
+        .eq('story_id', String(storyId))
         .eq('scene_order', 1)
         .single()
 
@@ -310,7 +309,32 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
         .eq('room_id', roomId)
 
       if (error) throw error
-      set({ participants: participants || [] })
+
+      const rows = (participants || []) as RoomParticipant[]
+      const userIds = Array.from(new Set(rows.map(r => r.user_id).filter(Boolean) as string[]))
+
+      // eslint-disable-next-line prefer-const
+      let tiersByUserId: Record<string, 'guest' | 'free' | 'paid' | 'enterprise'> = {}
+      if (userIds.length > 0) {
+        const { data: profiles, error: pErr } = await supabase
+          .from('user_profiles')
+          .select('id, tier')
+          .in('id', userIds)
+
+        if (!pErr && profiles) {
+          for (const p of profiles as Array<{ id: string; tier: string | null }>) {
+            const t = (p.tier as 'guest' | 'free' | 'paid' | 'enterprise') || 'guest'
+            tiersByUserId[p.id] = t
+          }
+        }
+      }
+
+      const mapped = rows.map((p) => ({
+        ...p,
+        user_tier: (p.user_id && tiersByUserId[p.user_id]) ? tiersByUserId[p.user_id] : 'guest',
+      }))
+      set({ participants: mapped })
+      get().recomputeEffectiveTier()
     } catch (error: unknown) {
       console.error('❌ Error loading participants:', error)
     }
@@ -322,7 +346,7 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
     try {
       const currentRoom = get().currentRoom
       if (!currentRoom) {
-        // Guest/roomless context: update local state only
+        // Guest context: update local state only
         console.log('ℹ️ No current room (guest flow); applying story locally')
         await get().loadStory(storyId)
         return
@@ -397,4 +421,13 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       participants: [],
       error: null,
     })
-  },}))
+
+    // Clear any session timers in UI store
+    try {
+      const { useUIStore } = await import('./uiStore')
+      useUIStore.getState().setSessionEndsAtMs?.(null)
+    } catch {
+      // noop
+    }
+  },
+}))

@@ -82,10 +82,7 @@ export default function VideoGrid() {
   return (
     <div className="h-full p-4">
       <div className={`grid ${getGridLayout()} gap-4 h-full`}>
-        <VideoFeed
-          className={`${getVideoSize()}`}
-          showControls={true}
-        />
+        {/* Remote participants first - get priority positioning */}
         {participantList.map((participant: RTCParticipant) => (
           <VideoFeed
             key={participant.id}
@@ -94,6 +91,11 @@ export default function VideoGrid() {
             showControls={false}
           />
         ))}
+        {/* Local feed second - gets secondary position */}
+        <VideoFeed
+          className={`${getVideoSize()}`}
+          showControls={false}
+        />
       </div>
     </div>
   )

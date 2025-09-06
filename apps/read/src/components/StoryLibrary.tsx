@@ -3,6 +3,7 @@ import { useRoomStore } from '../stores/roomStore'
 import { useAuthStore } from '../stores/authStore'
 import { supabase } from '../stores/authStore'
 import type { Tables } from '../types/supabase'
+// import { useTierPolicy } from '../hooks/useTierPolicy'
 
 type Story = Tables<'stories'>
 
@@ -11,8 +12,9 @@ interface StoryLibraryProps {
 }
 
 export default function StoryLibrary({ onClose }: StoryLibraryProps) {
-  const { currentRoom, enterRoom, changeStory } = useRoomStore()
+  const { currentRoom, changeStory } = useRoomStore()
   const { user } = useAuthStore()
+  // const { getPolicyForTier } = useTierPolicy()
   const [stories, setStories] = useState<Story[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedStory, setSelectedStory] = useState<Story | null>(null)
@@ -41,6 +43,13 @@ export default function StoryLibrary({ onClose }: StoryLibraryProps) {
   }
 
   const handleStorySelect = async (story: Story) => {
+    const effTier = useRoomStore.getState().effectiveRoomTier || 'guest'
+    const canAccess = (() => {
+      const map: Record<'guest' | 'free' | 'paid' | 'enterprise', number> = { guest: 0, free: 1, paid: 2, enterprise: 3 }
+      const storyTier = (story as unknown as { access_tier?: 'guest' | 'free' | 'paid' | 'enterprise' }).access_tier || 'guest'
+      return map[storyTier] <= map[effTier]
+    })()
+    if (!canAccess) return
     if (currentRoom) {
       // We're in a room, change the story for all participants
       console.log('🔄 Changing room story to:', story.title)
@@ -73,33 +82,39 @@ export default function StoryLibrary({ onClose }: StoryLibraryProps) {
   }
 
   const handleCreateRoomWithStory = async () => {
-    if (!selectedStory || !user) return
+    if (!selectedStory) return
 
     setMessage('Creating room...')
 
     try {
-      console.log('🏗️ Creating room with story:', selectedStory.title)
+      // If not logged in, create a guest room via existing flow
+      if (!user) {
+        const { createGuestRoom } = await import('../lib/supabase')
+        const { data, error } = await createGuestRoom('Story Time', selectedStory.id)
+        if (error) throw error
+        const room = Array.isArray(data) ? data[0] : data
+        const code = String(room.code || '').toUpperCase()
+        if (!code || code.length !== 6) throw new Error('Invalid room code')
+        // Navigate to invite/preflight path to run unified session logic
+        location.href = `/invite/${code}`
+        return
+      }
 
-      // Create room with selected story
+      // Authenticated: create room, then navigate to invite/preflight
       const { data, error } = await supabase
         .from('rooms')
         .insert({
           name: `${selectedStory.title} Room`,
           host_id: user.id,
           story_id: selectedStory.id,
-          max_participants: 10
         })
-        .select('id, name, code, created_at, status')
+        .select('id, code')
         .single()
 
       if (error) throw error
-
-      console.log('✅ Room created successfully:', data)
-      setMessage(`Room created! Code: ${data.code}`)
-
-      // Enter the room and close library
-      await enterRoom(data.id)
-      onClose?.()
+      const code = String(data.code || '').toUpperCase()
+      if (!code || code.length !== 6) throw new Error('Invalid room code')
+      location.href = `/invite/${code}`
     } catch (error: unknown) {
       console.error('❌ Room creation error:', error)
       const msg = (error as { message?: string })?.message || 'Unknown error'
@@ -148,21 +163,28 @@ export default function StoryLibrary({ onClose }: StoryLibraryProps) {
         )}
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {stories.map((story) => (
-            <div 
-              key={story.id}
-              className="bg-gray-900 rounded-lg p-6 hover:bg-gray-800 transition-colors cursor-pointer border-2 border-transparent hover:border-blue-500/50"
-              onClick={() => handleStorySelect(story)}
-            >
-              <h3 className="text-xl font-bold mb-2">{story.title}</h3>
-              <p className="text-gray-300 text-sm mb-4 line-clamp-3">
-                {story.description || 'No description available'}
-              </p>
-              <div className="text-xs text-gray-400">
-                {currentRoom ? 'Click to change story' : 'Click to create room'}
+          {stories.map((story) => {
+            const effTier = useRoomStore.getState().effectiveRoomTier || 'guest'
+            const rank: Record<'guest' | 'free' | 'paid' | 'enterprise', number> = { guest: 0, free: 1, paid: 2, enterprise: 3 }
+            const storyTier = (story as unknown as { access_tier?: 'guest' | 'free' | 'paid' | 'enterprise' }).access_tier || 'guest'
+            const locked = rank[storyTier] > rank[effTier]
+            return (
+              <div 
+                key={story.id}
+                className={`rounded-lg p-6 transition-colors border-2 ${locked ? 'bg-gray-900/60 border-gray-700 cursor-not-allowed' : 'bg-gray-900 hover:bg-gray-800 cursor-pointer hover:border-blue-500/50 border-transparent'}`}
+                onClick={() => !locked && handleStorySelect(story)}
+              >
+                <h3 className={`text-xl font-bold mb-2 ${locked ? 'text-gray-500' : ''}`}>{story.title}</h3>
+                <p className={`text-sm mb-4 line-clamp-3 ${locked ? 'text-gray-500' : 'text-gray-300'}`}>
+                  {story.description || 'No description available'}
+                </p>
+                <div className="text-xs text-gray-400 flex items-center justify-between">
+                  <span>{currentRoom ? 'Click to change story' : 'Click to create room'}</span>
+                  {locked && <span className="text-yellow-500">Locked</span>}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         {stories.length === 0 && (
@@ -174,15 +196,16 @@ export default function StoryLibrary({ onClose }: StoryLibraryProps) {
         {/* Story Preview Modal - Only for out-of-room selection */}
         {selectedStory && !currentRoom && (
           <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-gray-900 rounded-lg p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-              <div className="flex justify-between items-start mb-6">
+            <div className="bg-gray-900 rounded-lg p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto relative">
+              <button
+                onClick={() => setSelectedStory(null)}
+                className="absolute -top-3 -right-3 z-[2001] w-10 h-10 rounded-full bg-gray-800 text-white hover:bg-gray-700"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+              <div className="mb-6">
                 <h2 className="text-2xl font-bold">{selectedStory.title}</h2>
-                <button
-                  onClick={() => setSelectedStory(null)}
-                  className="text-gray-400 hover:text-white text-2xl"
-                >
-                  ✕
-                </button>
               </div>
               
               <div className="space-y-4">

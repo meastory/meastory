@@ -7,9 +7,9 @@ interface VideoFeedProps {
   showControls?: boolean
 }
 
-export default function VideoFeed({ participantId, className = '', showControls = false }: VideoFeedProps) {
+export default function VideoFeed({ participantId, className = '' }: VideoFeedProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const { localStream, participants, isMicMuted, isVideoOff, toggleMic, toggleVideo } = useWebRTCStore()
+  const { localStream, participants, isMicMuted, isVideoOff } = useWebRTCStore()
   
   const isLocal = !participantId
   const participant = participantId ? participants.get(participantId) : null
@@ -142,39 +142,6 @@ export default function VideoFeed({ participantId, className = '', showControls 
               ) : null}
             </div>
           </div>
-          
-          {/* Local Controls */}
-          {showControls && isLocal && (
-            <div className="flex space-x-2">
-              <button
-                onClick={toggleMic}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                  isMicMuted 
-                    ? 'bg-red-500 hover:bg-red-600' 
-                    : 'bg-gray-700 hover:bg-gray-600'
-                }`}
-                title={isMicMuted ? 'Unmute microphone' : 'Mute microphone'}
-              >
-                <span className="text-sm">
-                  {isMicMuted ? '🔇' : '🎙️'}
-                </span>
-              </button>
-              
-              <button
-                onClick={toggleVideo}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                  isVideoOff 
-                    ? 'bg-red-500 hover:bg-red-600' 
-                    : 'bg-gray-700 hover:bg-gray-600'
-                }`}
-                title={isVideoOff ? 'Turn on camera' : 'Turn off camera'}
-              >
-                <span className="text-sm">
-                  {isVideoOff ? '📷' : '📹'}
-                </span>
-              </button>
-            </div>
-          )}
         </div>
       </div>
       

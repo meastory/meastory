@@ -2,13 +2,14 @@ import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useWebRTCStore } from '../stores/webrtcStore'
 import VideoGrid from '../components/VideoGrid'
-import StoryOverlay from '../components/StoryOverlay'
-import StoryPlayer from '../components/StoryPlayer'
-import InRoomStoryPicker from '../components/InRoomStoryPicker'
+import StoryOverlay from '../components/UnifiedStoryOverlay'
+import { useUIStore } from '../stores/uiStore'
+import StoryLibrary from '../components/StoryLibrary'
 import { useRoomStore } from '../stores/roomStore'
-import { getRoomByCode, identifyDevice, guestCheckAndStartSession, logConnectionEvent, endGuestSession } from '../lib/supabase'
-import PresenceBadge from '../components/PresenceBadge'
-import { useFullscreen } from '../hooks/useFullscreen'
+import { getRoomByCode, identifyDevice, logConnectionEvent, startRoomSession, heartbeatRoomSession, endRoomSession } from '../lib/supabase'
+import { useTierPolicy } from '../hooks/useTierPolicy'
+import { useAuthStore } from '../stores/authStore'
+import FullscreenButton from '../components/FullscreenButton'
 
 interface DeviceOption {
   deviceId: string
@@ -32,7 +33,7 @@ export default function Join() {
   const [error, setError] = useState<string | null>(null)
   const [phase, setPhase] = useState<'preflight' | 'waiting' | 'connecting' | 'connected'>('preflight')
 
-  const [showPicker, setShowPicker] = useState(false)
+  const { isLibraryOpen, openLibrary, closeLibrary } = useUIStore()
   const [nameInput, setNameInput] = useState(childName || 'Alex')
   const [micLevel, setMicLevel] = useState(0)
 
@@ -42,13 +43,15 @@ export default function Join() {
   const autoPickerRef = useRef(false)
 
   const inviteUrl = useMemo(() => `${location.origin}/join/${normalized}`, [normalized])
-  const { isFullscreen, toggleFullscreen } = useFullscreen()
 
   // Session
   const sessionIdRef = useRef<string | null>(null)
   const sessionTimerRef = useRef<number | null>(null)
   const sessionEndsAtRef = useRef<number | null>(null)
   const [remainingMs, setRemainingMs] = useState<number | null>(null)
+  const { setSessionRemainingMs, setSessionEndsAtMs } = useUIStore()
+  const { getPolicyForTier } = useTierPolicy()
+  const { session } = useAuthStore()
 
   useEffect(() => {
     if (!sessionEndsAtRef.current) return
@@ -72,18 +75,11 @@ export default function Join() {
     const withLibrary = roomStore as typeof roomStore & { showLibrary?: () => void }
     withLibrary.showLibrary = () => {
       autoPickerRef.current = false
-      setShowPicker(true)
+      openLibrary?.()
     }
   }, [])
 
-  // Listen to custom event to open in-room picker (guest)
-  useEffect(() => {
-    const handler = () => { autoPickerRef.current = false; setShowPicker(true) }
-    window.addEventListener('open-inroom-picker' as unknown as keyof WindowEventMap, handler as EventListener)
-    return () => {
-      window.removeEventListener('open-inroom-picker' as unknown as keyof WindowEventMap, handler as EventListener)
-    }
-  }, [])
+  // Remove legacy event shim; use unified library control via local state for now
 
   const stopPreview = useCallback(() => {
     const s = previewStreamRef.current
@@ -213,12 +209,13 @@ export default function Join() {
     const startedAt = startedAtIso ? new Date(startedAtIso).getTime() : Date.now()
     const endsAt = startedAt + duration
     sessionEndsAtRef.current = endsAt
+    setSessionEndsAtMs?.(endsAt)
     if (sessionTimerRef.current) window.clearTimeout(sessionTimerRef.current)
     const delay = Math.max(0, endsAt - Date.now())
     sessionTimerRef.current = window.setTimeout(async () => {
       try {
         await logConnectionEvent({ session_id: sid, room_code: normalized, event_type: 'ended', detail: { reason: 'timeout' } })
-        await endGuestSession(sid)
+        await endRoomSession(sid)
       } catch (err) {
         console.warn('end session cleanup failed', err)
       }
@@ -256,8 +253,8 @@ export default function Join() {
         return
       }
 
-      // Start guest session via RPC (server-enforced limits)
-      const started = await guestCheckAndStartSession(normalized, idResp.ip_hash, idResp.device_hash)
+      // Start unified room session (tier-agnostic)
+      const started = await startRoomSession({ room_code: normalized, user_id: session?.user?.id || null, ip_hash: idResp.ip_hash, device_hash: idResp.device_hash })
       if ('error' in started) {
         if (started.error.includes('room_full')) setError('Room is full. Upgrade to add more participants.')
         else if (started.error.includes('daily_limit_exceeded')) setError('Daily limit reached for this device. Please try again tomorrow.')
@@ -274,7 +271,7 @@ export default function Join() {
       const ua = navigator.userAgent
       const detail = {
         network_type: navAny.connection?.effectiveType || 'unknown',
-        peer_role: started.role,
+        peer_role: 'guest',
         browser: /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) && !/Chrome\//.test(ua) ? 'Safari' : /Firefox\//.test(ua) ? 'Firefox' : 'Other',
         browser_version: (ua.match(/(Chrome|Firefox)\/(\d+\.\d+)/)?.[2]) || (ua.match(/Version\/(\d+\.\d+)/)?.[1]) || 'unknown',
         os: /Android/.test(ua) ? 'Android' : /iPhone|iPad|iPod/.test(ua) ? 'iOS' : /Mac OS X/.test(ua) ? 'macOS' : /Windows NT/.test(ua) ? 'Windows' : 'Other',
@@ -288,12 +285,14 @@ export default function Join() {
       })
 
       // 30 minutes from earliest start (or QA override)
-      scheduleSessionEnd(30 * 60 * 1000, started.session_id, started.started_at)
+      const durationMs = started.duration_ms ?? (30 * 60 * 1000)
+      scheduleSessionEnd(durationMs, started.session_id, started.started_at)
 
       setPhase('waiting')
 
       await enterRoom(started.room_id)
-      // enterRoom will initiate the Realtime connect using room.code
+      // After entering the room, navigate to the room app shell
+      navigate('/room')
     } catch (e) {
       console.error('Failed to enter room', e)
       setError('Failed to enter room')
@@ -319,21 +318,15 @@ export default function Join() {
     return () => { if (t) window.clearTimeout(t) }
   }, [participants.size, phase, isConnected])
 
-  // Auto-open picker when we first enter the room without a story
-  useEffect(() => {
-    if ((phase === 'connected' || phase === 'connecting') && !currentStory) {
-      autoPickerRef.current = true
-      setShowPicker(true)
-    }
-  }, [phase, currentStory])
+  // Do not auto-open library; user will open it manually
 
-  // Auto-close only if picker was auto-opened and a story becomes available
+  // Auto-close only if library was auto-opened and a story becomes available
   useEffect(() => {
-    if (autoPickerRef.current && currentStory && showPicker) {
+    if (autoPickerRef.current && currentStory && isLibraryOpen) {
       autoPickerRef.current = false
-      setShowPicker(false)
+      closeLibrary?.()
     }
-  }, [currentStory, showPicker])
+  }, [currentStory, isLibraryOpen])
 
   useEffect(() => {
     // Heartbeat while in waiting/connecting/connected phases
@@ -341,11 +334,9 @@ export default function Join() {
     let intervalId: number | null = null
     const send = async () => {
       const sid = sessionIdRef.current || globals.__guest_session_id
-      const rc = normalized
       if (sid) {
         try {
-          const { heartbeatGuestSession } = await import('../lib/supabase')
-          await heartbeatGuestSession(sid, rc)
+          await heartbeatRoomSession(sid)
         } catch (e) {
           console.warn('heartbeat failed', e)
         }
@@ -367,13 +358,18 @@ export default function Join() {
     }
   }, [phase, normalized])
 
+  // Sync remaining time into UI store for MenuPanel display
+  useEffect(() => {
+    setSessionRemainingMs?.(remainingMs)
+  }, [remainingMs])
+
   useEffect(() => {
     // End session on unload to avoid stale entries
     const onUnload = async () => {
       const sid = sessionIdRef.current
       if (!sid) return
       try {
-        await endGuestSession(sid)
+        await endRoomSession(sid)
       } catch (e) {
         console.warn('end session on unload failed', e)
       }
@@ -385,13 +381,18 @@ export default function Join() {
   if (phase === 'preflight') {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative">
+        {!session && (
+          <div className="absolute top-4 left-4 z-[1102]">
+            <button
+              onClick={() => navigate(`/login?redirect=${encodeURIComponent(`/join/${normalized}`)}`)}
+              className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white text-sm"
+            >
+              Login (optional)
+            </button>
+          </div>
+        )}
         <div className="absolute bottom-4 right-4 z-[1101]">
-          <button
-            onClick={() => toggleFullscreen()}
-            className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
-          >
-            ⤢
-          </button>
+          <FullscreenButton showOnDesktop variant="minimal" size="sm" />
         </div>
         <div className="w-full max-w-2xl bg-gray-900 p-6 rounded-lg shadow space-y-6">
           <h1 className="text-3xl font-bold text-center">Get Ready</h1>
@@ -456,21 +457,31 @@ export default function Join() {
   }
 
   if (phase === 'waiting') {
+    const effTier = useRoomStore.getState().effectiveRoomTier || 'guest'
+    const policy = getPolicyForTier(effTier)
     const mins = remainingMs != null ? Math.floor(remainingMs / 60000) : null
     const secs = remainingMs != null ? Math.floor((remainingMs % 60000) / 1000) : null
-    const showPrompt = remainingMs != null && remainingMs <= 5 * 60 * 1000
+    const warnMs = (policy.inroom_warning_threshold_minutes ?? 0) * 60 * 1000
+    const showPrompt = policy.show_timer_in_waiting && remainingMs != null && warnMs > 0 && remainingMs <= warnMs
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 relative">
-        <div className="absolute top-4 right-4 z-[1102] text-sm bg-white/10 border border-white/20 rounded px-2 py-1">
-          {remainingMs != null ? `Time left: ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}` : '—'}
-        </div>
+        {!session && (
+          <div className="absolute top-4 left-4 z-[1102]">
+            <button
+              onClick={() => navigate(`/login?redirect=${encodeURIComponent(`/join/${normalized}`)}`)}
+              className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white text-sm"
+            >
+              Login (optional)
+            </button>
+          </div>
+        )}
+        {policy.show_timer_in_waiting && (
+          <div className="absolute top-4 right-4 z-[1102] text-sm bg-white/10 border border-white/20 rounded px-2 py-1">
+            {remainingMs != null ? `Time left: ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}` : '—'}
+          </div>
+        )}
         <div className="absolute bottom-4 right-4 z-[1101]">
-          <button
-            onClick={() => toggleFullscreen()}
-            className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
-          >
-            ⤢
-          </button>
+          <FullscreenButton showOnDesktop variant="minimal" size="sm" />
         </div>
         <div className="w-full max-w-md bg-gray-900 p-6 rounded-lg shadow space-y-4 text-center">
           <h1 className="text-3xl font-bold">Waiting…</h1>
@@ -487,34 +498,45 @@ export default function Join() {
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="w-full max-w-6xl h-[70vh] mx-auto relative">
-        <PresenceBadge className="absolute top-4 right-4 z-[1105]" />
-        <button
-          onClick={() => toggleFullscreen()}
-          className="absolute bottom-4 right-4 z-[1101] px-3 py-2 rounded bg-gray-800 hover:bg-gray-700 text-white"
-          aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-        >
-          {isFullscreen ? '⤢' : '⤢'}
-        </button>
+        <div className="absolute bottom-4 right-4 z-[1101]">
+          <FullscreenButton showOnDesktop variant="minimal" size="sm" />
+        </div>
         <VideoGrid />
       </div>
       <StoryOverlay />
-      <StoryPlayer />
       <button
-        onClick={() => { autoPickerRef.current = false; setShowPicker(true) }}
+        onClick={() => { autoPickerRef.current = false; openLibrary?.() }}
         className="fixed top-6 left-20 z-[100] px-3 py-2 rounded bg-green-600 hover:bg-green-700 text-white"
       >
         📚
       </button>
       {/* Countdown timer next to library button */}
-      <div className="fixed top-6 left-40 z-[101] text-sm">
-        {remainingMs != null && (
-          <div className="px-2 py-1 rounded bg-white/10 border border-white/20">
-            {`${String(Math.floor(remainingMs / 60000)).padStart(2,'0')}:${String(Math.floor((remainingMs % 60000) / 1000)).padStart(2,'0')}`}
+      {(() => {
+        const effTier = useRoomStore.getState().effectiveRoomTier || 'guest'
+        const policy = getPolicyForTier(effTier)
+        if (!policy.show_timer_in_menu) return null
+        return (
+          <div className="fixed top-6 left-40 z:[101] text-sm">
+            {remainingMs != null && (
+              <div className="px-2 py-1 rounded bg-white/10 border border-white/20">
+                {`${String(Math.floor(remainingMs / 60000)).padStart(2,'0')}:${String(Math.floor((remainingMs % 60000) / 1000)).padStart(2,'0')}`}
+              </div>
+            )}
           </div>
-        )}
-      </div>
-      {showPicker && (
-        <InRoomStoryPicker onClose={() => setShowPicker(false)} />
+        )
+      })()}
+      {isLibraryOpen && (
+        <div className="fixed inset-0 z-[2000] bg-black/70 backdrop-blur-sm flex items-center justify-center p-6">
+          <div className="relative w-full max-w-5xl">
+            <button
+              onClick={() => closeLibrary?.()}
+              className="absolute -top-3 -right-3 z-[2001] w-10 h-10 rounded-full bg-gray-800 text-white hover:bg-gray-700"
+            >
+              ✕
+            </button>
+            <StoryLibrary onClose={() => closeLibrary?.()} />
+          </div>
+        </div>
       )}
     </div>
   )

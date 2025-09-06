@@ -138,3 +138,43 @@ export async function heartbeatGuestSession(sessionId: string, roomCode: string)
     p_room_code: roomCode,
   } as unknown as never)
 }
+
+// Unified room session RPCs (tier-agnostic)
+export async function startRoomSession(params: {
+  room_code: string
+  user_id?: string | null
+  device_hash?: string | null
+  ip_hash?: string | null
+}): Promise<
+  | { session_id: string; room_id: string; tier: string; started_at: string; duration_ms: number | null }
+  | { error: string }
+> {
+  try {
+    const { data, error } = await supabase.rpc('start_room_session' as unknown as never, {
+      p_room_code: params.room_code,
+      p_user_id: params.user_id || null,
+      p_device_hash: params.device_hash || null,
+      p_ip_hash: params.ip_hash || null,
+    } as unknown as never)
+    if (error) return { error: error.message }
+    const row = (Array.isArray(data) ? data[0] : data) as {
+      session_id: string
+      room_id: string
+      tier: string
+      started_at: string
+      duration_ms: number | null
+    }
+    if (!row?.session_id) return { error: 'invalid_response' }
+    return row
+  } catch (e) {
+    return { error: (e as { message?: string }).message || 'rpc_failed' }
+  }
+}
+
+export async function heartbeatRoomSession(session_id: string): Promise<void> {
+  await supabase.rpc('heartbeat_room_session' as unknown as never, { p_session_id: session_id } as unknown as never)
+}
+
+export async function endRoomSession(session_id: string): Promise<void> {
+  await supabase.rpc('end_room_session' as unknown as never, { p_session_id: session_id } as unknown as never)
+}

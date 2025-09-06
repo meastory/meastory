@@ -1,0 +1,266 @@
+{
+  "id": "three-little-pigs-boynton-interactive-v4",
+  "title": "The Three Little Pigs & {{childName}}: A Building Adventure",
+  "ageRange": [3, 8],
+  "themes": [
+    "problem-solving",
+    "collaboration",
+    "community-building",
+    "creative-thinking"
+  ],
+  "author_style": "Sandra Boynton",
+  "source_story": "The Three Little Pigs",
+  "interactive": true,
+  "storyType": "personalized",
+  "personalization": {
+    "tokens": ["childName"],
+    "defaults": { "childName": "Alex" }
+  },
+
+  "scenes": [
+    {
+      "id": "opening",
+      "background": "rolling-hillside-with-building-materials",
+      "text": "Oh my, oh my! What a wondrous day!\n{{childName}} skips up the hill to play.\n\nThree little pigs squeal “Hello!”\n“I'm Penny, I'm Benny, I'm Bella—let's go!\nCome build a house; choose what to do—\nStraw, sticks, or bricks, it’s up to you!”\n\nPenny claps: “Quick with straw!”\nBenny nods: “Sticks—just right!”\nBella smiles: “Brick by brick makes sturdy might!”",
+      "choices": [
+        {
+          "label": "Build fast with Penny’s straw",
+          "nextSceneId": "fast-choice"
+        },
+        {
+          "label": "Build steady with Bella’s bricks",
+          "nextSceneId": "careful-choice"
+        }
+      ],
+      "characters": ["childName", "Penny", "Benny", "Bella"],
+      "pathway": ["all"]
+    },
+    {
+      "id": "fast-choice",
+      "background": "sunny-building-site-with-straw",
+      "text": "\"Yippee!\" shouts Penny. \"Stack it high—\nThe speediest house beneath the sky!\"\n{{childName}} pats straw, smooth and round;\nThe breezy hut is quickly crowned.\n\nBut—shuffle, shuffle—who is near?\nWalter Wolf with bashful cheer:\n\"I’m meant to huff and puff and scare,\nBut really I just want to share.\"",
+      "choices": [
+        {
+          "label": "Invite Walter to help the team",
+          "nextSceneId": "fast-teamwork"
+        },
+        {
+          "label": "Use Walter’s wind for invention",
+          "nextSceneId": "fast-innovation"
+        }
+      ],
+      "characters": ["childName", "Penny", "Benny", "Bella", "Walter Wolf"],
+      "pathway": ["fast-teamwork", "fast-innovation"]
+    },
+
+    {
+      "id": "fast-teamwork",
+      "background": "collaborative-building-scene",
+      "text": "\"Together is better!\" {{childName}} calls.\nWalter’s gentle puffs clear straw that falls.\nSticks and bricks join straw so light—\nThree strong homes rise by night!\n\n\"Teamwork wins!\" the pigs all cheer,\nAnd Walter beams ear-to-ear.",
+      "choices": [
+        {
+          "label": "Lead the big Build-a-Thon parade!",
+          "nextSceneId": "ending-teamwork"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny", "Bella"],
+      "pathway": ["fast-teamwork"]
+    },
+
+    {
+      "id": "fast-innovation",
+      "background": "creative-workshop-scene",
+      "text": "\"Wind can work!\" {{childName}} grins wide.\nWalter’s breath turns gears inside.\nA whirring wheel—whoosh, whoosh, whoosh—\nPower tools with every push!\n\n\"I’m the Chief Wind Engineer!\" says he,\nAnd building whizzes easily.",
+      "choices": [
+        {
+          "label": "Open the Wind-Build Fair!",
+          "nextSceneId": "ending-innovation"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Penny"],
+      "pathway": ["fast-innovation"]
+    },
+    {
+      "id": "careful-choice",
+      "background": "organized-building-site-with-bricks",
+      "text": "\"Brick by brick,\" says Bella wise.\n{{childName}} stacks with careful eyes.\nWhen Walter huffs with all his might—\nThe brick house stands! What a sight!\n\nStraw and stick huts tumble down;\nThe pigs look startled, then un-frown\nAs Walter sighs, \"I didn’t mean harm—\nCould I learn to build with charm?\"",
+      "choices": [
+        {
+          "label": "Offer shelter to Walter",
+          "nextSceneId": "careful-shelter"
+        },
+        {
+          "label": "Teach Walter building tricks",
+          "nextSceneId": "careful-teaching"
+        }
+      ],
+      "characters": ["childName", "Penny", "Benny", "Bella", "Walter Wolf"],
+      "pathway": ["careful-shelter", "careful-teaching"]
+    },
+
+    {
+      "id": "careful-shelter",
+      "background": "cozy-brick-house-interior",
+      "text": "\"Come inside,\" says {{childName}} kind.\nWarm brick walls give peace of mind.\nWalter whispers, \"Friends like these\nTurn scary gusts to gentle breeze.\"",
+      "choices": [
+        {
+          "label": "Plan a neighborhood build",
+          "nextSceneId": "ending-community"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny", "Bella"],
+      "pathway": ["careful-shelter"]
+    },
+
+    {
+      "id": "careful-teaching",
+      "background": "outdoor-building-school",
+      "text": "\"Watch and try,\" {{childName}} explains.\nWalter practices patient gains.\nSoon he blows away brick dust—\nHelping others is a must!",
+      "choices": [
+        {
+          "label": "Graduate Building School!",
+          "nextSceneId": "ending-teaching"
+        }
+      ],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny", "Bella"],
+      "pathway": ["careful-teaching"]
+    },
+    {
+      "id": "ending-teamwork",
+      "background": "village-celebration-scene",
+      "text": "Parade time! Banners fly high.\n{{childName}} leads friends marching by.\nWalter, the Wind Assistant true,\nKeeps the rhythm—WHOOSH-a-doo!\n\nAsk {{childName}}: Which parade job would you choose next time, drummer or banner-bearer?",
+      "choices": [],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny", "Bella"],
+      "pathway": ["fast-teamwork"]
+    },
+
+    {
+      "id": "ending-innovation",
+      "background": "wind-powered-village-scene",
+      "text": "Welcome to the Wind-Build Fair!\nWhirling gadgets fill the air.\nWalter’s puffs make pinwheels spin;\nIdeas bloom for all to win.\n\nAsk {{childName}}: What new wind-powered tool could we invent together?",
+      "choices": [],
+      "characters": ["childName", "Walter Wolf", "Penny"],
+      "pathway": ["fast-innovation"]
+    },
+
+    {
+      "id": "ending-community",
+      "background": "peaceful-neighborhood-scene",
+      "text": "Brick, straw, stick—homes side-by-side;\nFriends feel welcome far and wide.\nWalter gardens, gentle breeze;\nNeighbors giggle through the trees.\n\nAsk {{childName}}: How can we welcome a new neighbor in real life?",
+      "choices": [],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny", "Bella"],
+      "pathway": ["careful-shelter"]
+    },
+
+    {
+      "id": "ending-teaching",
+      "background": "building-school-graduation",
+      "text": "Caps fly up—class complete!\nWalter’s puff dries mortar neat.\n{{childName}} hands out badges bright:\n\"Build with kindness, build it right!\"\n\nAsk {{childName}}: What skill would you like to teach a friend?",
+      "choices": [],
+      "characters": ["childName", "Walter Wolf", "Penny", "Benny", "Bella"],
+      "pathway": ["careful-teaching"]
+    }
+  ],
+  "pathways": {
+    "fast-teamwork": {
+      "description": "Quick build, then unite for a team parade",
+      "theme": "Collaborative Teamwork",
+      "scenes": ["opening", "fast-choice", "fast-teamwork", "ending-teamwork"]
+    },
+    "fast-innovation": {
+      "description": "Quick build, then invent wind-powered tools",
+      "theme": "Creative Innovation",
+      "scenes": ["opening", "fast-choice", "fast-innovation", "ending-innovation"]
+    },
+    "careful-shelter": {
+      "description": "Steady build, then share a safe home with Walter",
+      "theme": "Protective Sharing",
+      "scenes": ["opening", "careful-choice", "careful-shelter", "ending-community"]
+    },
+    "careful-teaching": {
+      "description": "Steady build, then teach building wisdom",
+      "theme": "Wise Teaching",
+      "scenes": ["opening", "careful-choice", "careful-teaching", "ending-teaching"]
+    }
+  },
+  "media": {
+    "backgrounds": {
+      "rolling-hillside-with-building-materials": {
+        "description": "Rolling green hillside with three neat piles of building materials and cheerful pig siblings",
+        "illustration_prompt": "Wide landscape illustration of a sunny hillside with three neat piles of materials - golden straw, brown wooden sticks, and red bricks - with three friendly pig siblings waving. Rolling hills in background under bright blue sky. Sandra Boynton illustration style with bold, simple shapes and vibrant colors."
+      },
+      "sunny-building-site-with-straw": {
+        "description": "Active building scene with golden straw materials scattered about",
+        "illustration_prompt": "Wide landscape illustration of a busy building site with golden straw materials, simple tools, and an energetic atmosphere. Sandra Boynton illustration style with warm, inviting colors."
+      },
+      "organized-building-site-with-bricks": {
+        "description": "Methodical building scene with neat stacks of red bricks",
+        "illustration_prompt": "Wide landscape illustration of an organized building site with neat stacks of red bricks, organized tools, and a patient atmosphere. Sandra Boynton illustration style with solid, dependable colors."
+      },
+      "collaborative-building-scene": {
+        "description": "All characters working together harmoniously with mixed materials",
+        "illustration_prompt": "Wide landscape illustration of characters working together with mixed building materials, tools shared, teamwork atmosphere. Sandra Boynton illustration style with collaborative, happy colors."
+      },
+      "creative-workshop-scene": {
+        "description": "Innovation workspace with wind-powered tools and inventions",
+        "illustration_prompt": "Wide landscape illustration of a creative workshop with wind-powered mechanisms and invention prototypes. Sandra Boynton illustration style with dynamic, inventive elements."
+      },
+      "cozy-brick-house-interior": {
+        "description": "Warm, safe interior with circular seating arrangement",
+        "illustration_prompt": "Wide landscape illustration of a cozy house interior with warm lighting and comfortable seating. Sandra Boynton illustration style with warm, comforting colors."
+      },
+      "outdoor-building-school": {
+        "description": "Educational building space with teaching demonstration area",
+        "illustration_prompt": "Wide landscape illustration of an outdoor teaching space with building materials and demonstration area. Sandra Boynton illustration style with encouraging educational colors."
+      },
+      "village-celebration-scene": {
+        "description": "Festive village with multiple houses and community celebration",
+        "illustration_prompt": "Wide landscape illustration of a festive village celebration with multiple houses and happy characters. Sandra Boynton illustration style with bold, celebratory colors."
+      },
+      "wind-powered-village-scene": {
+        "description": "Village with innovative wind-powered building tools and windmill",
+        "illustration_prompt": "Wide landscape illustration of a village with creative wind-powered tools and a central windmill. Sandra Boynton illustration style with inventive, dynamic elements."
+      },
+      "peaceful-neighborhood-scene": {
+        "description": "Harmonious neighborhood with homes for everyone",
+        "illustration_prompt": "Wide landscape illustration of a peaceful neighborhood with various houses and garden spaces. Sandra Boynton illustration style with warm, inclusive colors."
+      },
+      "building-school-graduation": {
+        "description": "Successful building school with teacher and students celebrating",
+        "illustration_prompt": "Wide landscape illustration of a building school with students and teacher celebrating success. Sandra Boynton illustration style with educational achievement colors."
+      }
+    },
+    "characters": {
+      "childName": {
+        "description": "The fourth little pig sibling, eager and curious, learning through choices",
+        "voice": "Enthusiastic, questioning, celebratory with age-appropriate excitement",
+        "illustration_prompt": "Full body illustration of a small, bright pink pig character with large curious eyes and cheerful round snout, wearing blue overalls. Sandra Boynton art style with bold simple shapes and friendly features."
+      },
+      "Penny": {
+        "description": "Energetic pig sibling who loves quick building and action",
+        "voice": "Quick, bouncy speech with enthusiastic repetition",
+        "illustration_prompt": "Full body illustration of a medium-sized bright yellow pig with energetic eyes, wearing an orange t-shirt. Standing in bouncy pose showing constant motion. Sandra Boynton art style with dynamic posture."
+      },
+      "Benny": {
+        "description": "Thoughtful pig sibling who finds balanced solutions",
+        "voice": "Thoughtful, reasonable speech with balanced suggestions", 
+        "illustration_prompt": "Full body illustration of a medium-sized warm brown pig with intelligent eyes, wearing a green plaid shirt. Standing in balanced, steady posture. Sandra Boynton art style with solid, dependable appearance."
+      },
+      "Bella": {
+        "description": "Patient, wise pig sibling who loves careful building",
+        "voice": "Gentle, flowing speech showing patience and wisdom",
+        "illustration_prompt": "Full body illustration of a reddish-pink pig with gentle, wise features, wearing a cozy purple cardigan. Standing in graceful posture with serene expression. Sandra Boynton art style with maternal, welcoming design."
+      },
+      "Walter Wolf": {
+        "description": "Lonely wolf who learns to use his talents helpfully",
+        "voice": "Initially vulnerable and confused, growing more confident and grateful",
+        "illustration_prompt": "Full body illustration of a medium-sized friendly gray wolf with soft features and expressive eyes showing hope rather than menace. Sandra Boynton art style with gentle, approachable wolf design."
+      }
+    }
+  },
+  "access": {
+    "tier": "guest",
+    "releaseStatus": "preview"
+  },
+  "description": "A playful, personalized retelling where {{childName}} helps the Three Little Pigs turn windy trouble into joyful building—all in Sandra Boynton’s bouncy rhyme."
+}
