@@ -287,6 +287,15 @@ export default function Join() {
       // 30 minutes from earliest start (or QA override)
       const durationMs = started.duration_ms ?? (30 * 60 * 1000)
       scheduleSessionEnd(durationMs, started.session_id, started.started_at)
+      // Persist endsAt to restore timer after refresh
+      try {
+        const startedAt = started.started_at ? new Date(started.started_at).getTime() : Date.now()
+        const endsAt = startedAt + durationMs
+        localStorage.setItem('activeSessionId', started.session_id)
+        localStorage.setItem('activeEndsAtMs', String(endsAt))
+      } catch (e) {
+        console.warn('persist endsAt failed', e)
+      }
 
       setPhase('waiting')
 
@@ -319,6 +328,17 @@ export default function Join() {
   }, [participants.size, phase, isConnected])
 
   // Do not auto-open library; user will open it manually
+  useEffect(() => {
+    // On refresh, if endsAt persisted and we are connected/in-room view, restore timer
+    const endsAtStr = localStorage.getItem('activeEndsAtMs')
+    if (endsAtStr) {
+      const endsAt = parseInt(endsAtStr, 10)
+      if (!Number.isNaN(endsAt)) {
+        sessionEndsAtRef.current = endsAt
+        setSessionEndsAtMs?.(endsAt)
+      }
+    }
+  }, [])
 
   // Auto-close only if library was auto-opened and a story becomes available
   useEffect(() => {

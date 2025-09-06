@@ -36,6 +36,20 @@ function App() {
 
   useEffect(() => {
     initialize()
+
+    // On refresh in /room, restore active room if persisted
+    try {
+      const pathNow = window.location.pathname || ''
+      if (pathNow.startsWith('/room')) {
+        const activeRoomId = localStorage.getItem('activeRoomId')
+        if (activeRoomId && !useRoomStore.getState().currentRoom) {
+          // Re-enter room without navigating away
+          useRoomStore.getState().enterRoom(activeRoomId)
+        }
+      }
+    } catch (e) {
+      console.warn('restore room on refresh failed', e)
+    }
   }, [initialize])
 
   // No-op: openLibrary is available via UI store
@@ -103,16 +117,12 @@ function App() {
         )}
         <div className="relative">
           {/* Menu visible even when library is open */}
-          <div className="absolute top-4 right-4 z-[1035]">
+          <div className="absolute top-0 right-0 z-[1035]">
             <MenuPanel />
           </div>
           <button
             onClick={handleCloseLibrary}
-            className={`
-              absolute top-4 z-20 p-2 rounded-full bg-gray-800 text-white 
-              hover:bg-gray-700 transition-colors
-              ${isFullscreen ? 'right-4' : 'right-16'}
-            `}
+            className={`absolute top-4 ${isFullscreen ? 'left-4' : 'left-4'} z-20 control-btn`}
             aria-label="Close library"
           >
             ✕

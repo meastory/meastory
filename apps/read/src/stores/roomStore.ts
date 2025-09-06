@@ -129,6 +129,13 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       }
 
       console.log('✅ Successfully entered room')
+      // Persist active room for refresh restore
+      try {
+        localStorage.setItem('activeRoomId', room.id)
+        if (room.code) localStorage.setItem('activeRoomCode', room.code)
+      } catch (e) {
+        console.warn('persist active room failed', e)
+      }
     } catch (e: unknown) {
       console.error('❌ Failed to enter room:', e)
       set({ error: (e as { message?: string })?.message || 'Failed to enter room' })
@@ -428,6 +435,14 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       useUIStore.getState().setSessionEndsAtMs?.(null)
     } catch {
       // noop
+    }
+
+    // Clear persisted active room
+    try {
+      localStorage.removeItem('activeRoomId')
+      localStorage.removeItem('activeRoomCode')
+    } catch (e) {
+      console.warn('clear persisted active room failed', e)
     }
   },
 }))
