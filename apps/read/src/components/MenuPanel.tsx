@@ -6,6 +6,7 @@ import { useWebRTCStore } from '../stores/webrtcStore'
 import PresenceBadge from './PresenceBadge'
 import InviteContent from './InviteContent'
 import { useTierPolicy } from '../hooks/useTierPolicy'
+import CountdownTimer from './CountdownTimer'
 
 export default function MenuPanel() {
   const [isOpen, setIsOpen] = useState(false)
@@ -120,32 +121,27 @@ export default function MenuPanel() {
           <div className="space-y-3">
             {currentRoom ? (
               <>
-                {/* User at top */}
-                {user && (
-                  <div className="pb-2">
-                    <p className="text-sm text-gray-300">User: {user.display_name || 'Logged In'}</p>
-                  </div>
-                )}
-
                 {/* Room Info */}
-                <div className="border-b border-gray-600 pb-3 mb-3">
-                  <p className="text-sm text-gray-300 mb-1">
-                    Room: <span className="font-semibold text-white">{currentRoom.name}</span>
+                <div>
+                  <p className="w-full text-center px-2 text-gray-300 mb-3">
+                      <span className="font-semibold text-white">{currentRoom.name}</span>
                   </p>
-                  <p className="text-xs text-gray-400">
-                    Code: {currentRoom.code}
+                  <p className="w-full text-center px-2 py-0 mb-3 text-gray-400">
+                    Join Code: {currentRoom.code}
                   </p>
+                  <PresenceBadge />
+                  
                 </div>
 
                 {/* Library & Communication */}
                 <button 
-                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  className="w-full text-left px-2 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
                   onClick={handleOpenLibrary}
                 >
                   📚 Open Library
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  className="w-full text-left px-2 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
                   onClick={handleShowInvite}
                 >
                   📧 Send Invite
@@ -155,13 +151,13 @@ export default function MenuPanel() {
                 
                 {/* Media Controls */}
                 <button 
-                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  className="w-full text-left px-2 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
                   onClick={handleToggleMic}
                 >
                   {isMicMuted ? '🔇' : '🎤'} {isMicMuted ? 'Unmute' : 'Mute'} Microphone
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  className="w-full text-left px-2 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
                   onClick={handleToggleVideo}
                 >
                   {isVideoOff ? '📷' : '📹'} {isVideoOff ? 'Turn On' : 'Turn Off'} Camera
@@ -175,13 +171,12 @@ export default function MenuPanel() {
                   const policy = getPolicyForTier(effTier)
                   if (!policy.show_timer_in_menu) return null
                   return (
-                    <div className="px-3 py-2 text-sm text-gray-300">
-                      <div className="mb-2">
-                        ⏰ Time: {sessionRemainingMs == null ? '—' : `${String(Math.floor(sessionRemainingMs / 60000)).padStart(2,'0')}:${String(Math.floor((sessionRemainingMs % 60000) / 1000)).padStart(2,'0')}`} remaining
-                      </div>
-                      <div>
-                        <PresenceBadge />
-                      </div>
+                    <div className="px-2 py-2 text-sm text-gray-300">
+                      <CountdownTimer
+                        endsAtMs={useUIStore.getState().sessionEndsAtMs}
+                        label="⏰ Time:"
+                      />
+                      <span> remaining</span>
                     </div>
                   )
                 })()}
@@ -190,7 +185,7 @@ export default function MenuPanel() {
                 
                 {/* Leave Room */}
                 <button 
-                  className="w-full text-left px-3 py-2 hover:bg-red-700 bg-red-600 rounded flex items-center gap-2"
+                  className="w-full text-left px-2 py-2 hover:bg-red-700 bg-red-600 rounded flex items-center gap-2"
                   onClick={handleLeaveRoom}
                 >
                   👋 Leave Room
@@ -200,35 +195,37 @@ export default function MenuPanel() {
               <>
                 {/* Lobby Menu Options */}
                 <button 
-                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  className="w-full text-left px-2 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
                   onClick={handleOpenLibrary}
                 >
                   📚 Browse Stories
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  className="w-full text-left px-2 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
                   onClick={handleMenuItemClick}
                 >
                   🎭 Manage Rooms
                 </button>
                 <button 
-                  className="w-full text-left px-3 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
+                  className="w-full text-left px-2 py-2 hover:bg-gray-700 rounded flex items-center gap-2"
                   onClick={handleMenuItemClick}
                 >
                   ⚙️ Settings
                 </button>
               </>
             )}
-            
+
+            {/* Sign Out */}
             {user && (
               <>
-                <hr className="border-gray-600" />
+                
                 <button 
-                  className="w-full text-left px-3 py-2 hover:bg-red-700 rounded flex items-center gap-2"
+                  className="w-full text-left px-2 py-2 hover:bg-red-700 rounded flex items-center gap-2"
                   onClick={handleSignOut}
                 >
                   🚪 Sign Out
                 </button>
+                <div className="w-full text-center px-2 py-2 text-gray-300">{user.display_name || 'Logged In'}</div>
               </>
             )}
           </div>

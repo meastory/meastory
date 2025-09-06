@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { QRCodeCanvas } from 'qrcode.react'
+import { useNavigate } from 'react-router-dom'
 
 interface InviteContentProps {
   code: string
@@ -10,6 +11,7 @@ interface InviteContentProps {
 export default function InviteContent({ code, onClose, isPopup = false }: InviteContentProps) {
   const normalized = String(code).toUpperCase()
   const inviteUrl = useMemo(() => `${location.origin}/join/${normalized}`, [normalized])
+  const navigate = useNavigate()
 
   const shareOrCopy = async () => {
     try {
@@ -79,7 +81,7 @@ export default function InviteContent({ code, onClose, isPopup = false }: Invite
             Story Time Invite
           </h1>
           <p className={`text-gray-300 ${isPopup ? 'text-sm' : 'text-lg'}`}>
-            Share this with someone to start reading together
+            Share this link to start reading together
           </p>
         </div>
 
@@ -92,6 +94,23 @@ export default function InviteContent({ code, onClose, isPopup = false }: Invite
             title="Click to copy code"
           >
             {normalized}
+          </button>
+        </div>
+
+        {/* Share Options */}
+        <div className="space-y-3 text-center">
+          <button
+            onClick={shareOrCopy}
+            className="w-45 mr-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
+          >
+            📱 Share Link
+          </button>
+          
+          <button
+            onClick={copyLink}
+            className="w-45 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-colors"
+          >
+            📋 Copy Link
           </button>
         </div>
 
@@ -108,28 +127,23 @@ export default function InviteContent({ code, onClose, isPopup = false }: Invite
           </div>
         </div>
 
-        {/* Share Options */}
+        {/* Join Room Button */}
+        {!isPopup && (  
         <div className="space-y-3">
-          <button
-            onClick={shareOrCopy}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
+        <button
+          onClick={() => navigate(`/join/${normalized}`)}
+          className="w-50 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
           >
-            📱 Share Link
-          </button>
-          
-          <button
-            onClick={copyLink}
-            className="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-colors"
-          >
-            📋 Copy Link
-          </button>
+          Join Room
+        </button>
         </div>
+        )}
 
         {/* Instructions */}
         <div className="text-center">
           <p className={`text-gray-400 ${isPopup ? 'text-xs' : 'text-sm'}`}>
-            Others can join by visiting{' '}
-            <span className="text-green-400 font-mono">meastory.com</span>{' '}
+            Guests can join by visiting{' '}
+            <span className="text-green-400 font-mono">meastory.com/join</span>{' '}
             and entering the room code, or by scanning the QR code.
           </p>
         </div>

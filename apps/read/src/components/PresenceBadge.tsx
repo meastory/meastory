@@ -12,7 +12,7 @@ export default function PresenceBadge({ className }: Props) {
   const label = useMemo(() => {
     const count = participants.size + 1
     const roleText = role ? role.toUpperCase() : '—'
-    return `Connected: ${count} • ${roleText}`
+    return `Connected: ${count}   •   ${roleText}`
   }, [participants.size, role])
 
   const tooltip = useMemo(() => {
