@@ -29,7 +29,8 @@
         }
       ],
       "emotionalBeat": "confused-conflict",
-      "readAloudNotes": "Start with confused, frustrated voices in the distance. Make Pip sound higher and more confused, Flint smaller and more worried. Show Bramble's gentle approach when he settles down to their size. End with the weight of both children looking to him for help."
+      "readAloudNotes": "Start with confused, frustrated voices in the distance. Make Pip sound higher and more confused, Flint smaller and more worried. Show Bramble's gentle approach when he settles down to their size. End with the weight of both children looking to him for help.",
+      "illustration": "opening-1"
     },
     {
       "id": "branch-a-1",
@@ -43,7 +44,8 @@
         }
       ],
       "emotionalBeat": "understanding-dawning",
-      "readAloudNotes": "Use patient, investigative tones throughout. Make each child's explanation sound earnest and reasonable. Build to Bramble's realization with growing excitement - 'Oh my paws and whiskers!' should sound like a genuine breakthrough moment."
+      "readAloudNotes": "Use patient, investigative tones throughout. Make each child's explanation sound earnest and reasonable. Build to Bramble's realization with growing excitement - 'Oh my paws and whiskers!' should sound like a genuine breakthrough moment.",
+      "illustration": "branch-a-1"
     },
     {
       "id": "branch-b-1",
@@ -57,7 +59,8 @@
         }
       ],
       "emotionalBeat": "escalating-hurt",
-      "readAloudNotes": "Start with overlapping voices and building tension. Make Pip's hurtful comment sound shocked and immediate, then show his instant regret. Show Flint curling up in pain. End with Bramble's gentle wisdom about letting feelings settle."
+      "readAloudNotes": "Start with overlapping voices and building tension. Make Pip's hurtful comment sound shocked and immediate, then show his instant regret. Show Flint curling up in pain. End with Bramble's gentle wisdom about letting feelings settle.",
+      "illustration": "branch-b-1"
     },
     {
       "id": "dp2-a-1",
@@ -76,7 +79,8 @@
         }
       ],
       "emotionalBeat": "collaborative-discovery",
-      "readAloudNotes": "Show Bramble's breakthrough moment with genuine excitement. Make both children sound hopeful and relieved. Build anticipation for the choice between sharing traditions or focusing on fairness."
+      "readAloudNotes": "Show Bramble's breakthrough moment with genuine excitement. Make both children sound hopeful and relieved. Build anticipation for the choice between sharing traditions or focusing on fairness.",
+      "illustration": "dp2-a-1"
     },
     {
       "id": "dp2-b-1",
@@ -95,7 +99,8 @@
         }
       ],
       "emotionalBeat": "gentle-healing",
-      "readAloudNotes": "Show Pip's worry and desire to fix his mistake. Make Flint sound still hurt but beginning to peek out. Use Willow's wise, gentle voice when she appears. End with hope that healing is possible with patience."
+      "readAloudNotes": "Show Pip's worry and desire to fix his mistake. Make Flint sound still hurt but beginning to peek out. Use Willow's wise, gentle voice when she appears. End with hope that healing is possible with patience.",
+      "illustration": "dp2-b-1"
     },
     {
       "id": "journey-1a2a-1",
@@ -109,7 +114,8 @@
         }
       ],
       "emotionalBeat": "celebratory-learning",
-      "readAloudNotes": "Show growing excitement as they teach each other. Make their discoveries sound genuine and delightful. Build the joy of understanding different ways can both be good. End with anticipation as Hazel approaches."
+      "readAloudNotes": "Show growing excitement as they teach each other. Make their discoveries sound genuine and delightful. Build the joy of understanding different ways can both be good. End with anticipation as Hazel approaches.",
+      "illustration": "journey-1a2a-1"
     },
     {
       "id": "journey-1a2b-1",
@@ -123,7 +129,8 @@
         }
       ],
       "emotionalBeat": "thoughtful-consideration",
-      "readAloudNotes": "Use contemplative, thoughtful pacing throughout. Show both children thinking carefully and considerately about each other's feelings. Build pride in Bramble's voice as they work out fair solutions together."
+      "readAloudNotes": "Use contemplative, thoughtful pacing throughout. Show both children thinking carefully and considerately about each other's feelings. Build pride in Bramble's voice as they work out fair solutions together.",
+      "illustration": "journey-1a2b-1"
     },
     {
       "id": "journey-1b2a-1",
@@ -137,7 +144,8 @@
         }
       ],
       "emotionalBeat": "bridge-building",
-      "readAloudNotes": "Show the friends discovering they can find common ground. Build excitement as they create new solutions together. Make their collaborative problem-solving sound natural and joyful."
+      "readAloudNotes": "Show the friends discovering they can find common ground. Build excitement as they create new solutions together. Make their collaborative problem-solving sound natural and joyful.",
+      "illustration": "journey-1b2a-1"
     },
     {
       "id": "journey-1b2b-1",
@@ -151,7 +159,8 @@
         }
       ],
       "emotionalBeat": "patient-reflection",
-      "readAloudNotes": "Use calm, healing tones throughout. Show the three deep breaths actually being taken. Make the real feelings they express sound honest and vulnerable. End with peaceful resolution settling like leaves."
+      "readAloudNotes": "Use calm, healing tones throughout. Show the three deep breaths actually being taken. Make the real feelings they express sound honest and vulnerable. End with peaceful resolution settling like leaves.",
+      "illustration": "journey-1b2b-1"
     },
     {
       "id": "dp3-a-1",
@@ -170,7 +179,8 @@
         }
       ],
       "emotionalBeat": "proud-understanding",
-      "readAloudNotes": "Show Hazel's warm approval and pride in the children's learning. Make both Pip and Flint sound confident and excited about their discoveries. Build anticipation for how they'll choose to move forward."
+      "readAloudNotes": "Show Hazel's warm approval and pride in the children's learning. Make both Pip and Flint sound confident and excited about their discoveries. Build anticipation for how they'll choose to move forward.",
+      "illustration": "dp3-a-1"
     },
     {
       "id": "dp3-b-1",
@@ -189,7 +199,8 @@
         }
       ],
       "emotionalBeat": "reflective-consideration",
-      "readAloudNotes": "Show Hazel's wise, calming presence as she assesses the situation. Make both children sound thoughtfully honest about their process. End with them still pondering the deeper question about how to move forward fairly."
+      "readAloudNotes": "Show Hazel's wise, calming presence as she assesses the situation. Make both children sound thoughtfully honest about their process. End with them still pondering the deeper question about how to move forward fairly.",
+      "illustration": "dp3-b-1"
     },
     {
       "id": "dp3-c-1",
@@ -208,7 +219,8 @@
         }
       ],
       "emotionalBeat": "creative-cooperation",
-      "readAloudNotes": "Show both understanding and healing coming together beautifully. Make the children sound confident and collaborative in their approach to the remaining challenge. Build excitement about their creative problem-solving."
+      "readAloudNotes": "Show both understanding and healing coming together beautifully. Make the children sound confident and collaborative in their approach to the remaining challenge. Build excitement about their creative problem-solving.",
+      "illustration": "dp3-c-1"
     },
     {
       "id": "ending-understanding-differences",
@@ -216,7 +228,8 @@
       "text": "\"What a wonderful-wonderful idea!\" said Hazel, her eyes twinkling like starlight dancing on water, her voice carrying that slow, warm approval that wrapped around you like a cozy blanket and made everyone feel treasured and appreciated. \"You could honor both family traditions, celebrate them both like flowers in a garden.\" \"Yes, yes, yes!\" said Flint, bouncing on his toes like joy bubbling up from a happy spring—so different from his earlier worried stillness, like night turning into bright morning. \"Sometimes we'll use my family's way—youngest first, kind and gentle—and sometimes we'll use Pip's family's way—winner first, exciting and bouncy!\" \"And we'll know both are good ways, both perfectly perfectly good,\" Pip added, his nose twitching with excitement that sparkled like dewdrops, ears doing their happy dance like flags celebrating. \"Like knowing two different songs that are both beautiful, both special in their own magical way!\" So they tried it right away, right then and there in the golden afternoon light. First, they played a game using Flint's family tradition—youngest goes first, gentle as can be. Flint went first and won, grinning with delight bright as sunshine, his small paws clapping together like tiny cymbals making music. Then they played using Pip's family tradition—winner goes first, exciting as a race. Since Flint had won, he got to go first again, which made Pip giggle-giggle-giggle and bounce with amusement rather than frustration, joy instead of worry. \"This is even more fun than just one way!\" Pip declared, doing a little hop of excitement that made his ears flap like birds taking flight. \"It's like having twice as many good rules, double the treasure!\" \"And when I visit my family,\" Flint said thoughtfully, his voice confident now rather than small and worried, \"I can tell them about Pip's family's way. They'll think it sounds exciting and wonderful and new!\" \"And I can tell my family about your family's way,\" Pip said warmly, nose twitching with enthusiasm bright as stars. \"They'll love how kind and fair and gentle it is, how it makes everyone feel special!\" Bramble watched his friends with a heart full of sunshine-warm happiness, golden and glowing, his scarf settled perfectly around his shoulders—no more nervous twisting needed, no more worry knots. They'd discovered something beautiful and precious: that differences weren't problems to be solved like puzzles, but treasures to be shared like gifts passed hand to hand. As the afternoon sun painted golden stripes across the woodland clearing like honey drizzled on warm bread, Pip and Flint played game after game—sometimes using one family's tradition, sometimes the other, always with laughter dancing between them like butterflies in summer air. \"I can help with that!\" Bramble called cheerfully to a young squirrel struggling to reach a high acorn, his helpful heart as eager as ever, bright as always. But this time, as he bounded off to help with paws quick and kind, his heart carried something new and precious: the warm knowledge that helping sometimes meant not choosing sides like picking teams, but helping friends discover that both sides could be right at the same time, both beautiful in their own special way. And if you walked very-very quietly through the woodland after that, stepping soft as whispered secrets, you might hear young voices saying, \"Which way should we play today? Your family's way or mine?\" followed by the sound of friends teaching each other the most important lesson of all: different can be wonderful, different can be treasure, different can be a gift that makes friendship richer and brighter than gold.",
       "choices": [],
       "emotionalBeat": "joyful-appreciation",
-      "readAloudNotes": "Build excitement as they discover they can honor both traditions. Make their playing together sound delightful and celebratory. Show the joy of learning that different ways can both be wonderful. End with Bramble's wisdom about differences being treasures to share."
+      "readAloudNotes": "Build excitement as they discover they can honor both traditions. Make their playing together sound delightful and celebratory. Show the joy of learning that different ways can both be wonderful. End with Bramble's wisdom about differences being treasures to share.",
+      "illustration": "ending-understanding-differences"
     },
     {
       "id": "ending-patience-helps-hearts-heal",
@@ -224,7 +237,8 @@
       "text": "\"That sounds very wise, wise as old owls and gentle as spring rain,\" said Hazel approvingly, settling her basket down with her characteristic methodical care like placing a precious jewel in its proper setting. \"In my experience, some of the best decisions come to us when we don't rush them like rabbits racing, but let them grow slowly like flowers that bloom when they're ready, when the time is just right.\" \"Really and truly?\" asked Pip, tilting his head with curiosity bright as polished pennies, one ear flopping sideways in that dear way that made everyone smile. \"Even deciding something as simple as game rules? Even little things like that?\" \"Especially simple things, especially the little ones,\" said Willow from her branch above, her voice gentle as evening breeze whispering through leaves, head tilted thoughtfully like wisdom itself pondering. \"Sometimes when we let our hearts rest after working through something difficult, they grow wiser and kinder, like trees that grow stronger after storms.\" So Pip and Flint decided to try playing without worrying about the rules for a while, for a little gentle time. They played several games, sometimes with Pip going first (and bouncing with excitement like a spring wound tight), sometimes with Flint (who would straighten his shoulders with quiet pride like a flower turning toward sun), sometimes deciding with rock-paper-scissors, sometimes just taking turns like sharing treats at a picnic. And something magical happened, wonderful as morning mist turning into rainbows: after a few games, they both realized the same thing at the same blessed time. \"You know what?\" said Flint thoughtfully, setting down the stick they'd been using to draw X's and O's, his small paws no longer fidgeting nervously but moving with calm purpose like a musician setting down his instrument. \"I don't think it matters as much as we thought it did, as much as we worried and fretted.\" \"Me neither, not one bit!\" said Pip, his eyes bright with discovery like someone finding treasure hidden in plain sight, nose twitching not with anxiety but with wonder bright as starlight. \"The fun part isn't who goes first—it's playing together, laughing together, being friends together!\" Hazel smiled the kind of smile that reaches all the way to your heart and wraps around it like warm honey, her voice warm with approval that glowed like firelight. \"Listen to that wisdom, sweet as music! You discovered that by taking time to heal your friendship first—patching it careful and kind—the rule question became much smaller, much less important than the friendship itself.\" \"So maybe,\" said Pip slowly-slowly, working out the idea like solving a gentle puzzle piece by piece, his nose twitching thoughtfully like a scholar pondering mysteries, \"we can just ask each other what feels fair each time we play. Since we're friends now—real true friends—we'll want to be fair to each other, kind to each other.\" \"Perfect, perfectly perfect,\" said Flint with a grin bright as summer morning, his small paws gesturing openly rather than clutching worriedly like nervous butterflies. \"Friends helping friends choose fairly, hearts helping hearts be kind.\" As the late afternoon light danced through the leaves above them like golden coins spinning in air, casting gentle shadows that swayed like contentment itself made visible, Bramble felt his heart settle into perfect peace, calm as still water reflecting sky. \"I can help with that!\" he said to himself as he watched Pip and Flint start a new game, this time asking each other with voices sweet as honey, \"What would feel fair to you today? What would make your heart happy?\" Sometimes, Bramble realized with wisdom warm in his chest, the most helpful thing wasn't solving problems quickly like racing to the finish line, but giving hearts time to grow wise enough to solve them beautifully, gently, like gardens growing in their own sweet time.",
       "choices": [],
       "emotionalBeat": "peaceful-resolution",
-      "readAloudNotes": "Use calm, patient pacing throughout. Show the magic of letting time and patience work. Make their discovery sound genuine and heartfelt. End with the peaceful satisfaction of wisdom gained through gentle patience."
+      "readAloudNotes": "Use calm, patient pacing throughout. Show the magic of letting time and patience work. Make their discovery sound genuine and heartfelt. End with the peaceful satisfaction of wisdom gained through gentle patience.",
+      "illustration": "ending-patience-helps-hearts-heal"
     },
     {
       "id": "ending-building-bridges-together",
@@ -232,7 +246,8 @@
       "text": "\"Taking turns choosing! Oh, what a clever idea!\" said Hazel with delight that sparkled like stars on water, her voice carrying that warm, practical wisdom that made everything seem possible and right. \"There's usually a simple way, a gentle way, to honor both family traditions while creating something new that's yours together, like weaving two different colored threads into one beautiful cloth.\" \"Ooh, ooh, ooh!\" said Pip, bouncing with excitement that bubbled up like laughter from a happy spring, his ears perked up high as birthday candles reaching toward celebration. \"So sometimes we'll decide youngest-first, and sometimes we'll decide winner-first, and sometimes we might make up totally new ways, brand-new like fresh fallen snow!\" \"Like asking each other what would be most fun that day,\" Flint added thoughtfully, his voice steady and confident now rather than small and worried, clear as church bells ringing across meadows. \"Or doing rock-paper-scissors, or just taking turns picking who goes first, fair and square and kind!\" Bramble watched as his friends' faces lit up with the joy of discovery, bright as candles glowing in windows, his scarf settled perfectly around his shoulders in the way it only did when his heart was truly at peace, content as a cat curled by the fire. They were creating something beautiful together—not choosing between their families' ways like picking teams, but weaving them together into something that was uniquely theirs, special as a snowflake, precious as a secret shared. \"Let's try it right now, right here!\" said Flint eagerly, his small paws no longer fidgeting with objects but gesturing with growing confidence like a conductor leading an orchestra. \"Whose turn is it to choose how we decide?\" asked Pip, then giggled-giggled like silver bells at how funny that sounded, his nose twitching with amusement bright as morning dew. \"I choose... youngest goes first this time!\" \"And next game, I'll choose winner goes first!\" Flint said happily, straightening his shoulders with pride like a flag flying brave and true. As they played, something wonderful happened, magical as morning mist turning into rainbows. Each game became a little celebration—not just of who won or who was youngest, but of friendship itself, bright and precious. They would check with each other like caring gardeners tending flowers: \"Does this feel fair? Are you happy with this way? Does your heart feel good?\" \"You know what I love about this?\" Flint said after they'd played several games, his voice carrying joy rather than worry, bright as sunshine breaking through clouds. \"It feels like we made something that's ours together, something nobody else has.\" \"Like a friendship bridge!\" Pip exclaimed, bouncing higher than usual with excitement that sparkled like fireworks. \"It connects your family's way to my family's way, but it's its own special thing too, magical and new!\" Willow hooted approvingly from above, her head tilting with satisfaction like wisdom nodding its approval. \"A friendship bridge—what a perfect way to describe it, beautiful as poetry! You've learned to honor where you each came from while building something new together, like two rivers joining to make something stronger than either alone.\" Bramble felt that familiar warm glow spreading through his chest like honey melting in warm tea, sweet and golden, his helpful heart fuller than ever. \"I can help with that!\" he called to a young robin who was trying to untangle a piece of string caught in a low branch, his voice as eager and kind as ever, bright with the joy of helping. And as he bounded off to help with paws quick and caring, he thought about all the friendship bridges in the woodland—connections built not by choosing one way or another like picking paths in a forest, but by friends who cared enough to create something beautiful together, something new and wonderful and right. If you listened very-very carefully in the woodland after that, stepping quiet as whispered prayers, you might hear the sound of friends asking each other, \"What would feel fair to you?\" and \"How shall we decide today?\" Because that's what bridge-builders do—they always make sure both sides feel included in something wonderful, something magical, something that makes the world a little bit brighter and kinder than it was before.",
       "choices": [],
       "emotionalBeat": "creative-bridge-building",
-      "readAloudNotes": "Build excitement as they create their friendship bridge solution. Make their collaborative decision-making sound natural and innovative. Show the pride in their creativity and the joy of building something new together. End with the celebration of their unique friendship solution."
+      "readAloudNotes": "Build excitement as they create their friendship bridge solution. Make their collaborative decision-making sound natural and innovative. Show the pride in their creativity and the joy of building something new together. End with the celebration of their unique friendship solution.",
+      "illustration": "ending-building-bridges-together"
     }
   ],
   "pathways": {

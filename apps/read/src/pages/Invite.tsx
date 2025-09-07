@@ -36,7 +36,7 @@ export default function Invite() {
           <div className="relative w-full max-w-5xl">
             <button
               onClick={() => closeLibrary?.()}
-              className="absolute -top-3 -right-3 z-[2001] w-10 h-10 rounded-full bg-gray-800 text-white hover:bg-gray-700"
+              className="absolute -top-3 -right-3 z-[2001] control-btn"
               aria-label="Close library"
             >
               ✕

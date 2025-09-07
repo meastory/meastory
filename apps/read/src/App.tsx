@@ -1,13 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { useUIStore } from './stores/uiStore'
 import { useAuthStore } from './stores/authStore'
-import { useRoomStore } from './stores/roomStore'
 import { useFullscreenContext } from './contexts/useFullscreenContext'
-import VideoContainer from './components/VideoContainer'
-import UnifiedStoryOverlay from './components/UnifiedStoryOverlay'
 import MenuPanel from './components/MenuPanel'
 import LoadingSpinner from './components/LoadingSpinner'
-import ErrorMessage from './components/ErrorMessage'
 import Auth from './components/Auth'
 import StoryLibrary from './components/StoryLibrary'
 import FullscreenButton from './components/FullscreenButton'
@@ -15,9 +11,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import InfoBanner from './components/InfoBanner'
 
 function App() {
-  const { isLoading, error, storyTextScale, setStoryTextScale, notice, setNotice, isLibraryOpen, openLibrary, closeLibrary } = useUIStore()
+  const { storyTextScale, setStoryTextScale, notice, setNotice, isLibraryOpen, closeLibrary } = useUIStore()
   const { session, initialized, initialize } = useAuthStore()
-  const { currentRoom, currentStory } = useRoomStore()
   const { isFullscreen } = useFullscreenContext()
   // Library is controlled globally via UI store
   const appRef = useRef<HTMLDivElement>(null)
@@ -31,8 +26,8 @@ function App() {
   const path = location.pathname || ''
   const isGuestRoute = path === '/start' || path === '/join' || path.startsWith('/join/') || path.startsWith('/invite/')
   const isAuthRoute = path === '/login' || path === '/register'
-  // Never force auth while actively in a room (guests should remain in-room on /room)
-  const shouldShowAuth = !session && !isGuestRoute && !isAuthRoute && !currentRoom
+  // Never force auth on guest/public routes
+  const shouldShowAuth = !session && !isGuestRoute && !isAuthRoute
 
   useEffect(() => {
     initialize()
@@ -52,11 +47,12 @@ function App() {
 
   useEffect(() => {
     const shouldShowLibrary = localStorage.getItem('showLibraryAfterLeave')
-    if (shouldShowLibrary === 'true' && !currentRoom && session) {
-      openLibrary?.()
+    if (shouldShowLibrary === 'true' && session) {
+      // In lobby, user opted to reopen library after leaving
+      // Library is controlled via dedicated pages outside room
       localStorage.removeItem('showLibraryAfterLeave')
     }
-  }, [currentRoom, session])
+  }, [session])
 
   useEffect(() => {
     document.documentElement.style.setProperty('--story-text-scale', String(storyTextScale))
@@ -103,16 +99,12 @@ function App() {
         )}
         <div className="relative">
           {/* Menu visible even when library is open */}
-          <div className="absolute top-4 right-4 z-[1035]">
+          <div className="absolute top-0 right-0 z-[1035]">
             <MenuPanel />
           </div>
           <button
             onClick={handleCloseLibrary}
-            className={`
-              absolute top-4 z-20 p-2 rounded-full bg-gray-800 text-white 
-              hover:bg-gray-700 transition-colors
-              ${isFullscreen ? 'right-4' : 'right-16'}
-            `}
+            className={`absolute top-4 ${isFullscreen ? 'left-4' : 'left-4'} z-20 control-btn`}
             aria-label="Close library"
           >
             ✕
@@ -127,53 +119,6 @@ function App() {
           
           <StoryLibrary onClose={handleCloseLibrary} />
         </div>
-      </div>
-    )
-  }
-
-  if (currentRoom) {
-    const replaceChildName = (text: string) => {
-      const childName = useRoomStore.getState().childName
-      return text.replace(/\{\{childName\}\}/g, childName || 'Alex')
-    }
-
-    return (
-      <div ref={appRef} className="video-first min-h-screen bg-black text-white">
-        {notice && (
-          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[1102]">
-            <InfoBanner message={notice} onDismiss={() => setNotice?.(null)} />
-          </div>
-        )}
-        {error && <ErrorMessage message={error} />}
-        
-        {/* Story Title - Top Left */}
-        {currentStory && (
-          <div className="absolute top-4 left-4 z-10">
-            <h1 className="text-white font-bold text-lg" style={{ fontFamily: 'Fraunces, serif', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
-              {replaceChildName(currentStory.title)}
-            </h1>
-          </div>
-        )}
-        
-        {isLoading ? (
-          <LoadingSpinner />
-        ) : (
-          <>
-            <VideoContainer />
-            <UnifiedStoryOverlay />
-            <MenuPanel />
-            
-            {/* Fullscreen Button - Bottom Right, Always On Top */}
-            <FullscreenButton 
-              className="fixed bottom-4 right-4 z-[1030]" 
-              targetElement={appRef.current}
-              variant="floating"
-              showOnDesktop={true}
-            />
-            
-            {/* Library modal controlled globally; nothing to render here */}
-          </>
-        )}
       </div>
     )
   }

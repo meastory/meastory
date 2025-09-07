@@ -493,7 +493,15 @@ Create a comprehensive illustration guide with specific generation prompts for a
    - **Generation Prompt**: Complete character generation prompt
    - **Technical Specs**: "Character illustration, plain white background, full body view, [AUTHOR_NAME]-style character design, bright colors, friendly appearance suitable for children"
 
-3. **Scene-Specific Visual Elements**
+3. **Overlay Illustrations (Per-Scene, Story Overlay Only)**
+   - Each scene should have an overlay-friendly illustration that complements the text
+   - These are referenced by `scenes[].illustration` and defined under `media.illustrations`
+   - For each overlay illustration provide:
+     - **Description**: What the overlay should convey (no characters if using scene-only motifs, or simple scene element)
+     - **storage_path**: `stories/[story-id]/[scene-id].png` (override if needed)
+     - Optional **prompt** metadata to track prompt provenance
+
+4. **Scene-Specific Visual Elements**
    - **Props/Objects**: Important story items that appear in scenes
    - **Action Illustrations**: Characters in specific poses or activities
    - **Emotional Moments**: Visual representations of key emotional beats
@@ -508,7 +516,8 @@ Create a comprehensive illustration guide with specific generation prompts for a
 Each prompt should be complete and specific enough to generate consistent, high-quality illustrations across different scenes and pathways.
 
 **Technical Requirements**:
-- Background images: Landscape format, no characters
+- Background images: Landscape format, no characters (reserved for future room backdrops)
+- Overlay illustrations: Transparent PNGs sized for overlay, stored in Supabase Storage under `illustrations/stories/...`
 - Character images: White backgrounds for PNG conversion and screen positioning
 - Consistent style across all visual elements
 - Appropriate resolution and quality for digital story presentation
@@ -530,7 +539,7 @@ Compile all refined content into the final, properly structured JSON file follow
 {
   "id": "[slug-unique]",
   "title": "[Final Story Title]",
-  "description": "[one to two sentence blurb]",
+  "description": "[one to two sentence blurb - REQUIRED]",
   "ageRange": [[MIN_AGE], [MAX_AGE]],
   "themes": ["[primary-theme]", "[secondary-theme]"],
   "storyType": "personalized" | "original",
@@ -556,6 +565,12 @@ Compile all refined content into the final, properly structured JSON file follow
         "voice": "[voice-characteristics]",
         "illustration_prompt": "[character-generation-prompt]"
       }
+    },
+    "illustrations": {
+      "[illustration-key]": {
+        "description": "[overlay illustration description]",
+        "storage_path": "stories/[story-id]/[scene-id-or-custom].png"
+      }
     }
   },
   "pedagogy": {
@@ -566,8 +581,9 @@ Compile all refined content into the final, properly structured JSON file follow
   "scenes": [
     {
       "id": "[scene-id]",
-      "title": "[Optional Scene Title]",
+      "title": "[Scene Title - REQUIRED]",
       "background": "[background-key]",
+      "illustration": "[illustration-key]",
       "text": "[final-refined-scene-text-with-{{childName}}]",
       "choices": [
         { "label": "[choice-label]", "nextSceneId": "[target-scene-id]" }
@@ -594,6 +610,8 @@ Note: the only scenes that should have zero choices are the endings. All scenes 
 
 **Compilation Process**:
 - Fill `storyType`, `personalization`, `access`, and `media` blocks.
+- Add `media.illustrations` with `storage_path` per scene or rely on default path resolution.
+- Include `illustration` on each scene (key referencing `media.illustrations`).
 - Validate all `nextSceneId` references and pathway scene lists.
 - Set `interactive=false` for linear stories (no choices).
 ```
@@ -623,6 +641,7 @@ Note: the only scenes that should have zero choices are the endings. All scenes 
 - [ ] JSON syntax is valid and error-free
 - [ ] Illustration prompts are complete and specific
 - [ ] All required metadata is included and accurate
+- [ ] Every scene includes a `title` and an `illustration` key or a resolvable default path
 
 This comprehensive framework provides a systematic, reusable process for transforming public domain stories into high-quality interactive content in specific author styles. Each step builds on the previous ones, ensuring consistency and quality throughout the development process.
 

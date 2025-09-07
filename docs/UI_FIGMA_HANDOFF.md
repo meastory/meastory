@@ -49,7 +49,7 @@ Use Figma Variables (Local mode) and/or the Figma Tokens plugin. We export JSON 
 - Orientation behavior:
   - Mobile portrait → stacked videos
   - Tablet/desktop → side-by-side videos
-- Fullscreen affordances present but subtle
+- Fullscreen buttons present but subtle
 
 ## Component mapping (Figma ↔ Code)
 - Video Grid → `components/VideoGrid.tsx`, `components/VideoFeed.tsx`
