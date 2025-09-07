@@ -180,20 +180,27 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
         // Resolve optional per-scene illustration via Supabase Storage (bucket: illustrations)
         let illustrationUrl: string | null = null
         try {
+          const normalizeUrl = (u: unknown): string => typeof u === 'string' ? u.replace(/^@+/, '') : ''
+          const isAbsolute = (u: string) => /^(https?:|data:)/.test(u)
           const contentAny = (story as unknown as { content?: Record<string, unknown> }).content as Record<string, unknown> | undefined
           const media = (contentAny?.media as Record<string, unknown> | undefined)
-          const illustrations = (media?.illustrations as Record<string, { storage_path?: string }> | undefined)
+          const illustrations = (media?.illustrations as Record<string, { storage_path?: string; url?: string; storage_url?: string; path?: string }> | undefined)
           const illKey = firstSceneFromJson.illustration || firstSceneFromJson.id
-          let storagePath = illKey ? illustrations?.[illKey]?.storage_path : undefined
-          if (!storagePath && illKey) {
+          let ref = illKey ? (illustrations?.[illKey]?.url || illustrations?.[illKey]?.storage_url || illustrations?.[illKey]?.storage_path || illustrations?.[illKey]?.path) : undefined
+          ref = normalizeUrl(ref)
+          if (!ref && illKey) {
             const storySlug = (story as unknown as { slug?: string; id?: string }).slug || (story as unknown as { id?: string }).id || String(storyId)
             const jsonId = typeof contentAny?.id === 'string' ? (contentAny!.id as string) : undefined
             const base = jsonId || storySlug
-            storagePath = base ? `stories/${base}/${illKey}.png` : undefined
+            ref = base ? `stories/${base}/${illKey}.png` : ''
           }
-          if (storagePath) {
-            const { data } = supabase.storage.from('illustrations').getPublicUrl(storagePath)
-            illustrationUrl = data.publicUrl || null
+          if (ref) {
+            if (isAbsolute(ref)) {
+              illustrationUrl = ref
+            } else {
+              const { data } = supabase.storage.from('illustrations').getPublicUrl(ref)
+              illustrationUrl = data.publicUrl || null
+            }
           }
         } catch (e) {
           console.warn('illustration resolve failed (first scene)', e)
@@ -280,20 +287,27 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
           // Resolve optional per-scene illustration via Supabase Storage (bucket: illustrations)
           let illustrationUrl: string | null = null
           try {
+            const normalizeUrl = (u: unknown): string => typeof u === 'string' ? u.replace(/^@+/, '') : ''
+            const isAbsolute = (u: string) => /^(https?:|data:)/.test(u)
             const contentAny = currentStory.content as Record<string, unknown> | undefined
             const media = (contentAny?.media as Record<string, unknown> | undefined)
-            const illustrations = (media?.illustrations as Record<string, { storage_path?: string }> | undefined)
+            const illustrations = (media?.illustrations as Record<string, { storage_path?: string; url?: string; storage_url?: string; path?: string }> | undefined)
             const illKey = nextSceneObj.illustration || nextSceneObj.id
-            let storagePath = illKey ? illustrations?.[illKey]?.storage_path : undefined
-            if (!storagePath && illKey) {
+            let ref = illKey ? (illustrations?.[illKey]?.url || illustrations?.[illKey]?.storage_url || illustrations?.[illKey]?.storage_path || illustrations?.[illKey]?.path) : undefined
+            ref = normalizeUrl(ref)
+            if (!ref && illKey) {
               const storySlug = (currentStory as unknown as { slug?: string; id?: string }).slug || (currentStory as unknown as { id?: string }).id || ''
               const jsonId = typeof contentAny?.id === 'string' ? (contentAny!.id as string) : undefined
               const base = jsonId || storySlug
-              storagePath = base ? `stories/${base}/${illKey}.png` : undefined
+              ref = base ? `stories/${base}/${illKey}.png` : ''
             }
-            if (storagePath) {
-              const { data } = supabase.storage.from('illustrations').getPublicUrl(storagePath)
-              illustrationUrl = data.publicUrl || null
+            if (ref) {
+              if (isAbsolute(ref)) {
+                illustrationUrl = ref
+              } else {
+                const { data } = supabase.storage.from('illustrations').getPublicUrl(ref)
+                illustrationUrl = data.publicUrl || null
+              }
             }
           } catch (e) {
             console.warn('illustration resolve failed (scene)', e)
