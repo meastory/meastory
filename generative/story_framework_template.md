@@ -5,7 +5,7 @@ This framework provides a character-agnostic structure for creating interactive 
 
 ## Core Story Architecture
 
-### Scene-Based Structure (Aligned with Existing JSON Format)
+### Scene-Based Structure (Aligned with JSON Authoring Spec)
 - **Opening Scenes (2-3 scenes):** Character introduction, setting establishment, initial situation
 - **Development Scenes (3-5 scenes):** Supporting character encounters, setup development
 - **Decision Point 1 (1 scene):** First choice (A or B) - fundamental approach dichotomy
@@ -116,7 +116,7 @@ Customize these choice pairs for your theme with **clear child language**:
 {
   "id": "[slug-unique]",
   "title": "[Story Title]",
-  "description": "[One to two sentence blurb]",
+  "description": "[One to two sentence blurb - REQUIRED]",
   "ageRange": [[MIN_AGE], [MAX_AGE]],
   "themes": ["[primary-theme]", "[secondary-theme]"],
   "storyType": "personalized" | "original",
@@ -142,6 +142,12 @@ Customize these choice pairs for your theme with **clear child language**:
         "voice": "[voice-characteristics]",
         "illustration_prompt": "[character-generation-prompt]"
       }
+    },
+    "illustrations": {
+      "[illustration-key]": {
+        "description": "[overlay illustration description]",
+        "storage_path": "stories/[story-id]/[scene-id-or-custom].png"
+      }
     }
   },
   "pedagogy": {
@@ -152,8 +158,9 @@ Customize these choice pairs for your theme with **clear child language**:
   "scenes": [
     {
       "id": "[scene-id]",
-      "title": "[Optional Scene Title]",
+      "title": "[Scene Title]",
       "background": "[background-key]",
+      "illustration": "[illustration-key]",
       "text": "[scene text with {{childName}}]",
       "choices": [
         { "label": "[choice label]", "nextSceneId": "[scene-id]" }
@@ -177,6 +184,9 @@ Customize these choice pairs for your theme with **clear child language**:
 }
 ```
 
+- Backgrounds vs. illustrations: `scenes[].background` is reserved for future room backdrops (transparent video compositing). Overlay art should use `scenes[].illustration`, which references `media.illustrations` entries.
+- Illustration storage: Prefer defining `media.illustrations[...].storage_path`; if omitted, the runtime resolves `illustrations/stories/{story-id}/{scene-id}.png` by default.
+- Titles and description: Provide a concise top‑level `description`, and a readable `title` for every scene.
 - Use `storyType` and `personalization.tokens` to signal personalization; keep placeholders like `{{childName}}` in text with fallbacks in `personalization.defaults`.
 - Set `interactive=false` for linear stories (no choices). Scenes still supported.
 - Prefer `media.backgrounds` and `media.characters` for art prompts; keys referenced by scenes.
@@ -260,7 +270,10 @@ Customize these choice pairs for your theme with **clear child language**:
 ### Technical Implementation Validation
 - [ ] Scene IDs follow consistent naming convention
 - [ ] All scene transitions connect properly
-- [ ] Background SVG descriptions are complete and specific
+- [ ] Background descriptions are complete and specific (reserved for room backdrops)
+- [ ] Overlay illustrations defined (either via `media.illustrations` or default path convention)
+- [ ] Every scene has a `title`
+- [ ] Top-level `description` present
 - [ ] Character consistency maintained across all appearances
 - [ ] {{childName}} placeholder used consistently in narrative text
 - [ ] JSON structure follows template exactly

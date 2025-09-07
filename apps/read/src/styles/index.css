@@ -84,12 +84,16 @@
     padding-bottom: max(20px, env(safe-area-inset-bottom));
     z-index: 1000; /* Raised above video */
     pointer-events: auto;
+    display: flex;
+    align-items: flex-end;
   }
 
   .story-content {
-    max-width: min(600px, 45vw);
+    max-width: calc(100% - 75px);
+    min-width: 280px;
     margin: 0;
     color: #FFFFFF;
+    flex-shrink: 0;
   }
 
   .story-title {
@@ -249,10 +253,26 @@
   @media (max-width: 768px) {
     .story-overlay {
       padding: 16px;
+      align-items: end;
     }
     
     .story-content {
-      max-width: 100%; /* Full width on mobile, illustration will be cropped/hidden */
+      max-width: calc(100% - 75px);
+      min-width: 280px;
+      flex-shrink: 0;
+    }
+    
+    .story-illustration {
+      width: 75px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    
+    .story-illustration img {
+      width: 300px;
+      max-height: 50vh;
+      object-fit: cover;
+      object-position: left center;
     }
     
     .story-choices {
@@ -278,33 +298,62 @@
     }
   }
 
-  /* Landscape/Desktop: Enable illustration space */
+  /* Landscape/Desktop: Enable full illustration space */
   @media (min-width: 769px) and (min-aspect-ratio: 4/3) {
     .story-overlay {
-      display: flex;
-      align-items: end;
+      padding: 20px;
     }
-    
     .story-content {
-      max-width: min(500px, 40vw);
+      max-width: min(45vw, calc(100% - 150px));
+      min-width: 350px;
       flex-shrink: 0;
     }
     
     .story-illustration {
       flex: 1;
-      display: flex;
-      justify-content: flex-end;
-      align-items: flex-end;
+      overflow: hidden; /* Crop overflow on the right */
+      pointer-events: none;
       padding-left: 20px;
-      pointer-events: none; /* Don't block story interactions */
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start; /* Left align */
     }
     
     .story-illustration img {
-      max-height: 70vh;
-      max-width: 100%;
-      object-fit: contain;
-      object-position: bottom right;
+      height: 70vh; /* Fill vertical */
+      width: auto;  /* Allow overflow to right */
+      object-position: left bottom;
     }
+  }
+
+  /* Base illustration container - works on all screen sizes */
+  .story-illustration {
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* Alternative mobile illustration widths - for testing */
+  .mobile-illustration-none .story-content {
+    max-width: 100% !important;
+  }
+  .mobile-illustration-none .story-illustration {
+    display: none !important;
+  }
+
+  .mobile-illustration-peek .story-content {
+    max-width: calc(100% - 75px) !important;
+  }
+  .mobile-illustration-peek .story-illustration {
+    width: 75px !important;
+  }
+
+  .mobile-illustration-wide .story-content {
+    max-width: calc(100% - 150px) !important;
+  }
+  .mobile-illustration-wide .story-illustration {
+    width: 150px !important;
   }
 
   @media (max-height: 600px) {

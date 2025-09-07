@@ -30,7 +30,8 @@
         }
       ],
       "emotionalBeat": "gentle-discovery",
-      "readAloudNotes": "Use Bramble's distinctive 'Oh my paws!' Make Luna's tiny voice very small and sweet. Show Bramble's gentle approach by lowering your voice and slowing down when he crouches to her size. Build the choice moment with care - both options should sound equally caring."
+      "readAloudNotes": "Use Bramble's distinctive 'Oh my paws!' Make Luna's tiny voice very small and sweet. Show Bramble's gentle approach by lowering your voice and slowing down when he crouches to her size. Build the choice moment with care - both options should sound equally caring.",
+      "illustration": "opening-1"
     },
     {
       "_comment": "BRANCH A - Protective Approach",
@@ -45,7 +46,8 @@
         }
       ],
       "emotionalBeat": "protective-security",
-      "readAloudNotes": "Use warm, reassuring tones throughout. Make Luna's small sound very soft and trusting. Show the contentment of being carried safely - Luna should sound pleased and comfortable watching the world go by from security."
+      "readAloudNotes": "Use warm, reassuring tones throughout. Make Luna's small sound very soft and trusting. Show the contentment of being carried safely - Luna should sound pleased and comfortable watching the world go by from security.",
+      "illustration": "branch-a-1"
     },
     {
       "_comment": "BRANCH B - Teaching Approach",
@@ -60,7 +62,8 @@
         }
       ],
       "emotionalBeat": "patient-learning",
-      "readAloudNotes": "Start with Bramble's thoughtful, patient voice. Show Luna's curiosity with little gestures and sounds. Make her first smile a special, bright moment. Use encouraging, teaching tones when explaining about landmarks. End with anticipation at Willow's thoughtful 'hmms.'"
+      "readAloudNotes": "Start with Bramble's thoughtful, patient voice. Show Luna's curiosity with little gestures and sounds. Make her first smile a special, bright moment. Use encouraging, teaching tones when explaining about landmarks. End with anticipation at Willow's thoughtful 'hmms.'",
+      "illustration": "branch-b-1"
     },
     {
       "_comment": "DECISION POINT 2-A - Pip's situation after protective approach",
@@ -80,7 +83,8 @@
         }
       ],
       "emotionalBeat": "excited-anticipation",
-      "readAloudNotes": "Make Pip incredibly energetic and bouncy - his 'Ooh, ooh!' should be infectious. Show Luna's delight at his bouncing with small giggles. Build excitement when she hears her parents calling, then pause thoughtfully at Bramble's dilemma moment."
+      "readAloudNotes": "Make Pip incredibly energetic and bouncy - his 'Ooh, ooh!' should be infectious. Show Luna's delight at his bouncing with small giggles. Build excitement when she hears her parents calling, then pause thoughtfully at Bramble's dilemma moment.",
+      "illustration": "dp2-a-1"
     },
     {
       "_comment": "DECISION POINT 2-B - Willow's situation after teaching approach",
@@ -100,7 +104,8 @@
         }
       ],
       "emotionalBeat": "thoughtful-curiosity",
-      "readAloudNotes": "Give Willow a gentle, wise voice with thoughtful pauses. Show Luna's fascination with the owl and her careful concentration with the pebbles. Build the tension when she hears her parents but looks back at her unfinished work - show her internal conflict through voice and pacing."
+      "readAloudNotes": "Give Willow a gentle, wise voice with thoughtful pauses. Show Luna's fascination with the owl and her careful concentration with the pebbles. Build the tension when she hears her parents but looks back at her unfinished work - show her internal conflict through voice and pacing.",
+      "illustration": "dp2-b-1"
     },
     {
       "_comment": "JOURNEY 1A2A - Consistent protective approach",
@@ -115,7 +120,8 @@
         }
       ],
       "emotionalBeat": "joyful-reunion",
-      "readAloudNotes": "Start with energetic excitement as Pip races off. Make Luna's observation about 'bounce gone' sweet and slightly wistful. Build anticipation with the approaching paw steps, then make the reunion moment warm and celebratory. Give each parent fox a distinct voice - Russet more energetic, Fern more graceful."
+      "readAloudNotes": "Start with energetic excitement as Pip races off. Make Luna's observation about 'bounce gone' sweet and slightly wistful. Build anticipation with the approaching paw steps, then make the reunion moment warm and celebratory. Give each parent fox a distinct voice - Russet more energetic, Fern more graceful.",
+      "illustration": "journey-1a2a-1"
     },
     {
       "_comment": "JOURNEY 1A2B - Protective to collaborative approach",
@@ -130,7 +136,8 @@
         }
       ],
       "emotionalBeat": "collaborative-joy",
-      "readAloudNotes": "Show the parade-like quality with bouncing energy. Make Luna's giggle delightful and musical. Emphasize her observation about different helping styles. Build to the warm reunion with parents calling in harmony."
+      "readAloudNotes": "Show the parade-like quality with bouncing energy. Make Luna's giggle delightful and musical. Emphasize her observation about different helping styles. Build to the warm reunion with parents calling in harmony.",
+      "illustration": "journey-1a2b-1"
     },
     {
       "_comment": "JOURNEY 1B2A - Teaching to skills focus",
@@ -145,7 +152,8 @@
         }
       ],
       "emotionalBeat": "proud-achievement",
-      "readAloudNotes": "Use patient teaching tones throughout. Show Luna's concentration and growing confidence. Make her 'landmark dance' playful and enthusiastic. Build pride in Luna's announcement about what she learned - she should sound genuinely accomplished."
+      "readAloudNotes": "Use patient teaching tones throughout. Show Luna's concentration and growing confidence. Make her 'landmark dance' playful and enthusiastic. Build pride in Luna's announcement about what she learned - she should sound genuinely accomplished.",
+      "illustration": "journey-1b2a-1"
     },
     {
       "_comment": "JOURNEY 1B2B - Consistent teaching/communication approach",
@@ -160,7 +168,8 @@
         }
       ],
       "emotionalBeat": "empowering-success",
-      "readAloudNotes": "Start with gentle teaching. Make Luna's first call tentative, then show her growing confidence and delight. Emphasize the magical quality of voices answering back. Show Luna's pride in demonstrating her new skill to her parents."
+      "readAloudNotes": "Start with gentle teaching. Make Luna's first call tentative, then show her growing confidence and delight. Emphasize the magical quality of voices answering back. Show Luna's pride in demonstrating her new skill to her parents.",
+      "illustration": "journey-1b2b-1"
     },
     {
       "_comment": "ENDING - Protective Care Theme (from consistent protective 1A2A path)",
@@ -169,7 +178,8 @@
       "text": "As Luna snuggled safe and sound in her mama's arms—cozy as a kit in winter's warmest den—Bramble felt that wonderful, wonderful glow spreading through his chest like honey warming by the fire. The feeling that came from making everything better for someone who needed help, needed it most of all. \"We should probably keep Luna closer when we're exploring,\" said Fern gently, stroking her kit's russet fur soft as silk, smooth as running water. \"She's still so very little, our precious wandering star.\" \"Good thinking,\" agreed Russet warmly, his voice steady as old oak roots. \"Maybe we'll stick to the familiar paths near home—the safe, known paths—until she's grown bigger and stronger and steadier on her paws.\" \"Ooh, ooh! I could help with that!\" Pip bounded in place like a spring himself, nose twitching with helpful excitement. \"I know all the safest, closest paths! Every twist, every turn, every cozy corner! Don't worry, I've got this!\" Luna, content as content could be in her mama's protective embrace, pointed at Bramble with a small paw precise as a compass needle. \"Bramble help,\" she said simply, clear as morning bells. \"Safe.\" \"Yes, dear little one,\" said Fern softly, her voice like lullabies and love songs. \"Bramble kept you very, very safe.\" Bramble watched as the fox family headed home together—Luna secure between her parents like a precious jewel in a soft pouch, Pip bouncing alongside like a gray guardian angel, offering to show them every safe shortcut he knew. His blue scarf had gotten pleasantly rumpled during the morning's adventure, twisted and turned but still cozy-warm, and he gave it an affectionate tug like greeting an old friend. As he walked back through the spring woodland to collect the moss he'd dropped when he first heard Luna's small voice calling like a lost song, Bramble's heart felt perfectly settled—peaceful as a still pond reflecting sky. \"I can help with that!\" he said cheerfully to a young squirrel struggling with an acorn bigger than his own head, heavier than his own body. Sometimes, he thought with satisfaction warm as summer sunshine, the most helpful thing was making sure everyone got safely home where they belonged, where love waited like lamplight in the window. And that was just fine—more than fine—with him.",
       "choices": [],
       "emotionalBeat": "protective-satisfaction",
-      "readAloudNotes": "Show the warm, settled feeling of everyone safe. Make the family decision about staying closer sound caring rather than restrictive. End with Bramble's contented realization about the value of protective care."
+      "readAloudNotes": "Show the warm, settled feeling of everyone safe. Make the family decision about staying closer sound caring rather than restrictive. End with Bramble's contented realization about the value of protective care.",
+      "illustration": "ending-consistent-primary"
     },
     {
       "_comment": "ENDING - Growing Independence Theme (from consistent teaching 1B2B path)",
@@ -178,7 +188,8 @@
       "text": "As the fox family prepared to head home down the dappled woodland path, Luna tugged on her papa's paw with small but determined strength and pointed back toward Willow and Bramble like someone with very important business to attend to. \"Show Mama and Papa,\" she said with the serious determination of someone who had learned something wonderful-important. She cupped her small paws around her mouth—careful as careful could be—and called out clear as crystal bells: \"Luna here! Luna call for help!\" Fern and Russet exchanged glances full of amazement, their eyes wide as full moons. \"She's never done that before,\" Fern said softly, her voice filled with wonder like watching the very first snowflake of winter. \"Ooh, ooh! Luna's the smartest little fox in the whole wide woodland!\" Pip exclaimed, bouncing in an excited circle like a furry whirlwind of joy. \"She learned something completely new! Race you to show everyone else!\" Luna looked pleased with herself as pleased could be, then turned to Willow with respect shining in her bright eyes. \"Big bird teach Luna call for help.\" Willow tilted her head thoughtfully, like wisdom considering its words. \"What do you think, little one? Will you remember to call if you need help when you're exploring the woodland paths and hidden places?\" Luna nodded serious as a little judge, then demonstrated her calling technique once more for her parents—cupping her paws just-so, calling clear and true. \"What a gift you've given her,\" said Russet gratefully to Bramble and Willow, his voice warm as bread fresh from the oven. \"Confidence to explore safely—the very best kind of confidence there is.\" As they began walking home together down paths dappled with golden sunshine, Luna insisted on walking part of the way herself, her small legs steady and sure. Every so often she would stop and practice her calling like someone rehearsing for the most important performance of her life. \"Luna here!\" she would announce, then giggle like silver bells when everyone answered back in chorus. Bramble walked beside them, adjusting his scarf and thinking about the morning's adventure, turning it over in his mind like a smooth stone worn perfect by countless tides. The same little kit who had been sitting lost among the daffodils—alone and calling for help—now carried herself different as different could be, like someone who knew she had important skills tucked safe in her heart. \"Thank you, Bramble,\" said Fern as they reached sight of the fox family's cozy den, smoke curling from its chimney like a welcoming wave. \"Luna learned more about taking care of herself today than we could have taught her in many, many seasons.\" Luna ran to Bramble for one last hug—arms reaching wide as her little heart—then pointed to herself with pride bright as sunshine, clear as spring water. \"Luna learn! Luna call! Luna brave!\" As Bramble headed home through the woodland paths, his heart felt full in a way that was new and wonderful. \"I can help with that!\" he said to himself, thinking about the next woodland friend who might need assistance. Sometimes, he'd discovered like finding treasure, the very best help was showing others they could help themselves too.",
       "choices": [],
       "emotionalBeat": "empowering-growth",
-      "readAloudNotes": "Show Luna's proud determination to demonstrate her new skill. Make her practice calls sound confident and joyful. Emphasize the transformation from lost to empowered. End with Bramble's discovery about teaching vs. solving."
+      "readAloudNotes": "Show Luna's proud determination to demonstrate her new skill. Make her practice calls sound confident and joyful. Emphasize the transformation from lost to empowered. End with Bramble's discovery about teaching vs. solving.",
+      "illustration": "ending-consistent-secondary"
     },
     {
       "_comment": "ENDING - Balanced Guidance Theme (from mixed 1A2B and 1B2A paths)",
@@ -187,7 +198,8 @@
       "text": "As the fox family settled in a sunny clearing to rest before heading home—settling soft as settling mist in a meadow—Luna played nearby among the spring flowers, occasionally looking back with bright eyes to make sure her parents were watching, still there, still keeping her safe with their love. \"She's growing so fast,\" observed Fern softly, her gentle voice like wind through new leaves, watching her kit move with growing confidence among the nodding violets and dancing daffodils. \"Part of me wants to keep her close and safe as safe can be, but part of me knows she needs to learn and explore, needs to spread her little wings.\" \"Both feelings make perfect sense,\" said Bramble thoughtfully, fidgeting with his blue scarf the way he always did when working through something important, wrapping it round and round his paw like winding a gentle clock. \"Nana always says... hmm, what would be the kindest thing to do when you have two good feelings that seem to pull different ways, like two paths through the same forest?\" \"What do you think might happen,\" asked Willow from her perch high above, head tilted with the wisdom of ages, \"if Luna had both safety and learning opportunities? Both roots to keep her steady and wings to help her fly?\" Russet nodded, watching Luna carefully arrange some interesting pebbles into patterns only she understood, placing each one with the concentration of an artist creating beauty. \"Maybe that's exactly what she needs—chances to practice being independent while knowing help is nearby, like having a soft place to land.\" Luna toddled back to them on legs steady as steady, carrying a small bouquet of spring flowers—violets purple as twilight, buttercups yellow as captured sunshine. \"Pretty,\" she said, offering some to each adult with the generosity of someone who has much love to share. When she reached Bramble, she patted his scarf gentle as a blessing and said, \"Thank you, Bramble.\" \"Oh my paws, Luna, you're very welcome,\" said Bramble, his voice warm as fresh-baked cookies, cozy as Nana's hugs. \"Actually,\" said Fern, an idea lighting her eyes like lanterns at dusk, \"would you mind if Luna visited you sometimes, Bramble? She could practice her exploring skills near your home while still being in territory safe and known.\" Luna's eyes lit up with excitement bright as fireworks, wide as wonder itself. She pointed to herself with one paw, then to Bramble, then made her little walking motion with two fingers—step, step, step through imaginary paths. \"Visit Bramble!\" \"That sounds like fun!\" said Bramble, realizing this felt exactly right, like puzzle pieces clicking into place. \"I can help with that!\" Walking home through the spring woodland, following paths dappled with golden light and dancing shadows, Bramble felt a new kind of happiness settle in his chest like a contented cat curling up by the fire. He'd learned something wonderful-important today: helping others didn't always mean choosing between keeping them safe or helping them grow independent. Sometimes, just like the spring season itself—bringing both the safety of warm earth and the adventure of growing things—the very best help found a way to balance both, like a tightrope walker dancing on air.",
       "choices": [],
       "emotionalBeat": "balanced-wisdom",
-      "readAloudNotes": "Show the thoughtful consideration of different parenting approaches. Make Luna's flower-giving moment sweet and generous. Build excitement about the future visits. End with Bramble's profound realization about balance - this should feel like earned wisdom."
+      "readAloudNotes": "Show the thoughtful consideration of different parenting approaches. Make Luna's flower-giving moment sweet and generous. Build excitement about the future visits. End with Bramble's profound realization about balance - this should feel like earned wisdom.",
+      "illustration": "ending-balanced"
     }
   ],
   "pathways": {

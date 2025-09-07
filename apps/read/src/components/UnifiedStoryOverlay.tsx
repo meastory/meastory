@@ -195,14 +195,18 @@ export default function UnifiedStoryOverlay() {
 
           {/* Illustration Space - Only shows on landscape/desktop */}
           <div className="story-illustration">
-            {/* Placeholder for illustration - you can replace this with actual story illustrations */}
-            {currentScene?.illustration_url && (
-              <img 
-                src={currentScene.illustration_url} 
-                alt="Story illustration"
-                style={{ opacity: 0.8 }}
-              />
-            )}
+            {/* Overlay-only illustration; do not treat background_image_url as overlay art */}
+            {(() => {
+              const ill = (currentScene as unknown as { illustration_url?: string | null })?.illustration_url || null
+              const src = ill || null
+              return src ? (
+                <img
+                  src={src}
+                  alt="Story illustration"
+                  style={{ opacity: 0.8 }}
+                />
+              ) : null
+            })()}
           </div>
         </div>
       )}

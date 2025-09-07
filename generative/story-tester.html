@@ -7,11 +7,18 @@
     <style>
         body {
             font-family: 'Nunito', sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
+            margin: 0;
             padding: 20px;
             background-color: #f0f8ff;
             color: #2c3e50;
+        }
+        :root {
+            --mobile-illustration-peek: 75px;
+            --desktop-text-width: 45vw;
+            --min-text-width-mobile: 280px;
+            --min-text-width-desktop: 350px;
+            --illustration-height-mobile: 50vh;
+            --illustration-height-desktop: 70vh;
         }
         
         .story-container {
@@ -19,7 +26,8 @@
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            margin: 0 auto 20px auto;
+            max-width: 800px;
         }
         
         .story-title {
@@ -139,6 +147,273 @@
             text-align: center;
             margin-bottom: 20px;
         }
+
+        details {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+            border: 1px solid #ecf0f1;
+        }
+
+        details > summary {
+            cursor: pointer;
+            font-weight: 700;
+            color: #2c3e50;
+            outline: none;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 18px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .meta-label {
+            color: #7f8c8d;
+        }
+
+        .small-note {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 6px;
+        }
+
+        .subtle {
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+
+        .choice-meta {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        /* App preview wrapper */
+        .app-preview-wrapper {
+            background: #111;
+            border-radius: 12px;
+            border: 1px solid #ecf0f1;
+            overflow: auto;
+            margin-top: 10px;
+            padding: 0 0 10px 0;
+        }
+
+        .app-preview-stage {
+            position: relative;
+            width: 100%;
+            height: 360px;
+            background: #000;
+            margin: 0 auto;
+        }
+
+        /* Key overlay styles adapted from the webapp for fidelity */
+        .story-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4));
+            backdrop-filter: blur(8px);
+            padding: 20px;
+            z-index: 1000;
+            pointer-events: auto;
+        }
+
+        .story-content {
+            max-width: 600px;
+            margin: 0;
+            color: #FFFFFF;
+        }
+
+        .story-title {
+            font-family: 'Fraunces', serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .story-text {
+            font-size: calc(18px * var(--story-text-scale, 1));
+            line-height: 1.6;
+            margin-bottom: 16px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+            white-space: pre-wrap;
+        }
+
+        .story-choices {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .story-choice {
+            background: rgba(255,255,255,0.15);
+            color: #FFFFFF;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 24px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+        }
+
+        .story-choice:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+
+        .story-illustration {
+            color: #ddd;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* Background image for preview stage */
+        .app-preview-stage.bg-has-image {
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        /* Reproduce key app layout behavior for overlay/illustration */
+        @media (max-width: 768px) {
+            .story-overlay {
+                padding: 16px;
+                display: flex;
+                align-items: end;
+            }
+            .story-content {
+                max-width: calc(100% - var(--mobile-illustration-peek));
+                min-width: var(--min-text-width-mobile);
+                flex-shrink: 0;
+                z-index: 1001;
+            }
+            .story-illustration {
+                width: var(--mobile-illustration-peek);
+                display: flex;
+                justify-content: flex-end;
+                align-items: flex-end;
+                overflow: hidden;
+                pointer-events: none;
+                z-index: 1000;
+            }
+            .story-illustration img {
+                max-height: var(--illustration-height-mobile);
+                width: 300px;
+                object-fit: cover;
+                object-position: left center;
+            }
+        }
+
+        @media (min-width: 769px) and (min-aspect-ratio: 4/3) {
+            .story-overlay {
+                display: flex;
+                align-items: end;
+                padding: 20px;
+            }
+            .story-content {
+                max-width: min(var(--desktop-text-width), calc(100% - 150px));
+                min-width: var(--min-text-width-desktop);
+                flex-shrink: 0;
+                z-index: 1001;
+            }
+            .story-illustration {
+                flex: 1;
+                display: flex;
+                justify-content: flex-start;
+                align-items: flex-end;
+                padding-left: 20px;
+                pointer-events: none;
+                z-index: 1000;
+                overflow: hidden;
+            }
+            .story-illustration img {
+                height: var(--illustration-height-desktop);
+                width: auto;
+                object-position: left bottom;
+            }
+        }
+
+        /* Editor styles */
+        .editor-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 16px;
+        }
+
+        .editor-grid label {
+            font-size: 13px;
+            color: #6b7280;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .editor-input, .editor-select, .editor-textarea {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 14px;
+        }
+
+        .editor-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .choices-editor .choice-row {
+            display: grid;
+            grid-template-columns: 1fr 220px 40px;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .small-btn {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: none;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .small-btn.secondary {
+            background: #95a5a6;
+        }
+
+        .pathway-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .pathway-chip {
+            background: #ecf0f1;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -166,13 +441,210 @@
                 <button class="control-button" onclick="showAllPathways()">Show All Pathways</button>
             </div>
             
+            <details open>
+                <summary>Story Metadata</summary>
+                <div id="globalMeta"></div>
+            </details>
+
+            <details>
+                <summary>Pathways Overview</summary>
+                <div id="pathwaysContainer" class="small-note"></div>
+            </details>
+
+            <details>
+                <summary>Video Call Optimization</summary>
+                <div id="videoOpt" class="small-note"></div>
+            </details>
+
+            <details>
+                <summary>Technical Specs</summary>
+                <div id="techSpecs" class="small-note"></div>
+            </details>
+
+            <details>
+                <summary>Media Catalog</summary>
+                <div id="mediaCatalog" class="small-note"></div>
+            </details>
+
+            <details>
+                <summary>Pedagogy</summary>
+                <div id="pedagogy" class="small-note"></div>
+            </details>
+
+            
+            
             <div class="pathway-info" id="pathwayInfo"></div>
             
             <div class="scene-id" id="sceneId"></div>
+            <div class="subtle" id="sceneBackground"></div>
             <div class="characters-list" id="charactersList"></div>
             <div class="scene-text" id="sceneText"></div>
+            <div class="subtle" id="sceneEmotionalBeat"></div>
+            <div class="subtle" id="sceneReadAloudNotes"></div>
+            <div class="subtle" id="sceneIllustration"></div>
             <div class="choices-container" id="choicesContainer"></div>
+
+            <details>
+                <summary>Editor (Beta)</summary>
+                <div class="editor-controls">
+                    <label style="display:flex; align-items:center; gap:6px;">
+                        <input type="checkbox" id="editModeToggle"> Enable Edit Mode
+                    </label>
+                    <button class="control-button" id="saveJsonBtn">Save JSON</button>
+                    <button class="control-button" id="validateBtn">Validate</button>
+                    <label style="margin-left:auto;">Scene:
+                        <select id="sceneSelect" class="editor-select" style="min-width: 220px;"></select>
+                    </label>
+                </div>
+
+                <div style="margin-bottom:16px; display:flex; gap:8px; align-items:center;">
+                    <button id="addSceneBtn" class="small-btn">Add Scene</button>
+                    <button id="duplicateSceneBtn" class="small-btn">Duplicate Scene</button>
+                    <button id="deleteSceneBtn" class="small-btn secondary">Delete Scene</button>
+                </div>
+
+                <div style="margin:12px 0 8px 0;"><strong>Global Metadata</strong></div>
+                <div class="editor-grid" style="margin-bottom:10px;">
+                    <div>
+                        <label>Title</label>
+                        <input id="editTitle" class="editor-input" placeholder="Story title (supports {{childName}})">
+                    </div>
+                    <div>
+                        <label>Description</label>
+                        <input id="editDescription" class="editor-input" placeholder="Short description">
+                    </div>
+                    <div>
+                        <label>Age Range Min</label>
+                        <input id="editAgeMin" type="number" min="0" class="editor-input" placeholder="e.g., 3">
+                    </div>
+                    <div>
+                        <label>Age Range Max</label>
+                        <input id="editAgeMax" type="number" min="0" class="editor-input" placeholder="e.g., 8">
+                    </div>
+                    <div>
+                        <label>Author Style</label>
+                        <input id="editAuthorStyle" class="editor-input" placeholder="Author style">
+                    </div>
+                    <div>
+                        <label>Source Story</label>
+                        <input id="editSourceStory" class="editor-input" placeholder="Source">
+                    </div>
+                    <div>
+                        <label>Interactive</label>
+                        <input id="editInteractive" type="checkbox" style="transform: translateY(5px);">
+                    </div>
+                    <div>
+                        <label>Story Type</label>
+                        <input id="editStoryType" class="editor-input" placeholder="e.g., personalized">
+                    </div>
+                    <div>
+                        <label>Themes (comma-separated)</label>
+                        <input id="editThemes" class="editor-input" placeholder="friendship, kindness">
+                    </div>
+                    <div>
+                        <label>Personalization Tokens (comma-separated)</label>
+                        <input id="editPersonalizationTokens" class="editor-input" placeholder="childName">
+                    </div>
+                    <div>
+                        <label>Personalization Defaults (JSON or k:v, k:v)</label>
+                        <input id="editPersonalizationDefaults" class="editor-input" placeholder='{"childName":"Alex"} or childName: Alex'>
+                    </div>
+                    <div>
+                        <label>Access Tier</label>
+                        <input id="editAccessTier" class="editor-input" placeholder="guest">
+                    </div>
+                    <div>
+                        <label>Release Status</label>
+                        <input id="editReleaseStatus" class="editor-input" placeholder="published">
+                    </div>
+                </div>
+
+                <div class="editor-grid">
+                    <div>
+                        <label>Scene Text</label>
+                        <textarea id="editText" class="editor-textarea" placeholder="Scene text with {{childName}} placeholders"></textarea>
+                    </div>
+                    <div>
+                        <label>Read Aloud Notes</label>
+                        <textarea id="editReadAloudNotes" class="editor-textarea" placeholder="Notes for reader"></textarea>
+                    </div>
+                    <div>
+                        <label>Background</label>
+                        <input id="editBackground" list="bgKeys" class="editor-input" placeholder="background key">
+                        <datalist id="bgKeys"></datalist>
+                    </div>
+                    <div>
+                        <label>Illustration</label>
+                        <input id="editIllustration" list="illKeys" class="editor-input" placeholder="illustration key">
+                        <datalist id="illKeys"></datalist>
+                    </div>
+                    <div>
+                        <label>Emotional Beat</label>
+                        <input id="editEmotionalBeat" class="editor-input" placeholder="e.g., wonder-discovery">
+                    </div>
+                </div>
+
+                <div style="margin-top:16px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                        <strong>Choices</strong>
+                        <button class="small-btn" id="addChoiceBtn">Add Choice</button>
+                    </div>
+                    <div id="editChoicesContainer" class="choices-editor"></div>
+                </div>
+
+                <hr style="margin:16px 0; border:none; border-top:1px solid #e5e7eb;">
+
+                <div>
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                        <strong>Pathways Editor</strong>
+                        <label style="margin-left:auto;">Pathway:
+                            <select id="pathwaySelect" class="editor-select" style="min-width: 220px;"></select>
+                        </label>
+                    </div>
+                    <div id="pathwayList"></div>
+                    <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                        <input id="pathwayNewScene" class="editor-input" list="sceneIdOptions" placeholder="Add scene id">
+                        <datalist id="sceneIdOptions"></datalist>
+                        <button id="addPathwaySceneBtn" class="small-btn">Add to Pathway</button>
+                    </div>
+                </div>
+            </details>
         </div>
+    </div>
+
+    <!-- App Preview outside card to avoid width constraints -->
+    <div style="margin: 20px auto; max-width: 95vw;">
+        <details open>
+            <summary>App Preview</summary>
+            <div class="app-preview-wrapper" style="max-width: 100%;">
+                <div style="display:flex; gap:10px; align-items:center; padding:10px; background:#1a1a1a; color:#eee; position:sticky; top:0; z-index:2">
+                    <label>Device:
+                        <select id="previewDevice" class="control-button" style="background:#333; border:none; border-radius:8px; padding:6px 8px; margin-left:6px;">
+                            <option value="mobile">Mobile Portrait (375x667)</option>
+                            <option value="tablet">Tablet (768x1024)</option>
+                            <option value="desktop" selected>Desktop (1280x720)</option>
+                        </select>
+                    </label>
+                    <label style="margin-left:8px;">Text Scale:
+                        <input id="previewScale" type="range" min="0.8" max="1.6" step="0.05" value="1" style="vertical-align:middle; margin-left:6px;">
+                    </label>
+                    <label style="margin-left:8px; display:flex; align-items:center; gap:6px;">
+                        <input id="toggleAppCss" type="checkbox"> Use app CSS
+                    </label>
+                    <button id="openMediaMapping" class="control-button" style="margin-left:auto">Media Mapping…</button>
+                </div>
+                <div class="app-preview-stage">
+                    <div class="story-overlay">
+                        <div class="story-content">
+                            <div class="story-title" id="previewTitle" style="display:none"></div>
+                            <div class="story-text" id="previewText"></div>
+                            <div class="story-choices" id="previewChoices"></div>
+                        </div>
+                        <div class="story-illustration" id="previewIllustration"></div>
+                    </div>
+                </div>
+            </div>
+        </details>
     </div>
 
     <script>
@@ -205,11 +677,21 @@
             document.getElementById('storyContent').style.display = 'block';
             document.getElementById('storyTitle').textContent = storyData.title.replace('{{childName}}', childName);
             document.getElementById('storyInfo').textContent = `Ages ${storyData.ageRange[0]}-${storyData.ageRange[1]} | Style: ${storyData.author_style} | Source: ${storyData.source_story}`;
+            populateGlobalMeta();
+            renderPathwaysOverview();
+            renderVideoOptimization();
+            renderTechnicalSpecs();
+            renderMediaCatalog();
+            renderPedagogy();
             
             // Start with first scene
             currentSceneId = storyData.scenes[0].id;
             sceneHistory = [];
             displayCurrentScene();
+            renderAppPreview();
+            initPreviewControls();
+            initMediaMapping();
+            initEditorUI();
         }
         
         function displayCurrentScene() {
@@ -223,8 +705,12 @@
             
             // Update display
             document.getElementById('sceneId').textContent = `Scene ID: ${scene.id}`;
+            document.getElementById('sceneBackground').textContent = scene.background ? `Background: ${scene.background}` : '';
             document.getElementById('charactersList').textContent = `Characters: ${scene.characters.join(', ')}`;
             document.getElementById('sceneText').textContent = scene.text.replace(/\{\{childName\}\}/g, childName);
+            document.getElementById('sceneEmotionalBeat').textContent = scene.emotionalBeat ? `Emotional Beat: ${scene.emotionalBeat}` : '';
+            document.getElementById('sceneReadAloudNotes').textContent = scene.readAloudNotes ? `Read-Aloud Notes: ${scene.readAloudNotes}` : '';
+            document.getElementById('sceneIllustration').textContent = scene.illustration ? `Illustration Key: ${scene.illustration}` : '';
             
             // Show pathway information
             const pathways = scene.pathway || [];
@@ -240,7 +726,15 @@
                     button.className = 'choice-button';
                     button.textContent = choice.label;
                     button.onclick = () => makeChoice(choice.nextSceneId);
+                    if (choice.nextSceneId) {
+                        button.title = `Next: ${choice.nextSceneId}`;
+                    }
                     choicesContainer.appendChild(button);
+
+                    const meta = document.createElement('div');
+                    meta.className = 'choice-meta';
+                    meta.textContent = choice.nextSceneId ? `→ ${choice.nextSceneId}` : '';
+                    choicesContainer.appendChild(meta);
                 });
             } else {
                 const endMessage = document.createElement('div');
@@ -251,6 +745,9 @@
                 endMessage.textContent = '🎉 Story Complete! 🎉';
                 choicesContainer.appendChild(endMessage);
             }
+
+            renderAppPreview();
+            syncEditorToCurrentScene();
         }
         
         function makeChoice(nextSceneId) {
@@ -288,15 +785,745 @@
         
         function showAllPathways() {
             if (!storyData) return;
-            
-            let pathwayInfo = 'Story Pathways:\n\n';
+            renderPathwaysOverview(true);
+        }
+
+        function populateGlobalMeta() {
+            const el = document.getElementById('globalMeta');
+            if (!el || !storyData) return;
+            const meta = [];
+            meta.push('<div class="meta-grid">');
+            meta.push(`<div class="meta-label">ID</div><div>${storyData.id || ''}</div>`);
+            meta.push(`<div class="meta-label">Description</div><div>${storyData.description || ''}</div>`);
+            meta.push(`<div class="meta-label">Themes</div><div>${(storyData.themes || []).join(', ')}</div>`);
+            meta.push(`<div class="meta-label">Author Style</div><div>${storyData.author_style || ''}</div>`);
+            meta.push(`<div class="meta-label">Source</div><div>${storyData.source_story || ''}</div>`);
+            meta.push(`<div class="meta-label">Interactive</div><div>${storyData.interactive ? 'Yes' : 'No'}</div>`);
+            meta.push(`<div class="meta-label">Story Type</div><div>${storyData.storyType || ''}</div>`);
+            if (storyData.personalization) {
+                const tokens = storyData.personalization.tokens || [];
+                const defaults = storyData.personalization.defaults || {};
+                meta.push(`<div class="meta-label">Personalization Tokens</div><div>${tokens.join(', ')}</div>`);
+                meta.push(`<div class="meta-label">Defaults</div><div>${Object.entries(defaults).map(([k,v])=>`${k}: ${v}`).join(', ')}</div>`);
+            }
+            if (storyData.access) {
+                meta.push(`<div class="meta-label">Access Tier</div><div>${storyData.access.tier || ''}</div>`);
+                meta.push(`<div class="meta-label">Release Status</div><div>${storyData.access.releaseStatus || ''}</div>`);
+            }
+            meta.push('</div>');
+            el.innerHTML = meta.join('');
+        }
+
+        function renderPathwaysOverview(scrollIntoView = false) {
+            const el = document.getElementById('pathwaysContainer');
+            if (!el || !storyData || !storyData.pathways) return;
+            const lines = [];
             Object.entries(storyData.pathways).forEach(([key, pathway]) => {
-                pathwayInfo += `${key}: ${pathway.theme}\n`;
-                pathwayInfo += `Description: ${pathway.description}\n`;
-                pathwayInfo += `Scenes: ${pathway.scenes.join(' → ')}\n\n`;
+                lines.push(`<div style="margin-bottom:10px"><strong>${key}</strong>: ${pathway.theme || ''}`);
+                lines.push(`<div>Description: ${pathway.description || ''}</div>`);
+                if (pathway.learningOutcome) {
+                    lines.push(`<div>Learning Outcome: ${pathway.learningOutcome}</div>`);
+                }
+                if (pathway.scenes && pathway.scenes.length) {
+                    lines.push(`<div>Scenes: ${pathway.scenes.join(' → ')}</div>`);
+                }
+                lines.push('</div>');
             });
-            
-            alert(pathwayInfo);
+            el.innerHTML = lines.join('');
+            if (scrollIntoView) {
+                el.parentElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function renderVideoOptimization() {
+            const el = document.getElementById('videoOpt');
+            if (!el || !storyData || !storyData.videoCallOptimization) return;
+            const v = storyData.videoCallOptimization;
+            const parts = [];
+            parts.push(`<div><strong>Pause Points</strong>: ${(v.pausePoints || []).join(', ')}</div>`);
+            parts.push(`<div><strong>Interaction Moments</strong>: ${(v.interactionMoments || []).join(', ')}</div>`);
+            parts.push(`<div><strong>Voice Variation Cues</strong>: ${(v.voiceVariationCues || []).join(', ')}</div>`);
+            parts.push(`<div><strong>Emotional Check-Ins</strong>: ${(v.emotionalCheckIns || []).join(', ')}</div>`);
+            el.innerHTML = parts.join('');
+        }
+
+        function renderTechnicalSpecs() {
+            const el = document.getElementById('techSpecs');
+            if (!el || !storyData || !storyData.technicalSpecs) return;
+            const t = storyData.technicalSpecs;
+            const parts = [];
+            parts.push(`<div>Total Scenes: ${t.totalScenes ?? ''}</div>`);
+            parts.push(`<div>Average Pathway Length: ${t.averagePathwayLength ?? ''}</div>`);
+            parts.push(`<div>Estimated Read Time: ${t.estimatedReadTime || ''}</div>`);
+            parts.push(`<div>Interactive Elements: ${t.interactiveElements || ''}</div>`);
+            parts.push(`<div>Replay Value: ${t.replayValue || ''}</div>`);
+            el.innerHTML = parts.join('');
+        }
+
+        function renderMediaCatalog() {
+            const el = document.getElementById('mediaCatalog');
+            if (!el || !storyData || !storyData.media) return;
+            const m = storyData.media;
+            const parts = [];
+            if (m.backgrounds) {
+                parts.push('<div style="margin-bottom:8px"><strong>Backgrounds</strong></div>');
+                Object.entries(m.backgrounds).forEach(([key, bg]) => {
+                    parts.push(`<div style="margin-left:8px;margin-bottom:6px"><strong>${key}</strong> — ${bg.description || ''}`);
+                    if (bg.illustration_prompt) {
+                        parts.push(`<div class="small-note" style="margin-left:8px">Prompt: ${bg.illustration_prompt}</div>`);
+                    }
+                    parts.push('</div>');
+                });
+            }
+            if (m.characters) {
+                parts.push('<div style="margin-top:12px;margin-bottom:8px"><strong>Characters</strong></div>');
+                Object.entries(m.characters).forEach(([key, ch]) => {
+                    parts.push(`<div style="margin-left:8px;margin-bottom:6px"><strong>${key}</strong> — ${ch.description || ''}`);
+                    if (ch.voice) {
+                        parts.push(`<div class="small-note" style="margin-left:8px">Voice: ${ch.voice}</div>`);
+                    }
+                    if (ch.illustration_prompt) {
+                        parts.push(`<div class="small-note" style="margin-left:8px">Prompt: ${ch.illustration_prompt}</div>`);
+                    }
+                    parts.push('</div>');
+                });
+            }
+            el.innerHTML = parts.join('');
+        }
+
+        function renderPedagogy() {
+            const el = document.getElementById('pedagogy');
+            if (!el || !storyData || !storyData.pedagogy) return;
+            const p = storyData.pedagogy;
+            const parts = [];
+            parts.push(`<div>Estimated Read Time: ${p.estimatedReadTime || ''}</div>`);
+            if (p.learningObjectives && p.learningObjectives.length) {
+                parts.push('<div>Learning Objectives:</div>');
+                parts.push('<ul style="margin-top:6px">');
+                p.learningObjectives.forEach(obj => parts.push(`<li>${obj}</li>`));
+                parts.push('</ul>');
+            }
+            el.innerHTML = parts.join('');
+        }
+
+        // --- Editor ---
+        let editModeEnabled = false;
+
+        function initEditorUI() {
+            const toggle = document.getElementById('editModeToggle');
+            const saveBtn = document.getElementById('saveJsonBtn');
+            const validateBtn = document.getElementById('validateBtn');
+            const sceneSelect = document.getElementById('sceneSelect');
+            const addChoiceBtn = document.getElementById('addChoiceBtn');
+            const addSceneBtn = document.getElementById('addSceneBtn');
+            const duplicateSceneBtn = document.getElementById('duplicateSceneBtn');
+            const deleteSceneBtn = document.getElementById('deleteSceneBtn');
+            const bgDatalist = document.getElementById('bgKeys');
+            const illDatalist = document.getElementById('illKeys');
+            const pathwaySelect = document.getElementById('pathwaySelect');
+            const sceneIdOptions = document.getElementById('sceneIdOptions');
+
+            // Populate selects/datalists
+            populateSceneSelect();
+            populateBackgroundKeys(bgDatalist);
+            populateIllustrationKeys(illDatalist);
+            populatePathwaySelect(pathwaySelect);
+            populateSceneIdOptions(sceneIdOptions);
+
+            // Wire events
+            toggle.addEventListener('change', () => {
+                editModeEnabled = toggle.checked;
+                setEditorDisabled(!editModeEnabled);
+            });
+            saveBtn.addEventListener('click', downloadJson);
+            validateBtn.addEventListener('click', validateStory);
+            sceneSelect.addEventListener('change', () => {
+                const newId = sceneSelect.value;
+                if (!newId) return;
+                currentSceneId = newId;
+                sceneHistory.push(newId);
+                displayCurrentScene();
+            });
+            addChoiceBtn.addEventListener('click', () => {
+                const scene = getCurrentScene();
+                if (!scene) return;
+                scene.choices = scene.choices || [];
+                scene.choices.push({ label: 'New choice', nextSceneId: '' });
+                renderChoicesEditor();
+                displayCurrentScene();
+            });
+
+            addSceneBtn.addEventListener('click', () => {
+                if (!editModeEnabled) return;
+                const newId = prompt('New scene id (unique, kebab-case):');
+                if (!newId) return;
+                if (storyData.scenes.some(s => s.id === newId)) {
+                    alert('That scene id already exists.');
+                    return;
+                }
+                const newScene = {
+                    id: newId,
+                    background: '',
+                    text: '',
+                    choices: [],
+                    characters: ['childName'],
+                    pathway: [],
+                    emotionalBeat: '',
+                    readAloudNotes: '',
+                    illustration: ''
+                };
+                storyData.scenes.push(newScene);
+                currentSceneId = newId;
+                populateSceneSelect();
+                displayCurrentScene();
+                renderPathwaysOverview();
+            });
+
+            duplicateSceneBtn.addEventListener('click', () => {
+                if (!editModeEnabled) return;
+                const scene = getCurrentScene();
+                if (!scene) return;
+                const newId = prompt('Duplicate scene id:', scene.id + '-copy');
+                if (!newId) return;
+                if (storyData.scenes.some(s => s.id === newId)) {
+                    alert('That scene id already exists.');
+                    return;
+                }
+                const clone = JSON.parse(JSON.stringify(scene));
+                clone.id = newId;
+                storyData.scenes.push(clone);
+                currentSceneId = newId;
+                populateSceneSelect();
+                displayCurrentScene();
+            });
+
+            deleteSceneBtn.addEventListener('click', () => {
+                if (!editModeEnabled) return;
+                const scene = getCurrentScene();
+                if (!scene) return;
+                // Check references
+                const refs = [];
+                storyData.scenes.forEach(s => (s.choices || []).forEach(c => { if (c.nextSceneId === scene.id) refs.push(`choice in ${s.id}`); }));
+                Object.entries(storyData.pathways || {}).forEach(([pid, p]) => (p.scenes || []).forEach(sid => { if (sid === scene.id) refs.push(`pathway ${pid}`); }));
+                if (refs.length > 0) {
+                    const ok = confirm('This scene is referenced by:\n\n' + refs.join('\n') + '\n\nDelete anyway?');
+                    if (!ok) return;
+                    // Remove references
+                    storyData.scenes.forEach(s => { s.choices = (s.choices || []).filter(c => c.nextSceneId !== scene.id); });
+                    Object.values(storyData.pathways || {}).forEach(p => { p.scenes = (p.scenes || []).filter(sid => sid !== scene.id); });
+                } else if (!confirm('Delete this scene?')) {
+                    return;
+                }
+                // Delete
+                storyData.scenes = storyData.scenes.filter(s => s.id !== scene.id);
+                // Set current to first scene
+                currentSceneId = storyData.scenes[0]?.id || '';
+                populateSceneSelect();
+                displayCurrentScene();
+                renderPathwaysOverview();
+            });
+
+            // Field change handlers
+            bindField('editText', (scene, value) => scene.text = value);
+            bindField('editReadAloudNotes', (scene, value) => scene.readAloudNotes = value);
+            bindField('editBackground', (scene, value) => scene.background = value);
+            bindField('editIllustration', (scene, value) => scene.illustration = value);
+            bindField('editEmotionalBeat', (scene, value) => scene.emotionalBeat = value);
+
+            // Pathways editor handlers
+            pathwaySelect.addEventListener('change', renderPathwaysEditor);
+            document.getElementById('addPathwaySceneBtn').addEventListener('click', () => {
+                const sel = document.getElementById('pathwaySelect');
+                const input = document.getElementById('pathwayNewScene');
+                const id = sel.value;
+                const sceneId = input.value.trim();
+                if (!id || !sceneId) return;
+                const p = storyData.pathways[id];
+                if (!p.scenes.includes(sceneId)) p.scenes.push(sceneId);
+                input.value = '';
+                renderPathwaysEditor();
+            });
+
+            // Initialize editor with current scene
+            setEditorDisabled(true);
+            syncEditorToCurrentScene();
+            renderPathwaysEditor();
+
+            // Global metadata populate + bind
+            populateGlobalEditorFields();
+            bindGlobalMeta();
+        }
+
+        function setEditorDisabled(disabled) {
+            const ids = ['editText','editReadAloudNotes','editBackground','editIllustration','editEmotionalBeat','addChoiceBtn','pathwaySelect','pathwayNewScene','addPathwaySceneBtn'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.disabled = disabled;
+            });
+            // Also disable choice inputs when needed
+            const container = document.getElementById('editChoicesContainer');
+            container.querySelectorAll('input,button,select,textarea').forEach(el => { el.disabled = disabled; });
+            const pathwayList = document.getElementById('pathwayList');
+            pathwayList.querySelectorAll('button').forEach(el => { el.disabled = disabled; });
+        }
+
+        function populateSceneSelect() {
+            const select = document.getElementById('sceneSelect');
+            select.innerHTML = '';
+            storyData.scenes.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.textContent = `${s.id}`;
+                select.appendChild(opt);
+            });
+            select.value = currentSceneId;
+        }
+
+        function populateBackgroundKeys(datalist) {
+            datalist.innerHTML = '';
+            const keys = Object.keys((storyData.media && storyData.media.backgrounds) || {});
+            keys.forEach(k => {
+                const opt = document.createElement('option');
+                opt.value = k;
+                datalist.appendChild(opt);
+            });
+        }
+
+        function populateIllustrationKeys(datalist) {
+            datalist.innerHTML = '';
+            const keys = Array.from(new Set(storyData.scenes.map(s => s.illustration).filter(Boolean)));
+            keys.forEach(k => {
+                const opt = document.createElement('option');
+                opt.value = k;
+                datalist.appendChild(opt);
+            });
+        }
+
+        function populatePathwaySelect(select) {
+            select.innerHTML = '';
+            Object.keys(storyData.pathways || {}).forEach(id => {
+                const opt = document.createElement('option');
+                opt.value = id;
+                opt.textContent = id;
+                select.appendChild(opt);
+            });
+        }
+
+        function populateSceneIdOptions(datalist) {
+            datalist.innerHTML = '';
+            storyData.scenes.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                datalist.appendChild(opt);
+            });
+        }
+
+        function getCurrentScene() {
+            return storyData.scenes.find(s => s.id === currentSceneId);
+        }
+
+        function syncEditorToCurrentScene() {
+            populateSceneSelect();
+            const scene = getCurrentScene();
+            if (!scene) return;
+            document.getElementById('editText').value = scene.text || '';
+            document.getElementById('editReadAloudNotes').value = scene.readAloudNotes || '';
+            document.getElementById('editBackground').value = scene.background || '';
+            document.getElementById('editIllustration').value = scene.illustration || '';
+            document.getElementById('editEmotionalBeat').value = scene.emotionalBeat || '';
+            renderChoicesEditor();
+        }
+
+        function populateGlobalEditorFields() {
+            document.getElementById('editTitle').value = storyData.title || '';
+            document.getElementById('editDescription').value = storyData.description || '';
+            document.getElementById('editAgeMin').value = storyData.ageRange?.[0] ?? '';
+            document.getElementById('editAgeMax').value = storyData.ageRange?.[1] ?? '';
+            document.getElementById('editAuthorStyle').value = storyData.author_style || '';
+            document.getElementById('editSourceStory').value = storyData.source_story || '';
+            document.getElementById('editInteractive').checked = !!storyData.interactive;
+            document.getElementById('editStoryType').value = storyData.storyType || '';
+            document.getElementById('editThemes').value = (storyData.themes || []).join(', ');
+            const tokens = (storyData.personalization?.tokens || []).join(', ');
+            document.getElementById('editPersonalizationTokens').value = tokens;
+            const defaults = storyData.personalization?.defaults || {};
+            document.getElementById('editPersonalizationDefaults').value = JSON.stringify(defaults);
+            document.getElementById('editAccessTier').value = storyData.access?.tier || '';
+            document.getElementById('editReleaseStatus').value = storyData.access?.releaseStatus || '';
+        }
+
+        function bindGlobalMeta() {
+            const set = (id, fn) => {
+                const el = document.getElementById(id);
+                const evt = el.type === 'checkbox' ? 'change' : 'input';
+                el.addEventListener(evt, () => { if (!editModeEnabled) return; fn(el); refreshAfterMetaChange(); });
+            };
+            set('editTitle', el => storyData.title = el.value);
+            set('editDescription', el => storyData.description = el.value);
+            set('editAgeMin', el => { const v = parseInt(el.value, 10); storyData.ageRange = [isNaN(v)?0:v, storyData.ageRange?.[1] ?? 0]; });
+            set('editAgeMax', el => { const v = parseInt(el.value, 10); storyData.ageRange = [storyData.ageRange?.[0] ?? 0, isNaN(v)?0:v]; });
+            set('editAuthorStyle', el => storyData.author_style = el.value);
+            set('editSourceStory', el => storyData.source_story = el.value);
+            set('editInteractive', el => storyData.interactive = el.checked);
+            set('editStoryType', el => storyData.storyType = el.value);
+            set('editThemes', el => storyData.themes = el.value.split(',').map(s => s.trim()).filter(Boolean));
+            set('editPersonalizationTokens', el => {
+                storyData.personalization = storyData.personalization || { tokens: [], defaults: {} };
+                storyData.personalization.tokens = el.value.split(',').map(s => s.trim()).filter(Boolean);
+            });
+            set('editPersonalizationDefaults', el => {
+                storyData.personalization = storyData.personalization || { tokens: [], defaults: {} };
+                try {
+                    storyData.personalization.defaults = JSON.parse(el.value);
+                } catch {
+                    // support k:v, k:v
+                    const obj = {};
+                    el.value.split(',').map(s=>s.trim()).filter(Boolean).forEach(pair => {
+                        const [k,...rest] = pair.split(':');
+                        if (k && rest.length) obj[k.trim()] = rest.join(':').trim();
+                    });
+                    storyData.personalization.defaults = obj;
+                }
+            });
+            set('editAccessTier', el => { storyData.access = storyData.access || {}; storyData.access.tier = el.value; });
+            set('editReleaseStatus', el => { storyData.access = storyData.access || {}; storyData.access.releaseStatus = el.value; });
+        }
+
+        function refreshAfterMetaChange() {
+            document.getElementById('storyTitle').textContent = (storyData.title || '').replace(/\{\{childName\}\}/g, childName);
+            populateGlobalMeta();
+            renderAppPreview();
+        }
+
+        function bindField(id, apply) {
+            const el = document.getElementById(id);
+            el.addEventListener('input', () => {
+                if (!editModeEnabled) return;
+                const scene = getCurrentScene();
+                if (!scene) return;
+                apply(scene, el.value);
+                displayCurrentScene();
+            });
+        }
+
+        function renderChoicesEditor() {
+            const container = document.getElementById('editChoicesContainer');
+            container.innerHTML = '';
+            const scene = getCurrentScene();
+            const sceneIds = storyData.scenes.map(s => s.id);
+            if (!scene) return;
+            (scene.choices || []).forEach((ch, idx) => {
+                const row = document.createElement('div');
+                row.className = 'choice-row';
+                const labelInput = document.createElement('input');
+                labelInput.className = 'editor-input';
+                labelInput.placeholder = 'label';
+                labelInput.value = ch.label || '';
+                labelInput.addEventListener('input', () => { if (editModeEnabled) { ch.label = labelInput.value; displayCurrentScene(); }});
+                const nextInput = document.createElement('input');
+                nextInput.className = 'editor-input';
+                nextInput.placeholder = 'nextSceneId';
+                nextInput.value = ch.nextSceneId || '';
+                nextInput.setAttribute('list','sceneIdOptions');
+                nextInput.addEventListener('input', () => { if (editModeEnabled) { ch.nextSceneId = nextInput.value; }});
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'small-btn secondary';
+                removeBtn.textContent = '✕';
+                removeBtn.title = 'Remove choice';
+                removeBtn.addEventListener('click', () => {
+                    if (!editModeEnabled) return;
+                    scene.choices.splice(idx,1);
+                    renderChoicesEditor();
+                    displayCurrentScene();
+                });
+                row.appendChild(labelInput);
+                row.appendChild(nextInput);
+                row.appendChild(removeBtn);
+                container.appendChild(row);
+            });
+        }
+
+        function renderPathwaysEditor() {
+            const select = document.getElementById('pathwaySelect');
+            const list = document.getElementById('pathwayList');
+            list.innerHTML = '';
+            const id = select.value || Object.keys(storyData.pathways || {})[0];
+            if (!id) return;
+            select.value = id;
+            const p = storyData.pathways[id];
+            (p.scenes || []).forEach((sid, index) => {
+                const row = document.createElement('div');
+                row.className = 'pathway-row';
+                const chip = document.createElement('span');
+                chip.className = 'pathway-chip';
+                chip.textContent = sid;
+                const up = document.createElement('button');
+                up.className = 'small-btn secondary';
+                up.textContent = '↑';
+                up.title = 'Move up';
+                up.addEventListener('click', () => {
+                    if (!editModeEnabled || index===0) return;
+                    const tmp = p.scenes[index-1];
+                    p.scenes[index-1] = p.scenes[index];
+                    p.scenes[index] = tmp;
+                    renderPathwaysEditor();
+                });
+                const down = document.createElement('button');
+                down.className = 'small-btn secondary';
+                down.textContent = '↓';
+                down.title = 'Move down';
+                down.addEventListener('click', () => {
+                    if (!editModeEnabled || index===p.scenes.length-1) return;
+                    const tmp = p.scenes[index+1];
+                    p.scenes[index+1] = p.scenes[index];
+                    p.scenes[index] = tmp;
+                    renderPathwaysEditor();
+                });
+                const remove = document.createElement('button');
+                remove.className = 'small-btn secondary';
+                remove.textContent = '✕';
+                remove.title = 'Remove from pathway';
+                remove.addEventListener('click', () => {
+                    if (!editModeEnabled) return;
+                    p.scenes.splice(index,1);
+                    renderPathwaysEditor();
+                });
+                row.appendChild(chip);
+                row.appendChild(up);
+                row.appendChild(down);
+                row.appendChild(remove);
+                list.appendChild(row);
+            });
+        }
+
+        function downloadJson() {
+            const blob = new Blob([JSON.stringify(storyData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const filename = `${storyData.id || 'story'}.edited.json`;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function validateStory() {
+            const messages = [];
+            // Unique scene ids
+            const ids = storyData.scenes.map(s => s.id);
+            const idSet = new Set();
+            const dups = new Set();
+            ids.forEach(id => { if (idSet.has(id)) dups.add(id); else idSet.add(id); });
+            if (dups.size > 0) messages.push(`Duplicate scene ids: ${Array.from(dups).join(', ')}`);
+            // Choices point to valid scenes
+            const idLookup = new Set(ids);
+            storyData.scenes.forEach(s => {
+                (s.choices || []).forEach(c => {
+                    if (c.nextSceneId && !idLookup.has(c.nextSceneId)) {
+                        messages.push(`Scene ${s.id} has choice to missing scene: ${c.nextSceneId}`);
+                    }
+                });
+            });
+            // Pathways reference valid scenes
+            Object.entries(storyData.pathways || {}).forEach(([pid, p]) => {
+                (p.scenes || []).forEach(sid => {
+                    if (!idLookup.has(sid)) messages.push(`Pathway ${pid} references missing scene: ${sid}`);
+                });
+            });
+            // Output
+            if (messages.length === 0) alert('✅ Validation passed.');
+            else alert('Validation issues:\n\n' + messages.join('\n'));
+        }
+
+        function renderAppPreview() {
+            if (!storyData || !currentSceneId) return;
+            const scene = storyData.scenes.find(s => s.id === currentSceneId);
+            if (!scene) return;
+            const stage = document.querySelector('.app-preview-stage');
+            const titleEl = document.getElementById('previewTitle');
+            const textEl = document.getElementById('previewText');
+            const choicesEl = document.getElementById('previewChoices');
+            const illEl = document.getElementById('previewIllustration');
+
+            // Title isn't part of JSON scenes; hide unless provided
+            if (scene.title) {
+                titleEl.style.display = '';
+                titleEl.textContent = String(scene.title).replace(/\{\{childName\}\}/g, childName);
+            } else {
+                titleEl.style.display = 'none';
+            }
+
+            textEl.textContent = scene.text.replace(/\{\{childName\}\}/g, childName);
+
+            // Choices
+            choicesEl.innerHTML = '';
+            if (scene.choices && scene.choices.length > 0) {
+                scene.choices.forEach(choice => {
+                    const btn = document.createElement('button');
+                    btn.className = 'story-choice';
+                    btn.textContent = choice.label;
+                    btn.onclick = () => makeChoice(choice.nextSceneId);
+                    choicesEl.appendChild(btn);
+                });
+            }
+
+            // Illustration and background resolution (align with app: supports scene.illustration_url)
+            const illKey = scene.illustration_url || scene.illustration || '';
+            const bgKey = scene.background || '';
+            const { backgrounds, illustrations } = getMediaMapping();
+
+            // Resolve background URL: allow absolute URL in scene.background or mapping or media backgrounds with url
+            let bgUrl = '';
+            const normalizeUrl = (u) => (typeof u === 'string' ? u.replace(/^@+/, '') : '');
+            if (typeof bgKey === 'string' && /^(https?:|data:)/.test(normalizeUrl(bgKey))) {
+                bgUrl = normalizeUrl(bgKey);
+            } else if (bgKey && backgrounds[bgKey]) {
+                bgUrl = backgrounds[bgKey];
+            } else if (storyData.media && storyData.media.backgrounds && storyData.media.backgrounds[bgKey]) {
+                const bgMeta = storyData.media.backgrounds[bgKey];
+                const candidate = normalizeUrl(bgMeta.url || bgMeta.storage_url || bgMeta.path || bgMeta.storage_path || '');
+                if (candidate && /^(https?:|data:)/.test(candidate)) bgUrl = candidate;
+            }
+
+            if (bgUrl) {
+                stage.classList.add('bg-has-image');
+                stage.style.backgroundImage = `url('${bgUrl}')`;
+            } else {
+                stage.classList.remove('bg-has-image');
+                stage.style.backgroundImage = '';
+            }
+            // Illustration: allow absolute URL in scene.illustration or mapping or media illustrations with url
+            let illUrl = '';
+            if (typeof illKey === 'string' && /^(https?:|data:)/.test(normalizeUrl(illKey))) {
+                illUrl = normalizeUrl(illKey);
+            } else if (illKey && illustrations[illKey]) {
+                illUrl = illustrations[illKey];
+            } else if (storyData.media && storyData.media.illustrations && storyData.media.illustrations[illKey]) {
+                const illMeta = storyData.media.illustrations[illKey];
+                const candidate = normalizeUrl(illMeta.url || illMeta.storage_url || illMeta.path || illMeta.storage_path || '');
+                if (candidate && /^(https?:|data:)/.test(candidate)) illUrl = candidate;
+            }
+            illEl.innerHTML = '';
+            if (illUrl) {
+                const img = document.createElement('img');
+                img.src = illUrl;
+                img.alt = 'Story illustration';
+                // Let CSS control sizing/positioning per spec
+                illEl.appendChild(img);
+            } else {
+                illEl.textContent = illKey ? `Illustration: ${illKey}` : '';
+            }
+        }
+
+        // --- Media mapping panel ---
+        function getMediaMapping() {
+            try {
+                const raw = localStorage.getItem('storyTesterMediaMap');
+                if (!raw) return { backgrounds: {}, illustrations: {} };
+                const parsed = JSON.parse(raw);
+                return {
+                    backgrounds: parsed.backgrounds || {},
+                    illustrations: parsed.illustrations || {}
+                };
+            } catch {
+                return { backgrounds: {}, illustrations: {} };
+            }
+        }
+
+        function saveMediaMapping(map) {
+            localStorage.setItem('storyTesterMediaMap', JSON.stringify(map));
+        }
+
+        function initMediaMapping() {
+            const btn = document.getElementById('openMediaMapping');
+            btn.addEventListener('click', () => {
+                const map = getMediaMapping();
+                // Collect known keys from loaded story
+                const bgKeys = Object.keys((storyData.media && storyData.media.backgrounds) || {});
+                const illKeys = ([]).concat(
+                    ...storyData.scenes.map(s => s.illustration || []).filter(Boolean)
+                );
+                const uniqueIll = Array.from(new Set(illKeys));
+
+                // Build a simple prompt-based editor for now (minimal UI)
+                // Backgrounds
+                bgKeys.forEach(k => {
+                    const current = map.backgrounds[k] || '';
+                    const val = prompt(`Background URL for "${k}" (leave blank to clear)`, current);
+                    if (val === null) return; // cancel keeps value
+                    if (val.trim() === '') delete map.backgrounds[k]; else map.backgrounds[k] = val.trim();
+                });
+                // Illustrations
+                uniqueIll.forEach(k => {
+                    const current = map.illustrations[k] || '';
+                    const val = prompt(`Illustration URL for "${k}" (leave blank to clear)`, current);
+                    if (val === null) return;
+                    if (val.trim() === '') delete map.illustrations[k]; else map.illustrations[k] = val.trim();
+                });
+                saveMediaMapping(map);
+                renderAppPreview();
+            });
+        }
+
+        function initPreviewControls() {
+            const stage = document.querySelector('.app-preview-stage');
+            const deviceSel = document.getElementById('previewDevice');
+            const scaleInput = document.getElementById('previewScale');
+            const cssToggle = document.getElementById('toggleAppCss');
+
+            const applyDevice = () => {
+                const val = deviceSel.value;
+                if (val === 'mobile') {
+                    stage.style.width = '375px';
+                    stage.style.height = '667px';
+                } else if (val === 'tablet') {
+                    stage.style.width = '768px';
+                    stage.style.height = '1024px';
+                } else {
+                    stage.style.width = '1280px';
+                    stage.style.height = '720px';
+                }
+            };
+
+            const applyScale = () => {
+                const val = parseFloat(scaleInput.value) || 1;
+                stage.style.setProperty('--story-text-scale', String(val));
+            };
+
+            const applyCssToggle = () => {
+                const enabled = cssToggle.checked;
+                let link = document.getElementById('appCssLink');
+                if (enabled) {
+                    if (!link) {
+                        link = document.createElement('link');
+                        link.id = 'appCssLink';
+                        link.rel = 'stylesheet';
+                        link.href = '../apps/read/src/styles/index.css';
+                        document.head.appendChild(link);
+                    }
+                    // Inject an override style to restore scrolling when using app CSS
+                    let override = document.getElementById('appCssOverride');
+                    if (!override) {
+                        override = document.createElement('style');
+                        override.id = 'appCssOverride';
+                        override.innerHTML = 'html, body { overflow: auto !important; height: auto !important; }';
+                        document.head.appendChild(override);
+                    }
+                } else if (link) {
+                    link.parentElement.removeChild(link);
+                    const override = document.getElementById('appCssOverride');
+                    if (override) override.parentElement.removeChild(override);
+                }
+            };
+
+            deviceSel.addEventListener('change', applyDevice);
+            scaleInput.addEventListener('input', applyScale);
+            cssToggle.addEventListener('change', applyCssToggle);
+
+            applyDevice();
+            applyScale();
         }
         
         // Auto-update child name as user types

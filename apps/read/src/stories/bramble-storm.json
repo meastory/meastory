@@ -27,7 +27,8 @@
         }
       ],
       "emotionalBeat": "excited-determination",
-      "readAloudNotes": "Use sound effects for the raindrop 'splat' and leaf whispers. Make Bramble's 'Oh my paws!' distinctive. Pause after hearing the different animal sounds to build anticipation for the choice."
+      "readAloudNotes": "Use sound effects for the raindrop 'splat' and leaf whispers. Make Bramble's 'Oh my paws!' distinctive. Pause after hearing the different animal sounds to build anticipation for the choice.",
+      "illustration": "opening-1"
     },
     {
       "id": "branch-a-1",
@@ -40,7 +41,8 @@
         }
       ],
       "emotionalBeat": "energetic-accomplishment",
-      "readAloudNotes": "Make Pip's bouncing energy infectious with your voice. Speed up the pacing during the 'racing' section, then slow down thoughtfully when Bramble notices the mixing problem."
+      "readAloudNotes": "Make Pip's bouncing energy infectious with your voice. Speed up the pacing during the 'racing' section, then slow down thoughtfully when Bramble notices the mixing problem.",
+      "illustration": "branch-a-1"
     },
     {
       "id": "branch-b-1",
@@ -53,7 +55,8 @@
         }
       ],
       "emotionalBeat": "calm-satisfaction",
-      "readAloudNotes": "Start with Bramble's thoughtful tone, show him fidgeting with his scarf. Use descriptive, slower pacing to match the careful approach. Make Pip's 'Ooh, ooh!' curious rather than frantic. End with warm satisfaction in both characters' voices."
+      "readAloudNotes": "Start with Bramble's thoughtful tone, show him fidgeting with his scarf. Use descriptive, slower pacing to match the careful approach. Make Pip's 'Ooh, ooh!' curious rather than frantic. End with warm satisfaction in both characters' voices.",
+      "illustration": "branch-b-1"
     },
     {
       "id": "dp2-a-1",
@@ -70,7 +73,8 @@
         }
       ],
       "emotionalBeat": "energetic-dilemma",
-      "readAloudNotes": "Contrast Bramble's continued energy with Willow's calm, thoughtful 'hmms.' Make the wind sounds with 'swoosh, grab!' Use questioning tone for Willow's puzzle description. Pause before choices to let the dilemma sink in."
+      "readAloudNotes": "Contrast Bramble's continued energy with Willow's calm, thoughtful 'hmms.' Make the wind sounds with 'swoosh, grab!' Use questioning tone for Willow's puzzle description. Pause before choices to let the dilemma sink in.",
+      "illustration": "dp2-a-1"
     },
     {
       "id": "dp2-b-1",
@@ -87,7 +91,8 @@
         }
       ],
       "emotionalBeat": "thoughtful-urgency",
-      "readAloudNotes": "Contrast with dp2-a-1 by showing Bramble's calmer, more settled energy. Make Willow's description of organized materials sound proud and orderly. Build tension with the worried squeak interruption - pause dramatically before Willow's response."
+      "readAloudNotes": "Contrast with dp2-a-1 by showing Bramble's calmer, more settled energy. Make Willow's description of organized materials sound proud and orderly. Build tension with the worried squeak interruption - pause dramatically before Willow's response.",
+      "illustration": "dp2-b-1"
     },
     {
       "id": "journey-1a2a-1",
@@ -100,7 +105,8 @@
         }
       ],
       "emotionalBeat": "frantic-exhaustion",
-      "readAloudNotes": "Start with high energy and excitement, make the treasure hunt sound fun and chaotic. Gradually slow down and add frustration as things keep falling apart. End with Bramble sounding tired and confused, voice becoming quieter and more uncertain."
+      "readAloudNotes": "Start with high energy and excitement, make the treasure hunt sound fun and chaotic. Gradually slow down and add frustration as things keep falling apart. End with Bramble sounding tired and confused, voice becoming quieter and more uncertain.",
+      "illustration": "journey-1a2a-1"
     },
     {
       "id": "journey-1a2a-2",
@@ -113,7 +119,8 @@
         }
       ],
       "emotionalBeat": "overwhelming-realization",
-      "readAloudNotes": "Start with busy, chaotic energy - multiple voices and sounds overlapping. Show Bramble's automatic 'I can help!' enthusiasm, then gradually build the confusion with listing mistakes. End with Bramble's voice becoming small and dejected, almost whispered 'worse and worser.'"
+      "readAloudNotes": "Start with busy, chaotic energy - multiple voices and sounds overlapping. Show Bramble's automatic 'I can help!' enthusiasm, then gradually build the confusion with listing mistakes. End with Bramble's voice becoming small and dejected, almost whispered 'worse and worser.'",
+      "illustration": "journey-1a2a-2"
     },
     {
       "id": "journey-1a2b-1",
@@ -126,7 +133,8 @@
         }
       ],
       "emotionalBeat": "thoughtful-learning",
-      "readAloudNotes": "Start with Bramble taking a deep breath - make this audible. Slow down your pacing to match the careful approach. Use gentle, methodical tones for the weaving instructions. End with Willow's wise lesson delivered warmly but clearly."
+      "readAloudNotes": "Start with Bramble taking a deep breath - make this audible. Slow down your pacing to match the careful approach. Use gentle, methodical tones for the weaving instructions. End with Willow's wise lesson delivered warmly but clearly.",
+      "illustration": "journey-1a2b-1"
     },
     {
       "id": "journey-1a2b-2",
@@ -139,7 +147,8 @@
         }
       ],
       "emotionalBeat": "caring-realization",
-      "readAloudNotes": "Show Hazel's tiredness through a weary but still caring voice. Use gentle concern in Bramble's question about her shutters. Build to Bramble's thoughtful realization about caring for caregivers - let this insight feel earned and important."
+      "readAloudNotes": "Show Hazel's tiredness through a weary but still caring voice. Use gentle concern in Bramble's question about her shutters. Build to Bramble's thoughtful realization about caring for caregivers - let this insight feel earned and important.",
+      "illustration": "journey-1a2b-2"
     },
     {
       "id": "journey-1b2a-1",
@@ -152,7 +161,8 @@
         }
       ],
       "emotionalBeat": "confident-innovation",
-      "readAloudNotes": "Show Bramble's growing confidence and excitement about trying something new. Make Willow sound delighted and surprised by the success. Build energy as they discover the new pattern works even better than expected. End with satisfaction about helping the mice family efficiently."
+      "readAloudNotes": "Show Bramble's growing confidence and excitement about trying something new. Make Willow sound delighted and surprised by the success. Build energy as they discover the new pattern works even better than expected. End with satisfaction about helping the mice family efficiently.",
+      "illustration": "journey-1b2a-1"
     },
     {
       "id": "journey-1b2a-2",
@@ -165,7 +175,8 @@
         }
       ],
       "emotionalBeat": "integrated-wisdom",
-      "readAloudNotes": "Emphasize the feeling of integration - two good feelings woven together. Use a wise, settled tone as Bramble applies his lessons from the day. Show how all the experiences have led to this moment of balanced understanding."
+      "readAloudNotes": "Emphasize the feeling of integration - two good feelings woven together. Use a wise, settled tone as Bramble applies his lessons from the day. Show how all the experiences have led to this moment of balanced understanding.",
+      "illustration": "journey-1b2a-2"
     },
     {
       "id": "journey-1b2b-1",
@@ -178,7 +189,8 @@
         }
       ],
       "emotionalBeat": "traditional-comfort",
-      "readAloudNotes": "Show Bramble's thoughtful fidgeting with his scarf - make this gesture visible through voice. Use reverent tones when describing the traditional pattern and family wisdom. Emphasize the soothing, reliable feeling of time-tested methods."
+      "readAloudNotes": "Show Bramble's thoughtful fidgeting with his scarf - make this gesture visible through voice. Use reverent tones when describing the traditional pattern and family wisdom. Emphasize the soothing, reliable feeling of time-tested methods.",
+      "illustration": "journey-1b2b-1"
     },
     {
       "id": "journey-1b2b-2",
@@ -191,7 +203,8 @@
         }
       ],
       "emotionalBeat": "respectful-patience",
-      "readAloudNotes": "Show the organized, peaceful atmosphere with calm, measured pacing. Use Bramble's thoughtful questioning voice - he's really learning to think before acting. Make Hazel's musing sound genuinely contemplative, considering different possibilities with respect."
+      "readAloudNotes": "Show the organized, peaceful atmosphere with calm, measured pacing. Use Bramble's thoughtful questioning voice - he's really learning to think before acting. Make Hazel's musing sound genuinely contemplative, considering different possibilities with respect.",
+      "illustration": "journey-1b2b-2"
     },
     {
       "id": "ending-consistent-primary",
@@ -199,7 +212,8 @@
       "text": "That's when something wonderful-magical happened—the most wonderful thing of all! Instead of anyone getting cross or frustrated, all the woodland creatures gathered around Bramble with the kindest, gentlest faces, like a warm circle of friendship. \"Oh, dear little Bramble,\" said Mrs. Mouse softly, \"you've been trying to help everyone all day long, haven't you?\" \"Sometimes the bravest thing a helper can do is ask for help themselves,\" said old Mr. Hedgehog warmly. \"Ask for help? Me?\" Bramble looked up, surprised. \"Of course, dear heart!\" said Hazel. \"Steady as we go works much better when we all go steady together, like a team of horses pulling the same cart.\" So Bramble told them about racing with Pip, and rushing with Willow, and trying to fix everything by going faster and faster. \"I think I forgot that helping works best when everyone does it together,\" he realized. By the time everything was sorted out (with everyone helping everyone), Bramble had learned that the very best helpers are the ones who know when to ask for help, and how to help others help each other—like links in a golden chain of kindness. And if you listened very carefully on quiet woodland mornings after that, you could hear all the creatures saying together: \"We can help with that!\" Because that's what friends do—they help each other, always and forever.",
       "choices": [],
       "emotionalBeat": "community-warmth",
-      "readAloudNotes": "Build to the magical moment with wonder in your voice. Give each woodland creature a distinct, caring voice. Show Bramble's surprise and growing understanding. End with the collective 'We can help with that!' as a joyful chorus - invite the child to join in."
+      "readAloudNotes": "Build to the magical moment with wonder in your voice. Give each woodland creature a distinct, caring voice. Show Bramble's surprise and growing understanding. End with the collective 'We can help with that!' as a joyful chorus - invite the child to join in.",
+      "illustration": "ending-consistent-primary"
     },
     {
       "id": "ending-consistent-secondary",
@@ -207,7 +221,8 @@
       "text": "\"I think,\" said Bramble slowly, the words coming like honey from a spoon, \"maybe the most helpful thing is to trust that everyone knows what they need right now, deep in their hearts.\" \"Exactly-exactly!\" said Bramble. \"We can be ready to help, without deciding for them what help they need or when they need it.\" So they made a simple, friendly sign that said \"Storm supplies ready and waiting—come when your heart feels ready too\" and placed it where everyone could see it from all the woodland paths, like a gentle lighthouse beacon. Then they settled in to wait with patient hearts, and something truly magical happened! One by one, families began to appear—exactly when they were ready. The mice came together as a cozy group, Mr. Hedgehog came with his dear friend Mrs. Rabbit, and the young rabbits came bouncing over just as they finished their own preparations. As the storm settled around them, Bramble realized he'd learned that the very best help starts with the most important question of all: \"What kind of help would be most welcome to you?\" The next morning, Bramble walked through the sparkling woodland knowing that sometimes the very best way to help is to start by asking how to help—and then listening, really listening, with your heart as well as your ears. And if you walked very quietly through the woodland after that, you might hear all the creatures asking each other: \"What kind of help would be most welcome?\" Because that's what true friends do—they listen first, then help with love.",
       "choices": [],
       "emotionalBeat": "peaceful-understanding",
-      "readAloudNotes": "Start with Bramble speaking very slowly and thoughtfully - 'like honey from a spoon.' Show the patient waiting and natural timing of families arriving. End with the gentle lesson about listening first, and invite the child to whisper the final question with you."
+      "readAloudNotes": "Start with Bramble speaking very slowly and thoughtfully - 'like honey from a spoon.' Show the patient waiting and natural timing of families arriving. End with the gentle lesson about listening first, and invite the child to whisper the final question with you.",
+      "illustration": "ending-consistent-secondary"
     },
     {
       "id": "ending-balanced",
@@ -215,7 +230,8 @@
       "text": "\"Hazel,\" said Bramble gently, \"I think the kindest thing right now is to help you get ready for the storm. Everyone else can wait just a little bit longer.\" \"Nana always says that you can't pour tea from an empty pot,\" Bramble said with the warmest smile. \"And today I learned something wonderful-important from Pip—that sometimes you need to go fast as a shooting star. And from Willow I learned that sometimes you need to go slow as honey dripping from a spoon. But right now, I think we need to take care of you first, because helpers need helping too.\" So together, they secured Hazel's shutters and made sure she had everything needed for a cozy storm night. Then they delivered supplies together—faster AND safer with teamwork. By the time the storm had passed and the sun was painting rainbow puddles everywhere, Bramble walked through the woodland feeling different in the most wonderful way. He still wanted to help everyone—that would never change. But now he knew that helping meant different things at different times, like wearing different clothes for different weather. Sometimes it meant moving fast as a hummingbird's wings, sometimes it meant slowing down like honey on a cold day, and sometimes it meant remembering that everyone—even the helpers—needed care and kindness too. \"I can help with that!\" Bramble called out cheerfully to a young squirrel struggling with a wide puddle. But first, he thought with a smile as bright as morning sunshine, \"Let me think with my heart about the very best way to help.\" And from that day forward, whenever any creature needed help, they knew they could count on Bramble—not just to help, but to help in exactly the right way, at exactly the right time, with exactly the right amount of care.",
       "choices": [],
       "emotionalBeat": "balanced-wisdom",
-      "readAloudNotes": "Start with gentle determination in Bramble's voice. Show the warmth of Nana's wisdom being applied. Build through the teamwork with Hazel to the morning after revelation. End with Bramble's familiar 'I can help with that!' but now with the added wisdom of 'let me think with my heart' - show his growth."
+      "readAloudNotes": "Start with gentle determination in Bramble's voice. Show the warmth of Nana's wisdom being applied. Build through the teamwork with Hazel to the morning after revelation. End with Bramble's familiar 'I can help with that!' but now with the added wisdom of 'let me think with my heart' - show his growth.",
+      "illustration": "ending-balanced"
     }
   ],
   "pathways": {

@@ -8,6 +8,7 @@ interface JsonScene {
   id: string
   title?: string
   background?: string
+  illustration?: string
   text: string
   choices?: JsonChoice[]
   meta?: { emotionalBeat?: string; readAloudNotes?: string }
@@ -176,6 +177,27 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
       if (firstSceneFromJson) {
         // Map JSON scene to StoryScene-like shape for UI compatibility
         const mappedChoices = (firstSceneFromJson.choices || []).map(c => ({ label: c.label, next_scene_id: c.nextSceneId }))
+        // Resolve optional per-scene illustration via Supabase Storage (bucket: illustrations)
+        let illustrationUrl: string | null = null
+        try {
+          const contentAny = (story as unknown as { content?: Record<string, unknown> }).content as Record<string, unknown> | undefined
+          const media = (contentAny?.media as Record<string, unknown> | undefined)
+          const illustrations = (media?.illustrations as Record<string, { storage_path?: string }> | undefined)
+          const illKey = firstSceneFromJson.illustration || firstSceneFromJson.id
+          let storagePath = illKey ? illustrations?.[illKey]?.storage_path : undefined
+          if (!storagePath && illKey) {
+            const storySlug = (story as unknown as { slug?: string; id?: string }).slug || (story as unknown as { id?: string }).id || String(storyId)
+            const jsonId = typeof contentAny?.id === 'string' ? (contentAny!.id as string) : undefined
+            const base = jsonId || storySlug
+            storagePath = base ? `stories/${base}/${illKey}.png` : undefined
+          }
+          if (storagePath) {
+            const { data } = supabase.storage.from('illustrations').getPublicUrl(storagePath)
+            illustrationUrl = data.publicUrl || null
+          }
+        } catch (e) {
+          console.warn('illustration resolve failed (first scene)', e)
+        }
         const mapped: StoryScene = {
           id: firstSceneFromJson.id,
           story_id: storyId,
@@ -188,6 +210,8 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
           created_at: story.created_at,
           updated_at: story.updated_at,
         } as unknown as StoryScene
+        // Attach overlay-only illustration URL (not part of DB schema)
+        ;(mapped as unknown as { illustration_url?: string | null }).illustration_url = illustrationUrl
         console.log('🎬 First scene (JSON) loaded:', mapped.title || mapped.id)
         set({ currentScene: mapped })
         try {
@@ -253,6 +277,27 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
 
         if (nextSceneObj) {
           const mappedChoices = (nextSceneObj.choices || []).map(c => ({ label: c.label, next_scene_id: c.nextSceneId }))
+          // Resolve optional per-scene illustration via Supabase Storage (bucket: illustrations)
+          let illustrationUrl: string | null = null
+          try {
+            const contentAny = currentStory.content as Record<string, unknown> | undefined
+            const media = (contentAny?.media as Record<string, unknown> | undefined)
+            const illustrations = (media?.illustrations as Record<string, { storage_path?: string }> | undefined)
+            const illKey = nextSceneObj.illustration || nextSceneObj.id
+            let storagePath = illKey ? illustrations?.[illKey]?.storage_path : undefined
+            if (!storagePath && illKey) {
+              const storySlug = (currentStory as unknown as { slug?: string; id?: string }).slug || (currentStory as unknown as { id?: string }).id || ''
+              const jsonId = typeof contentAny?.id === 'string' ? (contentAny!.id as string) : undefined
+              const base = jsonId || storySlug
+              storagePath = base ? `stories/${base}/${illKey}.png` : undefined
+            }
+            if (storagePath) {
+              const { data } = supabase.storage.from('illustrations').getPublicUrl(storagePath)
+              illustrationUrl = data.publicUrl || null
+            }
+          } catch (e) {
+            console.warn('illustration resolve failed (scene)', e)
+          }
           const mapped: StoryScene = {
             id: nextSceneObj.id,
             story_id: currentStory.id,
@@ -265,6 +310,8 @@ export const useRoomStore = create<RoomState & RoomActions>((set, get) => ({
             created_at: get().currentScene?.created_at || new Date().toISOString(),
             updated_at: new Date().toISOString(),
           } as unknown as StoryScene
+          // Attach overlay-only illustration URL (not part of DB schema)
+          ;(mapped as unknown as { illustration_url?: string | null }).illustration_url = illustrationUrl
 
           console.log('🎭 Scene (JSON) loaded:', mapped.title || mapped.id, 'Order:', mapped.scene_order)
           set({ currentScene: mapped })
