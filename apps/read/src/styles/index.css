@@ -250,7 +250,7 @@
   }
 
   /* Mobile responsiveness */
-  @media (max-width: 768px) {
+  @media { /*(max-width: 768px) {*/
     .story-overlay {
       padding: 16px;
       align-items: end;
@@ -263,13 +263,12 @@
     }
     
     .story-illustration {
-      width: 75px;
       overflow: hidden;
+      max-width: none;
       pointer-events: none;
     }
     
     .story-illustration img {
-      height: 50vh; /* Fill vertical space on mobile */
       width: auto;  /* Allow overflow to right */
       max-width: none; /* Prevent width capping */
       object-position: left center; /* Left anchored, vertical centered */
@@ -308,53 +307,18 @@
       min-width: 350px;
       flex-shrink: 0;
     }
-    
+
+
     .story-illustration {
-      flex: 1;
-      overflow: hidden; /* Crop overflow on the right */
+      overflow: hidden;
       pointer-events: none;
-      padding-left: 20px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: flex-start; /* Left align */
     }
     
     .story-illustration img {
-      height: 70vh; /* Fill vertical */
       width: auto;  /* Allow overflow to right */
-      max-width: none; /* Override resets that cap to container width */
-      object-position: left bottom;
-    }
-  }
-
-  /* Base illustration container - works on all screen sizes */
-  .story-illustration {
-    display: flex;
-    align-items: flex-end;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  /* Alternative mobile illustration widths - for testing */
-  .mobile-illustration-none .story-content {
-    max-width: 100% !important;
-  }
-  .mobile-illustration-none .story-illustration {
-    display: none !important;
-  }
-
-  .mobile-illustration-peek .story-content {
-    max-width: calc(100% - 75px) !important;
-  }
-  .mobile-illustration-peek .story-illustration {
-    width: 75px !important;
-  }
-
-  .mobile-illustration-wide .story-content {
-    max-width: calc(100% - 150px) !important;
-  }
-  .mobile-illustration-wide .story-illustration {
-    width: 150px !important;
+      max-width: none; /* Prevent width capping */
+      object-position: left center; /* Left anchored, vertical centered */
+    }    
   }
 
   @media (max-height: 600px) {
