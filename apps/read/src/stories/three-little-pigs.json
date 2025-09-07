@@ -47,7 +47,8 @@
       "pathway": [
         "all"
       ],
-      "illustration": "opening"
+      "illustration": "opening",
+      "title": "Oh my, oh my! What a wondrous day!"
     },
     {
       "id": "fast-choice",
@@ -74,7 +75,8 @@
         "fast-teamwork",
         "fast-innovation"
       ],
-      "illustration": "fast-choice"
+      "illustration": "fast-choice",
+      "title": "\"Yippee!\" shouts Penny. \"Stack it high—"
     },
     {
       "id": "fast-teamwork",
@@ -96,7 +98,8 @@
       "pathway": [
         "fast-teamwork"
       ],
-      "illustration": "fast-teamwork"
+      "illustration": "fast-teamwork",
+      "title": "\"Together is better!\" {{childName}} calls."
     },
     {
       "id": "fast-innovation",
@@ -116,7 +119,8 @@
       "pathway": [
         "fast-innovation"
       ],
-      "illustration": "fast-innovation"
+      "illustration": "fast-innovation",
+      "title": "\"Wind can work!\" {{childName}} grins wide."
     },
     {
       "id": "careful-choice",
@@ -143,7 +147,8 @@
         "careful-shelter",
         "careful-teaching"
       ],
-      "illustration": "careful-choice"
+      "illustration": "careful-choice",
+      "title": "\"Brick by brick,\" says Bella wise."
     },
     {
       "id": "careful-shelter",
@@ -165,7 +170,8 @@
       "pathway": [
         "careful-shelter"
       ],
-      "illustration": "careful-shelter"
+      "illustration": "careful-shelter",
+      "title": "\"Come inside,\" says {{childName}} kind."
     },
     {
       "id": "careful-teaching",
@@ -187,7 +193,8 @@
       "pathway": [
         "careful-teaching"
       ],
-      "illustration": "careful-teaching"
+      "illustration": "careful-teaching",
+      "title": "\"Watch and try,\" {{childName}} explains."
     },
     {
       "id": "ending-teamwork",
@@ -204,7 +211,8 @@
       "pathway": [
         "fast-teamwork"
       ],
-      "illustration": "ending-teamwork"
+      "illustration": "ending-teamwork",
+      "title": "Parade time! Banners fly high."
     },
     {
       "id": "ending-innovation",
@@ -219,7 +227,8 @@
       "pathway": [
         "fast-innovation"
       ],
-      "illustration": "ending-innovation"
+      "illustration": "ending-innovation",
+      "title": "Welcome to the Wind-Build Fair!"
     },
     {
       "id": "ending-community",
@@ -236,7 +245,8 @@
       "pathway": [
         "careful-shelter"
       ],
-      "illustration": "ending-community"
+      "illustration": "ending-community",
+      "title": "Brick, straw, stick—homes side-by-side;"
     },
     {
       "id": "ending-teaching",
@@ -253,7 +263,8 @@
       "pathway": [
         "careful-teaching"
       ],
-      "illustration": "ending-teaching"
+      "illustration": "ending-teaching",
+      "title": "Caps fly up—class complete!"
     }
   ],
   "pathways": {

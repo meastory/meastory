@@ -33,7 +33,8 @@
         "1B2A",
         "1B2B"
       ],
-      "illustration": "opening-1"
+      "illustration": "opening-1",
+      "title": "In a house on a hill lived {{childName}} one day,"
     },
     {
       "id": "opening-2",
@@ -55,7 +56,8 @@
         "1B2A",
         "1B2B"
       ],
-      "illustration": "opening-2"
+      "illustration": "opening-2",
+      "title": "Mama packed goodies in a basket so neat,"
     },
     {
       "id": "opening-3",
@@ -77,7 +79,8 @@
         "1B2A",
         "1B2B"
       ],
-      "illustration": "opening-3"
+      "illustration": "opening-3",
+      "title": "{{childName}} took up that basket with care,"
     },
     {
       "id": "dp1-choice",
@@ -103,7 +106,8 @@
         "1B2A",
         "1B2B"
       ],
-      "illustration": "dp1-choice"
+      "illustration": "dp1-choice",
+      "title": "\"I'm going to Granny's!\" said {{childName}} with glee,"
     },
     {
       "id": "branch-a-1",
@@ -123,7 +127,8 @@
         "1A2A",
         "1A2B"
       ],
-      "illustration": "branch-a-1"
+      "illustration": "branch-a-1",
+      "title": "\"No-no,\" said {{childName}}, \"I'll stay where it's right,"
     },
     {
       "id": "branch-a-2",
@@ -144,7 +149,8 @@
         "1A2A",
         "1A2B"
       ],
-      "illustration": "branch-a-2"
+      "illustration": "branch-a-2",
+      "title": "That Wolf ran swiftly through the thick green trees,"
     },
     {
       "id": "branch-b-1",
@@ -164,7 +170,8 @@
         "1B2A",
         "1B2B"
       ],
-      "illustration": "branch-b-1"
+      "illustration": "branch-b-1",
+      "title": "\"Oh yes indeed!\" cried {{childName}} with glee,"
     },
     {
       "id": "branch-b-2",
@@ -186,7 +193,8 @@
         "1B2A",
         "1B2B"
       ],
-      "illustration": "branch-b-2"
+      "illustration": "branch-b-2",
+      "title": "{{childName}} hummed while picking flowers bright,"
     },
     {
       "id": "dp2-a-choice",
@@ -210,7 +218,8 @@
         "1A2A",
         "1A2B"
       ],
-      "illustration": "dp2-a-choice"
+      "illustration": "dp2-a-choice",
+      "title": "{{childName}} walked up to Granny's front door,"
     },
     {
       "id": "dp2-b-choice",
@@ -234,7 +243,8 @@
         "1B2A",
         "1B2B"
       ],
-      "illustration": "dp2-b-choice"
+      "illustration": "dp2-b-choice",
+      "title": "{{childName}} came with flowers bright,"
     },
     {
       "id": "journey-1a2a-1",
@@ -254,7 +264,8 @@
       "pathway": [
         "1A2A"
       ],
-      "illustration": "journey-1a2a-1"
+      "illustration": "journey-1a2a-1",
+      "title": "\"I'll peek and ponder,\" said {{childName}} so wise,"
     },
     {
       "id": "journey-1a2a-2",
@@ -275,7 +286,8 @@
       "pathway": [
         "1A2A"
       ],
-      "illustration": "journey-1a2a-2"
+      "illustration": "journey-1a2a-2",
+      "title": "\"Quick as a wink!\" said Sam with glee,"
     },
     {
       "id": "journey-1a2b-1",
@@ -293,7 +305,8 @@
       "pathway": [
         "1A2B"
       ],
-      "illustration": "journey-1a2b-1"
+      "illustration": "journey-1a2b-1",
+      "title": "\"I did what Mama said was right-right-right,"
     },
     {
       "id": "journey-1a2b-2",
@@ -314,7 +327,8 @@
       "pathway": [
         "1A2B"
       ],
-      "illustration": "journey-1a2b-2"
+      "illustration": "journey-1a2b-2",
+      "title": "{{childName}} peeked through the window with care,"
     },
     {
       "id": "journey-1b2a-1",
@@ -332,7 +346,8 @@
       "pathway": [
         "1B2A"
       ],
-      "illustration": "journey-1b2a-1"
+      "illustration": "journey-1b2a-1",
+      "title": "{{childName}} walked over to the small cottage door,"
     },
     {
       "id": "journey-1b2a-2",
@@ -353,7 +368,8 @@
       "pathway": [
         "1B2A"
       ],
-      "illustration": "journey-1b2a-2"
+      "illustration": "journey-1b2a-2",
+      "title": "{{childName}} peeked with flowers held tight,"
     },
     {
       "id": "journey-1b2b-1",
@@ -372,7 +388,8 @@
       "pathway": [
         "1B2B"
       ],
-      "illustration": "journey-1b2b-1"
+      "illustration": "journey-1b2b-1",
+      "title": "{{childName}} knocked with flowers bright,"
     },
     {
       "id": "journey-1b2b-2",
@@ -393,7 +410,8 @@
       "pathway": [
         "1B2B"
       ],
-      "illustration": "journey-1b2b-2"
+      "illustration": "journey-1b2b-2",
+      "title": "{{childName}} stepped closer but then stopped dead,"
     },
     {
       "id": "dp3-version-1",
@@ -418,7 +436,8 @@
       "pathway": [
         "1A2A"
       ],
-      "illustration": "dp3-version-1"
+      "illustration": "dp3-version-1",
+      "title": "{{childName}}, you've been so careful and smart!"
     },
     {
       "id": "dp3-version-2",
@@ -443,7 +462,8 @@
       "pathway": [
         "1B2B"
       ],
-      "illustration": "dp3-version-2"
+      "illustration": "dp3-version-2",
+      "title": "{{childName}}, your heart has been kind all along,"
     },
     {
       "id": "dp3-version-3",
@@ -469,7 +489,8 @@
         "1A2B",
         "1B2A"
       ],
-      "illustration": "dp3-version-3"
+      "illustration": "dp3-version-3",
+      "title": "{{childName}}, you've tried such wonderful things!"
     },
     {
       "id": "ending-prepared-wisdom",
@@ -485,7 +506,8 @@
       "pathway": [
         "1A2A"
       ],
-      "illustration": "ending-prepared-wisdom"
+      "illustration": "ending-prepared-wisdom",
+      "title": "Wolf looked up with a sheepish grin,"
     },
     {
       "id": "ending-heart-smart-learning",
@@ -501,7 +523,8 @@
       "pathway": [
         "1B2B"
       ],
-      "illustration": "ending-heart-smart-learning"
+      "illustration": "ending-heart-smart-learning",
+      "title": "Wolf sat up with embarrassed eyes wide,"
     },
     {
       "id": "ending-balanced-wisdom",
@@ -518,7 +541,8 @@
         "1A2B",
         "1B2A"
       ],
-      "illustration": "ending-balanced-wisdom"
+      "illustration": "ending-balanced-wisdom",
+      "title": "Wolf sat up with a wondering look,"
     }
   ],
   "pathways": {

@@ -33,7 +33,8 @@
       ],
       "emotionalBeat": "wonder-discovery",
       "readAloudNotes": "Emphasize the bouncy rhythm and encourage child participation with 'skip, skip, skip'",
-      "illustration": "opening-1"
+      "illustration": "opening-1",
+      "title": "Skip, skip, skip! What a splendid day!"
     },
     {
       "id": "opening-2",
@@ -60,7 +61,8 @@
       ],
       "emotionalBeat": "anticipation-choice-readiness",
       "readAloudNotes": "Use three different voice sizes for the bear family inside: big, medium, tiny",
-      "illustration": "opening-2"
+      "illustration": "opening-2",
+      "title": "Tip-toe, tip-toe, up so close,"
     },
     {
       "id": "knocker-path-1",
@@ -81,7 +83,8 @@
       ],
       "emotionalBeat": "warm-welcome-validation",
       "readAloudNotes": "Use Papa Bear's deep, gentle voice throughout",
-      "illustration": "knocker-path-1"
+      "illustration": "knocker-path-1",
+      "title": "Knock, knock, knock! goes {{childName}}'s hand,"
     },
     {
       "id": "knocker-path-2",
@@ -108,7 +111,8 @@
       ],
       "emotionalBeat": "joyful-family-welcome",
       "readAloudNotes": "Use three distinct voices: Papa (deep), Mama (musical), Baby (squeaky)",
-      "illustration": "knocker-path-2"
+      "illustration": "knocker-path-2",
+      "title": "Inside it's cozy, warm and bright,"
     },
     {
       "id": "peeker-path-1",
@@ -131,7 +135,8 @@
       ],
       "emotionalBeat": "wonder-gentle-discovery",
       "readAloudNotes": "Whisper the peeking parts, build suspense when Baby Bear almost notices",
-      "illustration": "peeker-path-1"
+      "illustration": "peeker-path-1",
+      "title": "Tip-toe, tip-toe, quiet as can be,"
     },
     {
       "id": "peeker-path-2",
@@ -158,7 +163,8 @@
       ],
       "emotionalBeat": "mutual-delight-understanding",
       "readAloudNotes": "Show the bears' excitement and welcoming nature",
-      "illustration": "peeker-path-2"
+      "illustration": "peeker-path-2",
+      "title": "Papa Bear looks all around,"
     },
     {
       "id": "knocker-breakfast",
@@ -181,7 +187,8 @@
       ],
       "emotionalBeat": "confident-joy-leadership",
       "readAloudNotes": "Make the breakfast testing fun with sound effects and emphasize the slurping sounds",
-      "illustration": "knocker-breakfast"
+      "illustration": "knocker-breakfast",
+      "title": "\"Thank you, thank you! Yes, I will!\""
     },
     {
       "id": "knocker-thoughtful",
@@ -204,7 +211,8 @@
       ],
       "emotionalBeat": "thoughtful-connection-wisdom",
       "readAloudNotes": "Emphasize the bears' delight at {{childName}}'s consideration",
-      "illustration": "knocker-thoughtful"
+      "illustration": "knocker-thoughtful",
+      "title": "\"Are you sure? Are you sure?"
     },
     {
       "id": "peeker-enthusiastic",
@@ -227,7 +235,8 @@
       ],
       "emotionalBeat": "enthusiastic-connection-earned-confidence",
       "readAloudNotes": "Show {{childName}}'s transformation from shy to confident with breakfast testing fun",
-      "illustration": "peeker-enthusiastic"
+      "illustration": "peeker-enthusiastic",
+      "title": "{{childName}} takes a tiny step,"
     },
     {
       "id": "peeker-gentle",
@@ -250,7 +259,8 @@
       ],
       "emotionalBeat": "deep-appreciation-understanding",
       "readAloudNotes": "Use gentle, thoughtful tones throughout",
-      "illustration": "peeker-gentle"
+      "illustration": "peeker-gentle",
+      "title": "{{childName}} walks up so politely,"
     },
     {
       "id": "ending-leader",
@@ -268,7 +278,8 @@
       ],
       "emotionalBeat": "excited-planning-leadership",
       "readAloudNotes": "Build to a joyful, celebratory conclusion",
-      "illustration": "ending-leader"
+      "illustration": "ending-leader",
+      "title": "\"Tomorrow,\" {{childName}} says with glee,"
     },
     {
       "id": "ending-wise",
@@ -286,7 +297,8 @@
       ],
       "emotionalBeat": "learning-wisdom-teaching",
       "readAloudNotes": "Use gentle, warm tones, emphasizing the gift exchange",
-      "illustration": "ending-wise"
+      "illustration": "ending-wise",
+      "title": "{{childName}} and the bears sit close,"
     },
     {
       "id": "ending-bridge",
@@ -304,7 +316,8 @@
       ],
       "emotionalBeat": "celebration-community-joy",
       "readAloudNotes": "Build to an inspiring, community-focused conclusion",
-      "illustration": "ending-bridge"
+      "illustration": "ending-bridge",
+      "title": "\"You know what's great?\" {{childName}} says,"
     },
     {
       "id": "ending-heart",
@@ -322,7 +335,8 @@
       ],
       "emotionalBeat": "gentle-appreciation-gifts",
       "readAloudNotes": "Use gentle, warm tones throughout",
-      "illustration": "ending-heart"
+      "illustration": "ending-heart",
+      "title": "{{childName}} sits in the cozy place,"
     }
   ],
   "pathways": {

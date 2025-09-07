@@ -127,6 +127,13 @@
             font-size: 12px;
             margin-bottom: 10px;
         }
+
+        .scene-title-display {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 6px;
+        }
         
         .characters-list {
             color: #8e44ad;
@@ -476,6 +483,7 @@
             <div class="pathway-info" id="pathwayInfo"></div>
             
             <div class="scene-id" id="sceneId"></div>
+            <div class="scene-title-display" id="sceneTitleDisplay"></div>
             <div class="subtle" id="sceneBackground"></div>
             <div class="characters-list" id="charactersList"></div>
             <div class="scene-text" id="sceneText"></div>
@@ -492,6 +500,7 @@
                     </label>
                     <button class="control-button" id="saveJsonBtn">Save JSON</button>
                     <button class="control-button" id="validateBtn">Validate</button>
+                    <button class="control-button" id="generateTitlesBtn">Generate Missing Titles</button>
                     <label style="margin-left:auto;">Scene:
                         <select id="sceneSelect" class="editor-select" style="min-width: 220px;"></select>
                     </label>
@@ -560,6 +569,10 @@
                 </div>
 
                 <div class="editor-grid">
+                    <div>
+                        <label>Scene Title</label>
+                        <input id="editSceneTitle" class="editor-input" placeholder="Short descriptive title">
+                    </div>
                     <div>
                         <label>Scene Text</label>
                         <textarea id="editText" class="editor-textarea" placeholder="Scene text with {{childName}} placeholders"></textarea>
@@ -705,6 +718,7 @@
             
             // Update display
             document.getElementById('sceneId').textContent = `Scene ID: ${scene.id}`;
+            document.getElementById('sceneTitleDisplay').textContent = scene.title ? String(scene.title).replace(/\{\{childName\}\}/g, childName) : '';
             document.getElementById('sceneBackground').textContent = scene.background ? `Background: ${scene.background}` : '';
             document.getElementById('charactersList').textContent = `Characters: ${scene.characters.join(', ')}`;
             document.getElementById('sceneText').textContent = scene.text.replace(/\{\{childName\}\}/g, childName);
@@ -918,6 +932,7 @@
             const addSceneBtn = document.getElementById('addSceneBtn');
             const duplicateSceneBtn = document.getElementById('duplicateSceneBtn');
             const deleteSceneBtn = document.getElementById('deleteSceneBtn');
+            const generateTitlesBtn = document.getElementById('generateTitlesBtn');
             const bgDatalist = document.getElementById('bgKeys');
             const illDatalist = document.getElementById('illKeys');
             const pathwaySelect = document.getElementById('pathwaySelect');
@@ -951,6 +966,24 @@
                 scene.choices.push({ label: 'New choice', nextSceneId: '' });
                 renderChoicesEditor();
                 displayCurrentScene();
+            });
+
+            generateTitlesBtn.addEventListener('click', () => {
+                if (!storyData?.scenes) return;
+                let changed = 0;
+                storyData.scenes.forEach((s, idx) => {
+                    if (!s.title || String(s.title).trim() === '') {
+                        s.title = generateSceneTitle(s, idx);
+                        changed++;
+                    }
+                });
+                if (changed > 0) {
+                    displayCurrentScene();
+                    syncEditorToCurrentScene();
+                    alert(`Generated ${changed} scene title(s).`);
+                } else {
+                    alert('All scenes already have titles.');
+                }
             });
 
             addSceneBtn.addEventListener('click', () => {
@@ -1025,6 +1058,7 @@
 
             // Field change handlers
             bindField('editText', (scene, value) => scene.text = value);
+            bindField('editSceneTitle', (scene, value) => scene.title = value);
             bindField('editReadAloudNotes', (scene, value) => scene.readAloudNotes = value);
             bindField('editBackground', (scene, value) => scene.background = value);
             bindField('editIllustration', (scene, value) => scene.illustration = value);
@@ -1126,12 +1160,35 @@
             populateSceneSelect();
             const scene = getCurrentScene();
             if (!scene) return;
+            document.getElementById('editSceneTitle').value = scene.title || '';
             document.getElementById('editText').value = scene.text || '';
             document.getElementById('editReadAloudNotes').value = scene.readAloudNotes || '';
             document.getElementById('editBackground').value = scene.background || '';
             document.getElementById('editIllustration').value = scene.illustration || '';
             document.getElementById('editEmotionalBeat').value = scene.emotionalBeat || '';
             renderChoicesEditor();
+        }
+
+        function generateSceneTitle(scene, index) {
+            try {
+                const id = (scene.id || `scene-${index+1}`);
+                const text = String(scene.text || '').replace(/\{\{childName\}\}/g, '{{childName}}');
+                const firstNonEmptyLine = text.split('\n').map(l => l.trim()).find(l => l.length > 0) || '';
+                let candidate = firstNonEmptyLine;
+                // If the first line is too long, take first sentence-ish or slice
+                if (candidate.length > 80) {
+                    const punctIdx = candidate.search(/[\.!?]/);
+                    if (punctIdx > 20) candidate = candidate.slice(0, punctIdx + 1);
+                    if (candidate.length > 80) candidate = candidate.slice(0, 80);
+                }
+                if (candidate.length < 6) {
+                    candidate = id.replace(/[-_]/g, ' ');
+                    candidate = candidate.charAt(0).toUpperCase() + candidate.slice(1);
+                }
+                return candidate;
+            } catch {
+                return `Scene ${index+1}`;
+            }
         }
 
         function populateGlobalEditorFields() {

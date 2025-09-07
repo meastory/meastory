@@ -30,7 +30,8 @@
       ],
       "emotionalBeat": "confused-conflict",
       "readAloudNotes": "Start with confused, frustrated voices in the distance. Make Pip sound higher and more confused, Flint smaller and more worried. Show Bramble's gentle approach when he settles down to their size. End with the weight of both children looking to him for help.",
-      "illustration": "opening-1"
+      "illustration": "opening-1",
+      "title": "Bramble Bear was collecting smooth river stones—the roundest, most perfect ones "
     },
     {
       "id": "branch-a-1",
@@ -45,7 +46,8 @@
       ],
       "emotionalBeat": "understanding-dawning",
       "readAloudNotes": "Use patient, investigative tones throughout. Make each child's explanation sound earnest and reasonable. Build to Bramble's realization with growing excitement - 'Oh my paws and whiskers!' should sound like a genuine breakthrough moment.",
-      "illustration": "branch-a-1"
+      "illustration": "branch-a-1",
+      "title": "\"Let me talk with each of you separately,\" said Bramble thoughtfully, fidgeting-"
     },
     {
       "id": "branch-b-1",
@@ -60,7 +62,8 @@
       ],
       "emotionalBeat": "escalating-hurt",
       "readAloudNotes": "Start with overlapping voices and building tension. Make Pip's hurtful comment sound shocked and immediate, then show his instant regret. Show Flint curling up in pain. End with Bramble's gentle wisdom about letting feelings settle.",
-      "illustration": "branch-b-1"
+      "illustration": "branch-b-1",
+      "title": "\"Come on then, little friends,\" said Bramble, settling down between his two upse"
     },
     {
       "id": "dp2-a-1",
@@ -80,7 +83,8 @@
       ],
       "emotionalBeat": "collaborative-discovery",
       "readAloudNotes": "Show Bramble's breakthrough moment with genuine excitement. Make both children sound hopeful and relieved. Build anticipation for the choice between sharing traditions or focusing on fairness.",
-      "illustration": "dp2-a-1"
+      "illustration": "dp2-a-1",
+      "title": "Now Bramble understood the whole muddle-puddle—like seeing both sides of a coin "
     },
     {
       "id": "dp2-b-1",
@@ -100,7 +104,8 @@
       ],
       "emotionalBeat": "gentle-healing",
       "readAloudNotes": "Show Pip's worry and desire to fix his mistake. Make Flint sound still hurt but beginning to peek out. Use Willow's wise, gentle voice when she appears. End with hope that healing is possible with patience.",
-      "illustration": "dp2-b-1"
+      "illustration": "dp2-b-1",
+      "title": "Bramble watched as Pip kept glancing at Flint with worry-eyes, wanting-wanting-w"
     },
     {
       "id": "journey-1a2a-1",
@@ -115,7 +120,8 @@
       ],
       "emotionalBeat": "celebratory-learning",
       "readAloudNotes": "Show growing excitement as they teach each other. Make their discoveries sound genuine and delightful. Build the joy of understanding different ways can both be good. End with anticipation as Hazel approaches.",
-      "illustration": "journey-1a2a-1"
+      "illustration": "journey-1a2a-1",
+      "title": "\"What a wonderful-wonderful idea!"
     },
     {
       "id": "journey-1a2b-1",
@@ -130,7 +136,8 @@
       ],
       "emotionalBeat": "thoughtful-consideration",
       "readAloudNotes": "Use contemplative, thoughtful pacing throughout. Show both children thinking carefully and considerately about each other's feelings. Build pride in Bramble's voice as they work out fair solutions together.",
-      "illustration": "journey-1a2b-1"
+      "illustration": "journey-1a2b-1",
+      "title": "\"That's a very thoughtful idea, very wise indeed,\" said Bramble, settling down l"
     },
     {
       "id": "journey-1b2a-1",
@@ -145,7 +152,8 @@
       ],
       "emotionalBeat": "bridge-building",
       "readAloudNotes": "Show the friends discovering they can find common ground. Build excitement as they create new solutions together. Make their collaborative problem-solving sound natural and joyful.",
-      "illustration": "journey-1b2a-1"
+      "illustration": "journey-1b2a-1",
+      "title": "\"You know what, my dear friends?"
     },
     {
       "id": "journey-1b2b-1",
@@ -160,7 +168,8 @@
       ],
       "emotionalBeat": "patient-reflection",
       "readAloudNotes": "Use calm, healing tones throughout. Show the three deep breaths actually being taken. Make the real feelings they express sound honest and vulnerable. End with peaceful resolution settling like leaves.",
-      "illustration": "journey-1b2b-1"
+      "illustration": "journey-1b2b-1",
+      "title": "\"Willow's right, wise and true,\" said Bramble thoughtfully, adjusting his scarf "
     },
     {
       "id": "dp3-a-1",
@@ -180,7 +189,8 @@
       ],
       "emotionalBeat": "proud-understanding",
       "readAloudNotes": "Show Hazel's warm approval and pride in the children's learning. Make both Pip and Flint sound confident and excited about their discoveries. Build anticipation for how they'll choose to move forward.",
-      "illustration": "dp3-a-1"
+      "illustration": "dp3-a-1",
+      "title": "\"Aunt Hazel!\" called Flint, waving both paws above his head like tiny flags danc"
     },
     {
       "id": "dp3-b-1",
@@ -200,7 +210,8 @@
       ],
       "emotionalBeat": "reflective-consideration",
       "readAloudNotes": "Show Hazel's wise, calming presence as she assesses the situation. Make both children sound thoughtfully honest about their process. End with them still pondering the deeper question about how to move forward fairly.",
-      "illustration": "dp3-b-1"
+      "illustration": "dp3-b-1",
+      "title": "As Pip and Flint sat quietly-quietly, letting their careful words settle between"
     },
     {
       "id": "dp3-c-1",
@@ -220,7 +231,8 @@
       ],
       "emotionalBeat": "creative-cooperation",
       "readAloudNotes": "Show both understanding and healing coming together beautifully. Make the children sound confident and collaborative in their approach to the remaining challenge. Build excitement about their creative problem-solving.",
-      "illustration": "dp3-c-1"
+      "illustration": "dp3-c-1",
+      "title": "As Pip and Flint worked through their friendship muddle—learning about each othe"
     },
     {
       "id": "ending-understanding-differences",
@@ -229,7 +241,8 @@
       "choices": [],
       "emotionalBeat": "joyful-appreciation",
       "readAloudNotes": "Build excitement as they discover they can honor both traditions. Make their playing together sound delightful and celebratory. Show the joy of learning that different ways can both be wonderful. End with Bramble's wisdom about differences being treasures to share.",
-      "illustration": "ending-understanding-differences"
+      "illustration": "ending-understanding-differences",
+      "title": "\"What a wonderful-wonderful idea!"
     },
     {
       "id": "ending-patience-helps-hearts-heal",
@@ -238,7 +251,8 @@
       "choices": [],
       "emotionalBeat": "peaceful-resolution",
       "readAloudNotes": "Use calm, patient pacing throughout. Show the magic of letting time and patience work. Make their discovery sound genuine and heartfelt. End with the peaceful satisfaction of wisdom gained through gentle patience.",
-      "illustration": "ending-patience-helps-hearts-heal"
+      "illustration": "ending-patience-helps-hearts-heal",
+      "title": "\"That sounds very wise, wise as old owls and gentle as spring rain,\" said Hazel "
     },
     {
       "id": "ending-building-bridges-together",
@@ -247,7 +261,8 @@
       "choices": [],
       "emotionalBeat": "creative-bridge-building",
       "readAloudNotes": "Build excitement as they create their friendship bridge solution. Make their collaborative decision-making sound natural and innovative. Show the pride in their creativity and the joy of building something new together. End with the celebration of their unique friendship solution.",
-      "illustration": "ending-building-bridges-together"
+      "illustration": "ending-building-bridges-together",
+      "title": "\"Taking turns choosing!"
     }
   ],
   "pathways": {
