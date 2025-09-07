@@ -269,10 +269,10 @@
     }
     
     .story-illustration img {
-      width: 300px;
-      max-height: 50vh;
-      object-fit: cover;
-      object-position: left center;
+      height: 50vh; /* Fill vertical space on mobile */
+      width: auto;  /* Allow overflow to right */
+      max-width: none; /* Prevent width capping */
+      object-position: left center; /* Left anchored, vertical centered */
     }
     
     .story-choices {
